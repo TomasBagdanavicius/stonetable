@@ -1,0 +1,1041 @@
+@layer accessories {
+
+    /* Icon Hosts */
+
+    .i-host,
+    .scr-menu > *,
+    .con-menu > *,
+    .cont-btn,
+    .scr-cl-btn,
+    .file-cl-btn,
+    .mty-ctrl,
+    .fld-srch,
+    .opt-btn,
+    .type-file,
+    .type-dir,
+    .i-menu,
+    .i-open-lo,
+    .i-disc-lo,
+    .tgl-lo,
+    .tgl-word-wrap-btn,
+    .scr.welcome h1,
+    .lst-test-case .cnt > .state,
+    .lst-test-case ol > [data-state] > .cnt,
+    .show-info-btn {
+        --icon-color: var(--bg-color-restrained);
+        --icon-size: 16px;
+        --icon-weight: 2px;
+        /* Calculated */
+        --icon-size-half: calc(var(--icon-size) / 2);
+        --icon-weight-half: calc(var(--icon-weight) / 2);
+        --icon-weight-double: calc(var(--icon-weight) * 2);
+        /* Properties */
+        position: relative;
+    }
+
+    .i-host::before,
+    .i-host::after,
+    .scr-menu > ::before,
+    .scr-menu > ::after,
+    .con-menu > ::before,
+    .con-menu > ::after,
+    .cont-btn::before,
+    .cont-btn::after,
+    .scr-cl-btn::before,
+    .scr-cl-btn::after,
+    .file-cl-btn::before,
+    .file-cl-btn::after,
+    .mty-ctrl::before,
+    .mty-ctrl::after,
+    .fld-srch::before,
+    .fld-srch::after,
+    .opt-btn::before,
+    .opt-btn::after,
+    .type-file > :first-child::before,
+    .type-file > :first-child::after,
+    .type-dir > :first-child::before,
+    .type-dir > :first-child::after,
+    .i-menu::before,
+    .i-open-lo::before,
+    .i-open-lo::after,
+    .i-disc-lo::before,
+    .i-disc-lo::after,
+    .tgl-lo::before,
+    .tgl-lo::after,
+    .tgl-word-wrap-btn::before,
+    .tgl-word-wrap-btn::after,
+    .scr.welcome h1::before,
+    .scr.welcome h1::after,
+    .show-info-btn::before,
+    .show-info-btn::after,
+    .lst-test-case .cnt > .state::before,
+    .lst-test-case .cnt > .state::after,
+    .lst-test-case ol > [data-state] > .cnt::before,
+    .lst-test-case ol > [data-state] > .cnt::after {
+        position: absolute;
+        content: '';
+    }
+
+    /* Medium Length Rightwards Arrow */
+
+    .i-md-rt-arw,
+    .cont-btn:not(.waiting) {
+        --icon-size: 20px;
+        --wing-size: 10px;
+    }
+
+    .i-md-rt-arw::before,
+    .cont-btn:not(.wtng)::before {
+        /* +1 for baseline optimization */
+        top: calc(50% - var(--icon-weight-half) + 1px);
+        left: calc(50% - var(--icon-size-half));
+        width: var(--icon-size);
+        height: var(--icon-weight);
+        border-radius: var(--icon-weight-half);
+        background-color: var(--icon-color);
+    }
+
+    .i-md-rt-arw::after,
+    .cont-btn:not(.wtng)::after {
+        top: calc(50% + var(--icon-weight-half));
+        left: calc(50% + var(--icon-size-half) - var(--wing-size)
+            + var(--icon-weight-half));
+        width: var(--wing-size);
+        height: var(--wing-size);
+        border-radius: var(--icon-weight-half);
+        border: solid var(--icon-weight) var(--icon-color);
+        transform: rotate(45deg);
+        transform-origin: 100% 0;
+        border-bottom-width: 0;
+        border-left-width: 0;
+    }
+
+    /* Arrow Down */
+
+    .i-arw-down::before,
+    .i-arw-down::after {
+        bottom: calc(50% - 3px);
+        left: calc(50% - 1px);
+        width: 2px;
+        height: 8px;
+        border-radius: 1px;
+        background-color: var(--icon-color);
+        transform: rotate(-45deg);
+        transform-origin: 50% 100%;
+    }
+
+    .i-arw-down::after {
+        margin-left: -1px;
+        transform: rotate(45deg);
+    }
+
+    /* Enter & Exit Fullscreen */
+
+    :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn) {
+        --icon-size: 10px;
+        --icon-offset: 1px;
+    }
+
+    :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::before,
+    :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::after {
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-radius: var(--icon-weight-half);
+    }
+
+    :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::before {
+        bottom: calc(50% + var(--icon-offset));
+        left: calc(50% + var(--icon-offset));
+        border-width: var(--icon-weight) var(--icon-weight) 0 0;
+    }
+
+    :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::after {
+        top: calc(50% + var(--icon-offset));
+        right: calc(50% + var(--icon-offset));
+        border-width: 0 0 var(--icon-weight) var(--icon-weight);
+    }
+
+    .i-exit-fscr::before,
+    body:fullscreen .tgl-fscr-btn::before {
+        border-width: 0 0 var(--icon-weight) var(--icon-weight);
+    }
+
+    body:-webkit-full-screen .tgl-fscr-btn::before {
+        border-width: 0 0 var(--icon-weight) var(--icon-weight);
+    }
+
+    .i-exit-fscr::after,
+    body:fullscreen .tgl-fscr-btn::after {
+        border-width: var(--icon-weight) var(--icon-weight) 0 0;
+    }
+
+    body:-webkit-full-screen .tgl-fscr-btn::after {
+        border-width: var(--icon-weight) var(--icon-weight) 0 0;
+    }
+
+    /* Search */
+
+    .i-srch,
+    .fld-srch {
+        --icon-size: 20px;
+        --icon-offset: calc((var(--base-bar-height) - var(--icon-size)) / 2);
+    }
+
+    .i-srch::before,
+    .fld-srch::before {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-radius: 50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .i-srch::after,
+    .fld-srch::after {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-size-half);
+        height: var(--icon-weight);
+        margin-top: calc(0px - var(--icon-weight-half));
+        border-radius: var(--icon-weight-half);
+        background-color: var(--icon-color);
+        transform: rotate(45deg) translate(var(--icon-size-half));
+        transform-origin: 0 0;
+    }
+
+    /* Connect */
+
+    .i-rcnt,
+    .rcnt-btn,
+    .scr.welcome h1 {
+        --space-width: 8px;
+        --space-height: 4px;
+        --off-x: calc(var(--icon-weight) + var(--space-width) / 2);
+        --off-y: calc(var(--icon-weight) + var(--space-height) / 2);
+        --off-x-half: calc(var(--off-x) / 2);
+        --off-y-half: calc(var(--off-y) / 2);
+        --off-closest: calc(var(--icon-weight) + var(--off-x-half));
+    }
+
+    .i-rcnt::before,
+    .i-rcnt::after,
+    .rcnt-btn::before,
+    .rcnt-btn::after,
+    .scr.welcome h1::before,
+    .scr.welcome h1::after {
+        width: 20px;
+        height: 12px;
+        border: solid var(--icon-weight) var(--icon-color);
+        border-radius: var(--decorative-radius);
+    }
+
+    .i-rcnt::before,
+    .rcnt-btn::before,
+    .scr.welcome h1::before {
+        bottom: 50%;
+        left: 50%;
+        transform: translate(calc(0px - var(--off-x)), var(--off-y)) rotate(-45deg);
+        transform-origin: var(--off-closest) calc(12px - var(--off-closest));
+        outline: solid 1px var(--current-background-color);
+        z-index: 2;
+    }
+
+    .i-rcnt::after,
+    .rcnt-btn::after,
+    .scr.welcome h1::after {
+        top: 50%;
+        right: 50%;
+        transform: translate(var(--off-x), calc(0px - var(--off-y))) rotate(-45deg);
+        transform-origin: calc(20px - var(--off-closest)) var(--off-closest);
+    }
+
+    /* Close */
+
+    .i-cl,
+    .cl-btn,
+    .mty-ctrl,
+    .lst-test-case [data-state="failed"] > .cnt > .state,
+    .lst-test-case ol > [data-state="failed"] > .cnt {
+        --icon-size: 20px;
+    }
+
+    .i-cl::before,
+    .i-cl::after,
+    .cl-btn::before,
+    .cl-btn::after,
+    .mty-ctrl::before,
+    .mty-ctrl::after,
+    .lst-test-case [data-state="failed"] > .cnt > .state::before,
+    .lst-test-case [data-state="failed"] > .cnt > .state::after,
+    .lst-test-case ol > [data-state="failed"] > .cnt::before,
+    .lst-test-case ol > [data-state="failed"] > .cnt::after {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-size);
+        height: var(--icon-weight);
+        border-radius: var(--icon-weight-half);
+        background-color: var(--icon-color);
+        transform: translate(-50%,-50%) rotate(45deg);
+        transform-origin: 50% 50%;
+    }
+
+    .i-cl::after,
+    .cl-btn::after,
+    .mty-ctrl::after,
+    .lst-test-case [data-state="failed"] > .cnt > .state::after,
+    .lst-test-case ol > [data-state="failed"] > .cnt::after {
+        transform: translate(-50%,-50%) rotate(-45deg);
+    }
+
+    /* Options */
+
+    .i-opts,
+    .opt-btn {
+        --icon-size: 4px;
+        --icon-offset: 4px;
+        background: radial-gradient(
+            circle at center,
+            var(--icon-color) var(--icon-size-half),
+            var(--current-background-color) var(--icon-size-half)
+        );
+    }
+
+    .i-opts::before,
+    .i-opts::after,
+    .opt-btn::before,
+    .opt-btn::after {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border-radius: 50%;
+        background-color: var(--icon-color);
+        transform: translate(-50%,-50%);
+    }
+
+    .i-opts::before,
+    .opt-btn::before {
+        top: calc(50% - var(--icon-offset) - var(--icon-size));
+    }
+
+    .i-opts::after,
+    .opt-btn::after {
+        top: calc(50% + var(--icon-offset) + var(--icon-size));
+    }
+
+    /* File */
+
+    .i-file,
+    .type-file > :first-child {
+        --icon-width: 25px;
+        --icon-height: 30px;
+    }
+
+    .i-file::before,
+    .type-file > :first-child::before {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-width);
+        height: var(--icon-height);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-radius: var(--decorative-radius);
+        transform: translate(-50%,-50%);
+    }
+
+    .i-file::after,
+    .type-file > :first-child::after {
+        --width: 11px;
+        --height: 9px;
+        top: calc(50% - var(--height) / 2);
+        left: calc(50% - var(--width) / 2);
+        width: var(--width);
+        height: var(--height);
+        padding: 3px 0;
+        border-style: solid;
+        border-color: var(--icon-color);
+        border-width: var(--icon-weight-half) 0;
+        background-color: var(--icon-color);
+        background-clip: content-box;
+    }
+
+    /* Folder */
+
+    .i-dir,
+    .type-dir > :first-child {
+        --icon-width: 25px;
+        --icon-height: 18px;
+    }
+
+    .i-dir::before,
+    .type-dir > :first-child::before {
+        top: calc(50% + var(--icon-weight));
+        left: 50%;
+        width: var(--icon-width);
+        height: var(--icon-height);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-radius: var(--decorative-radius);
+        border-top-left-radius: 0;
+        transform: translate(-50%,-50%);
+    }
+
+    .i-dir::after,
+    .type-dir > :first-child::after {
+        --width: 10px;
+        --height: 8px;
+        top: calc(50% - 13px);
+        left: calc(50% - var(--icon-width) / 2);
+        width: var(--width);
+        height: var(--height);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-bottom-width: 0;
+        border-top-left-radius: var(--decorative-radius);
+        background-color: var(--current-background-color);
+        /* Fix possible horizontal line at intersection subpixel issue */
+        box-shadow: 0px -3px 0px 0px var(--current-background-color) inset;
+    }
+
+    /* OS Mode */
+
+    .i-os-mode,
+    :root[data-color-mode="os"] .tgl-clr-mode {
+        --icon-size: 20px;
+    }
+
+    .i-os-mode::before,
+    :root[data-color-mode="os"] .tgl-clr-mode::before {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-radius: 50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .i-os-mode::after,
+    :root[data-color-mode="os"] .tgl-clr-mode::after {
+        --height: calc(var(--icon-size) - var(--icon-weight));
+        --height-half: calc(var(--height) / 2);
+        top: 50%;
+        left: 50%;
+        width: calc(var(--icon-size-half) - var(--icon-weight-half));
+        height: var(--height);
+        border-radius: var(--height-half) 0 0 var(--height-half);
+        background-color: var(--icon-color);
+        transform: translate(-100%,-50%);
+    }
+
+    /* Dark Mode */
+
+    .i-dark-mode,
+    :root[data-color-mode="dark"] .tgl-clr-mode {
+        --icon-size: 20px;
+    }
+
+    .i-dark-mode::before,
+    .i-dark-mode::after,
+    :root[data-color-mode="dark"] .tgl-clr-mode::before,
+    :root[data-color-mode="dark"] .tgl-clr-mode::after {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border-radius: 50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .i-dark-mode::before,
+    :root[data-color-mode="dark"] .tgl-clr-mode::before {
+        background-color: var(--icon-color);
+    }
+
+    .i-dark-mode::after,
+    :root[data-color-mode="dark"] .tgl-clr-mode::after {
+        background-color: var(--current-background-color);
+        transform: translate(calc(-50% + 7px), calc(-50% - 2px));
+    }
+
+    /* Light Mode */
+
+    .i-lt-mode,
+    :root[data-color-mode="light"] .tgl-clr-mode {
+        --icon-size: 20px;
+    }
+
+    .i-lt-mode::before,
+    .i-lt-mode::after,
+    :root[data-color-mode="light"] .tgl-clr-mode::before,
+    :root[data-color-mode="light"] .tgl-clr-mode::after {
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .i-lt-mode::before,
+    :root[data-color-mode="light"] .tgl-clr-mode::before {
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border: solid var(--icon-weight) var(--icon-color);
+    }
+
+    .i-lt-mode::after,
+    :root[data-color-mode="light"] .tgl-clr-mode::after {
+        width: var(--icon-weight-double);
+        height: var(--icon-weight-double);
+        background-color: var(--icon-color);
+    }
+
+    /* Reload */
+
+    .i-rld,
+    .rld-btn {
+        --icon-size: 20px;
+    }
+
+    .i-rld::before,
+    .rld-btn::before {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-right-color: transparent;
+        border-radius: 50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .i-rld::after,
+    .rld-btn::after {
+        top: calc(50% - 8px);
+        left: calc(50% + 4px);
+        width: 7px;
+        height: 7px;
+        border: solid var(--icon-weight) var(--icon-color);
+        border-top-width: 0;
+        border-left-width: 0;
+        border-radius: var(--icon-weight-half);
+    }
+
+    /* Menu */
+
+    .i-menu {
+        --icon-width: 20px;
+        --icon-height: 14px;
+    }
+
+    .i-menu::before {
+        --offset-top: calc((var(--icon-height) - var(--icon-weight) * 3) / 2);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: var(--icon-width);
+        height: var(--icon-height);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-width: var(--icon-weight) 0;
+        padding: var(--offset-top) 0;
+        background-color: var(--icon-color);
+        background-clip: content-box;
+    }
+
+    /* Open Layout */
+
+    .i-open-lo {
+        --icon-width: 20px;
+        --icon-height: 14px;
+        --stroke-size: 2px;
+        /* Calculated */
+        --stroke-size-double: calc(var(--stroke-size) * 2);
+    }
+
+    .i-open-lo::before {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, calc(0px - var(--icon-height) / 2));
+        width: var(--icon-width);
+        height: var(--stroke-size);
+        background-color: var(--icon-color);
+    }
+
+    .i-open-lo::after {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, calc(0px - (var(--icon-height) / 2 - var(--stroke-size-double))));
+        width: var(--icon-width);
+        height: calc(var(--icon-height) - var(--stroke-size-double));
+        border-left: solid var(--stroke-size-double) var(--icon-color);
+        padding-left: var(--stroke-size);
+        background-color: var(--icon-color);
+        background-clip: content-box;
+    }
+
+    /* Discrete Layout */
+
+    .i-disc-lo {
+        --icon-width: 20px;
+        --icon-height: 14px;
+        --stroke-size: 2px;
+    }
+
+    .i-disc-lo::before {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-width);
+        height: var(--icon-height);
+        padding-top: var(--stroke-size);
+        transform: translate(-50%,-50%);
+        border-top: solid var(--stroke-size) var(--icon-color);
+        background-color: var(--icon-color);
+        background-clip: content-box;
+    }
+
+    /* No Word Wrap */
+
+    .i-no-word-wrap,
+    body:not(.word-wrap) .tgl-word-wrap-btn {
+        --icon-width: 30px;
+        --icon-height: 8px;
+        /* Calculated */
+        --icon-width-half: calc(var(--icon-width) / 2);
+        --icon-height-half: calc(var(--icon-height) / 2);
+        --icon-spacer-size: calc(var(--icon-height) - var(--icon-weight-double));
+    }
+
+    .i-no-word-wrap::before,
+    .i-no-word-wrap::after,
+    body:not(.word-wrap) .tgl-word-wrap-btn::before,
+    body:not(.word-wrap) .tgl-word-wrap-btn::after {
+        top: calc(50% - var(--icon-height-half));
+        left: calc(50% - var(--icon-width-half));
+        width: var(--icon-width);
+        height: var(--icon-weight);
+        background-color: var(--icon-color);
+        border-radius: var(--icon-weight-half);
+    }
+
+    .i-no-word-wrap::after,
+    body:not(.word-wrap) .tgl-word-wrap-btn::after {
+        top: calc(50% + var(--icon-spacer-size) / 2);
+        /* Deduct 1/3 of icon width length. */
+        width: calc(var(--icon-width) - (var(--icon-width) / 3));
+    }
+
+    /* Word Wrap */
+
+    .i-word-wrap,
+    body.word-wrap .tgl-word-wrap-btn {
+        --icon-width: 25px;
+        --icon-height: 14px;
+        /* Calculated */
+        --icon-width-half: calc(var(--icon-width) / 2);
+        --icon-height-half: calc(var(--icon-height) / 2);
+    }
+
+    .i-word-wrap::before,
+    body.word-wrap .tgl-word-wrap-btn::before {
+        top: 50%;
+        left: 50%;
+        width: var(--icon-width);
+        height: var(--icon-height);
+        transform: translate(-50%,-50%);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-left: 0;
+        border-radius: 0 var(--icon-height-half) var(--icon-height-half) 0;
+    }
+
+    .i-word-wrap::after,
+    body.word-wrap .tgl-word-wrap-btn::after {
+        --size: 7px;
+        top: calc(50% + var(--icon-height-half) - var(--size));
+        left: 50%;
+        width: var(--size);
+        height: var(--size);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-top-width: 0;
+        border-right-width: 0;
+        border-radius: var(--icon-weight-half);
+        transform: rotate(45deg);
+        transform-origin: 0 50%;
+    }
+
+    /* Checkmark */
+
+    .i-check,
+    .lst-test-case :is(.sel:not([data-state]), [data-state="passed"]) > .cnt > .state,
+    .lst-test-case ol > [data-state="passed"] > .cnt {
+        --icon-offset: 50%;
+        --icon-wing-size: 20px;
+        --icon-smaller-wing-size: 10px;
+    }
+
+    .i-check::before,
+    .i-check::after,
+    .lst-test-case :is(.sel:not([data-state]), [data-state="passed"]) > .cnt > .state::before,
+    .lst-test-case :is(.sel:not([data-state]), [data-state="passed"]) > .cnt > .state::after,
+    .lst-test-case ol > [data-state="passed"] > .cnt::before,
+    .lst-test-case ol > [data-state="passed"] > .cnt::after {
+        --original-transform: translateX(calc(-50% - var(--icon-weight-half)));
+        left: 50%;
+        /* The current solution is to align to the bottom, which is a common way
+        for this icon to be tailored. */
+        bottom: var(--icon-offset);
+        transform: var(--original-transform);
+        transform-origin: 50% 100%;
+        width: var(--icon-weight);
+        height: var(--icon-wing-size);
+        border-radius: var(--icon-weight-half);
+        background-color: var(--icon-color);
+    }
+
+    .i-check::before,
+    .lst-test-case :is(.sel:not([data-state]), [data-state="passed"]) > .cnt > .state::before,
+    .lst-test-case ol > [data-state="passed"] > .cnt::before {
+        height: var(--icon-smaller-wing-size);
+        transform: var(--original-transform) rotate(-45deg);
+    }
+
+    .i-check::after,
+    .lst-test-case :is(.sel:not([data-state]), [data-state="passed"]) > .cnt > .state::after,
+    .lst-test-case ol > [data-state="passed"] > .cnt::after {
+        margin-left: -1px;
+        transform: var(--original-transform) rotate(45deg);
+    }
+
+    /* Info */
+
+    .i-info,
+    .show-info-btn {
+        --icon-size: 20px;
+    }
+
+    .i-info::before,
+    .show-info-btn::before {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border: solid var(--icon-weight) var(--icon-color);
+        border-radius: 50%;
+    }
+
+    .i-info::after,
+    .show-info-btn::after {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        font: 16px/var(--icon-size) "Times New Roman", Times, serif;
+        color: var(--icon-color);
+        content: 'i';
+    }
+
+
+    /* Compact Buttons */
+
+    .scr-menu button,
+    .con-menu button,
+    .mty-ctrl,
+    .opt-btn,
+    .tgl-lo {
+        --compact-width: var(--base-bar-height);
+        width: var(--compact-width);
+        aspect-ratio: 1;
+    }
+
+    /* Enclosed Buttons */
+
+    .scr-menu button,
+    .con-menu button,
+    .mty-ctrl,
+    .opt-btn,
+    .tgl-lo {
+        --enclosed-height: var(--base-bar-height);
+        overflow: hidden;
+        align-items: start;
+        min-width: 0;
+        height: 0;
+        min-height: 0;
+        padding-top: var(--enclosed-height);
+        padding-bottom: 0;
+    }
+
+
+    /* Position File Document and Folder Icons */
+
+    .fav-menu > ul > li.has-opt,
+    .lst-file .lst-grp > * {
+        --icon-offset: 12px;
+    }
+
+    .fav-menu > ul > [data-storage-id] > :first-child,
+    .lst-file .lst-grp > * > :first-child {
+        padding-left: calc(var(--icon-offset) + 35px);
+    }
+
+    .fav-menu > ul > li.has-opt > :first-child::before,
+    .lst-file .lst-grp > * > :first-child::before {
+        left: var(--icon-offset);
+        transform: translate(0,-50%);
+    }
+
+    .fav-menu .type-file > :first-child::after,
+    .lst-file .type-file > :first-child::after {
+        left: calc(var(--icon-offset) + ((var(--icon-width) - var(--icon-weight-double) - var(--width)) / 2) + var(--icon-weight));
+    }
+
+    .fav-menu .type-dir > :first-child::after,
+    .lst-file .type-dir > :first-child::after {
+        left: var(--icon-offset);
+    }
+
+
+    /* Button Styles */
+
+    /* Continue Button */
+
+    .cont-btn {
+        --icon-offset: 30px;
+        padding: 3px 60px 3px 30px;
+    }
+
+    .cont-btn:not(.wtng)::before {
+        left: auto;
+        right: var(--icon-offset);
+    }
+
+    .cont-btn:not(.wtng)::after {
+        left: auto;
+        right: calc(var(--icon-offset) - var(--icon-weight-half));
+    }
+
+
+    /* Field */
+
+    .fld {
+        padding-right: calc(var(--base-bar-height) + 12px);
+    }
+
+    .fld .mty-ctrl {
+        /* Put back to `absolute`, since this is an icon host. */
+        position: absolute;
+    }
+
+    /* Search Field */
+
+    .fld-srch {
+        padding-left: var(--base-bar-height);
+    }
+
+    .fld-srch::before {
+        left: var(--icon-offset);
+        transform: translateY(-50%);
+    }
+
+    .fld-srch::after {
+        left: calc(var(--icon-size-half) + var(--icon-offset));
+    }
+
+    .fld-srch .ttl {
+        left: var(--base-bar-height);
+    }
+
+
+    /* Listings */
+
+    /* Test Cases */
+
+    .lst-test-case .opt-btn {
+        --compact-width: 39px;
+        --enclosed-height: 39px;
+    }
+
+    .lst-test-case > .lst-grp .cnt {
+        min-height: var(--base-bar-height);
+    }
+
+    .lst-test-case ol > [data-state] > .cnt {
+        padding-left: 40px;
+    }
+
+    .lst-test-case ol > [data-state] > .cnt::before,
+    .lst-test-case ol > [data-state] > .cnt::after {
+        bottom: 15px;
+        left: calc(40px / 2 - var(--icon-weight-half));
+    }
+
+
+    /* Screens */
+
+    .scr.welcome h1 {
+        padding-top: 25px;
+    }
+
+    .scr.welcome h1::before {
+        bottom: auto;
+        top: 0;
+    }
+
+    .scr.welcome h1::after {
+        top: 12px;
+    }
+
+
+    @media (min-width: 661px) {
+
+        /* Icon Hosts */
+
+        /* Open Layout */
+
+        body[data-layout="open"] .tgl-lo {
+            --icon-width: 20px;
+            --icon-height: 14px;
+            --stroke-size: 2px;
+            /* Calculated */
+            --stroke-size-double: calc(var(--stroke-size) * 2);
+        }
+
+        body[data-layout="open"] .tgl-lo::before {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, calc(0px - var(--icon-height) / 2));
+            width: var(--icon-width);
+            height: var(--stroke-size);
+            background-color: var(--icon-color);
+        }
+
+        body[data-layout="open"] .tgl-lo::after {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, calc(0px - (var(--icon-height) / 2 - var(--stroke-size-double))));
+            width: var(--icon-width);
+            height: calc(var(--icon-height) - var(--stroke-size-double));
+            border-left: solid var(--stroke-size-double) var(--icon-color);
+            padding-left: var(--stroke-size);
+            background-color: var(--icon-color);
+            background-clip: content-box;
+        }
+
+        /* Discrete Layout */
+
+        body[data-layout="discrete"] .tgl-lo {
+            --icon-width: 20px;
+            --icon-height: 14px;
+            --stroke-size: 2px;
+        }
+
+        body[data-layout="discrete"] .tgl-lo::before {
+            top: 50%;
+            left: 50%;
+            width: var(--icon-width);
+            height: var(--icon-height);
+            padding-top: var(--stroke-size);
+            transform: translate(-50%,-50%);
+            border-top: solid var(--stroke-size) var(--icon-color);
+            background-color: var(--icon-color);
+            background-clip: content-box;
+        }
+    }
+
+    @media (max-width: 660px) {
+
+        /* Icon Hosts */
+
+        /* Menu */
+
+        body[data-layout="discrete"] .tgl-lo {
+            --icon-width: 20px;
+            --icon-height: 14px;
+        }
+
+        body[data-layout="discrete"] .tgl-lo::before {
+            --offset-top: calc((var(--icon-height) - var(--icon-weight) * 3) / 2);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: var(--icon-width);
+            height: var(--icon-height);
+            border: solid var(--icon-weight) var(--icon-color);
+            border-width: var(--icon-weight) 0;
+            padding: var(--offset-top) 0;
+            background-color: var(--icon-color);
+            background-clip: content-box;
+        }
+
+        /* Close */
+
+        body[data-layout="open"] .tgl-lo {
+            --icon-size: 20px;
+        }
+
+        body[data-layout="open"] .tgl-lo::before,
+        body[data-layout="open"] .tgl-lo::after {
+            top: 50%;
+            left: 50%;
+            width: var(--icon-size);
+            height: var(--icon-weight);
+            border-radius: var(--icon-weight-half);
+            background-color: var(--icon-color);
+            transform: translate(-50%,-50%) rotate(45deg);
+            transform-origin: 50% 50%;
+        }
+
+        body[data-layout="open"] .tgl-lo::after {
+            transform: translate(-50%,-50%) rotate(-45deg);
+        }
+    }
+}
+
+@layer waiting {
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .wtng {
+        pointer-events: none;
+        color: unset;
+    }
+
+    /* Spinner */
+
+    .wtng::after {
+        --spinner-size: 20px;
+        --spinner-size-half: var(--spinner-size) / 2;
+        --spinner-size-half-negative: calc(0px - var(--spinner-size-half));
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 3;
+        height: var(--spinner-size);
+        width: var(--spinner-size);
+        margin: var(--spinner-size-half-negative) 0 0
+            var(--spinner-size-half-negative);
+        border: solid 2px currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        opacity: 1;
+        animation: spin 0.8s infinite linear;
+        content: '';
+    }
+
+    .cont-btn.wtng::after {
+        right: var(--icon-offset);
+        left: auto;
+    }
+
+    /* About LWIS Technologies */
+
+    .upg-sts .wtng::after {
+        --spinner-size: 15px;
+        left: 0;
+        margin-left: 0;
+    }
+}

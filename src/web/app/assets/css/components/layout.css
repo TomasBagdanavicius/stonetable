@@ -1,0 +1,954 @@
+/* Base */
+
+html,
+body {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-width: 320px;
+}
+
+button {
+    margin: auto;
+}
+
+menu,
+menu > ul {
+    display: flex;
+    justify-content: center;
+}
+
+menu button {
+    margin: 0;
+}
+
+/* Single Line Reserved Buttons */
+
+.fld .mty-ctrl,
+.scr.landing .lst-grp button,
+.cat-menu > ul > li.has-opt > button:first-child,
+.fav-menu > ul > li > button:first-child,
+.lst-file .lst-grp > * > :first-child,
+.lst-test-case ol .file-ttl {
+    overflow: hidden;
+    min-width: 75px;
+    max-width: 150px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Nested Button */
+
+.cat-menu > ul > li.has-opt,
+.fav-menu > ul > li,
+.lst-file .lst-grp > * {
+    display: flex;
+}
+
+.cat-menu > ul > li.has-opt > button:first-child,
+.fav-menu > ul > li > button:first-child,
+.lst-file .lst-grp > * > :first-child {
+    flex-grow: 1;
+    min-width: 0;
+    text-align: start;
+}
+
+.fav-menu > ul > .has-opt > button,
+.lst-file .lst-grp button {
+    margin: 0;
+}
+
+.fav-menu > ul > .has-opt > :last-child,
+.lst-file .lst-grp > * > .opt-btn {
+    --height: calc(var(--base-bar-height) - var(--base-bar-offset-double));
+    min-height: var(--height);
+    /* Make sure it's not shrunk when a title on the left side is very long. */
+    flex-shrink: 0;
+}
+
+/* Field */
+
+.fld {
+    --empty-controller-max-width: 75px;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: calc(var(--base-bar-offset-height) + var(--divider-size));
+    padding: 0 calc(var(--empty-controller-max-width) + 12px) 0 12px;
+    border-bottom: solid var(--divider-size) currentColor;
+}
+
+.fld input {
+    width: 100%;
+    height: 100%;
+}
+
+.fld .ttl {
+    position: absolute;
+    inset: 0 0 auto 12px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    z-index: 2;
+}
+
+.fld .mty-ctrl {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: var(--empty-controller-max-width);
+}
+
+.fld:focus-within .ttl,
+.fld:not(.blk-within) .ttl {
+    height: 15px;
+    transform: translateY(-50%);
+}
+
+/* Search Field */
+
+.fld-srch {
+    padding-left: 12px;
+}
+
+.fld-srch .ttl {
+    left: 12px;
+}
+
+
+/* Messages */
+
+/* Short */
+
+.msg-shrt {
+    margin: auto;
+}
+
+
+/* Code Lines */
+
+.code-lns {
+    display: table;
+    width: 100%;
+}
+
+.code-lns > * {
+    display: table-row;
+}
+
+.code-lns > * > * {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.code-lns > * > .line-num {
+    /* Fit content workaround for a table cell. */
+    width: 1px;
+    padding: 0 10px;
+    text-align: end;
+    vertical-align: top;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.code-lns > * > .cnt {
+    white-space: pre;
+    tab-size: 4;
+}
+
+/* Mode: Enable Word Wrapping */
+
+.code-lns.word-wrap > * > .cnt {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+/* Listing */
+
+.lst {
+    display: flex;
+    flex-direction: column;
+}
+
+.lst h1 {
+    margin: 0;
+    text-align: center;
+}
+
+.lst-bd {
+    overflow: hidden auto;
+    flex: 1 0 0;
+    scrollbar-width: thin;
+}
+
+.lst-grp {
+    display: flex;
+    flex-direction: column;
+}
+
+.lst-ftr .msg {
+    text-align: center;
+}
+
+/* File Listing */
+
+.lst-file {
+    /* Constrain flexing inside. */
+    width: 100%;
+}
+
+.lst-file .lst-h,
+/* Title does not fit above the input field due to toolbar size restraints. */
+.lst-file .fld-srch:focus-within .ttl,
+.lst-file .fld-srch:not(.blk-within) .ttl,
+.lst.no-rslt .fld-srch {
+    display: none;
+}
+
+.lst-file .fld-srch.blk-within:focus-within .ttl {
+    display: flex;
+    height: 100%;
+    transform: none;
+}
+
+.lst-file .lst-h + p {
+    margin: calc(0px - var(--base-bar-offset)) 0 var(--base-bar-offset);
+}
+
+.lst-file .lst-grp > * > :first-child {
+    /* Do not limit the width of the lead button. */
+    max-width: none;
+}
+
+.lst-file .lst-grp > * > span:first-child {
+    display: block;
+    height: var(--base-bar-height);
+    padding: var(--base-bar-offset) 12px;
+    border-radius: var(--decorative-radius);
+    line-height: calc(var(--base-bar-height) - var(--base-bar-offset-double));
+}
+
+/* Test Cases */
+
+.lst-test-case .opt-btn {
+    margin: 0 3px;
+}
+
+@media ( hover: hover ) {
+
+    .lst-test-case .cnt:not(:hover, :focus-within) > .opt-btn,
+    .lst-test-case .err:not(:hover, :focus-within) > .opt-btn {
+        display: none;
+    }
+}
+
+@media ( hover: none ) {
+
+    .lst-test-case .cnt:not(.act) > .opt-btn,
+    .lst-test-case .err:not(.act) > .opt-btn {
+        display: none;
+    }
+}
+
+/* Listing Header */
+
+.lst-test-case > .lst-hdr {
+    position: sticky;
+    inset: 0 0 auto;
+    z-index: 2;
+    margin-bottom: var(--base-bar-offset);
+    padding-bottom: var(--divider-size);
+    background-color: var(--current-background-color);
+}
+
+.lst-test-case > .lst-hdr::after {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: var(--divider-size);
+    background-color: currentColor;
+    content: '';
+}
+
+.lst-test-case > .lst-hdr button:disabled {
+    display: none;
+}
+
+.lst-test-case > .lst-hdr dl {
+    display: flex;
+    margin: 0 12px;
+}
+
+.lst-test-case > .lst-hdr dt::after {
+    content: ':';
+}
+
+.lst-test-case > .lst-hdr dt:not(:first-child) {
+    margin-left: 15px;
+}
+
+.lst-test-case > .lst-hdr dd {
+    margin-left: 5px;
+}
+
+.lst-test-case > .lst-hdr menu {
+    justify-content: flex-start;
+}
+
+.lst-test-case > .lst-hdr .hdr-inr {
+    overflow: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--base-bar-offset) 0;
+    white-space: nowrap;
+}
+
+/* Listing Group */
+
+.lst-test-case > .lst-grp {
+    display: flex;
+    flex-direction: column;
+}
+
+.lst-test-case > .lst-grp .cat-ttl {
+    overflow: hidden;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.lst-test-case > .lst-grp .file-cn {
+    white-space: nowrap;
+}
+
+.lst-test-case > .lst-grp .fail-cn {
+    margin-left: 15px;
+    white-space: nowrap;
+}
+
+.lst-test-case > .lst-grp .cnt {
+    display: flex;
+    align-items: center;
+    min-height: var(--base-bar-offset-height);
+    padding: var(--base-bar-offset) 12px;
+    border-radius: var(--decorative-radius);
+}
+
+.lst-test-case > .lst-grp .cnt > .state {
+    flex-shrink: 0;
+    width: 25px;
+    aspect-ratio: 1;
+    margin-right: 12px;
+    cursor: pointer;
+    border: solid 1px currentColor;
+}
+
+.lst-test-case > .lst-grp > .sel > .cnt > .state {
+    padding: 3px;
+    background-clip: content-box;
+    background-color: currentColor;
+}
+
+.lst-test-case > .lst-grp > * > .cnt {
+    cursor: pointer;
+}
+
+.lst-test-case > .lst-grp > :not(.open) > ol {
+    display: none;
+}
+
+/* File List */
+
+.lst-test-case .file-l {
+    flex-direction: column;
+    width: 100%;
+    counter-reset: file-l;
+}
+
+.lst-test-case .file-l .err {
+    display: flex;
+    align-items: center;
+    min-height: 39px;
+    margin: 0;
+}
+
+.lst-test-case .file-l .file-ttl {
+    max-width: none;
+}
+
+.lst-test-case .file-l > li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-left: 49px;
+    counter-increment: file-l;
+}
+
+.lst-test-case .file-l > li::before {
+    width: 49px;
+    margin-left: -49px;
+    padding-right: 5px;
+    text-align: end;
+    content: counter(file-l) ".";
+}
+
+.lst-test-case .file-l > li > * {
+    flex: 1 0 auto;
+    width: 100%;
+}
+
+.lst-test-case .file-l > li > .cnt {
+    width: calc(100% - 49px);
+    padding-inline: 0;
+}
+
+.lst-test-case .file-l .code-msg {
+    margin-top: 1em;
+}
+
+/* Open State */
+.lst-test-case > .lst-grp > .open > .file-l {
+    display: flex;
+}
+
+
+/* Screens */
+
+/* Generic Screen */
+
+.scr {
+    contain: strict;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+}
+
+.scr-tb {
+    contain: size;
+    flex: 0 0 var(--base-bar-offset-height);
+    position: relative;
+    /* Added primarily for Safari, because .scr-cnt-con-bd would not be shown on
+    top of things behind it in mobile (eg. .main-pnl > .tb). */
+    z-index: 2;
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    height: var(--base-bar-offset-height);
+}
+
+.scr-tb > .scr-menu {
+    flex: 0 0 auto;
+    max-width: 100%;
+}
+
+.scr-tb button {
+    white-space: nowrap;
+}
+
+.scr-bd {
+    overflow: auto;
+    flex: 1 1 auto;
+    display: flex;
+    margin: 15px 0;
+    padding: 0 15px;
+}
+
+.scr-inr {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+/* Screen Menu */
+
+.scr-menu {
+    overflow: auto hidden;
+    justify-content: flex-start;
+    padding: var(--base-bar-offset);
+    scrollbar-width: thin;
+}
+
+
+/* Welcome Screen */
+
+.scr.welcome article {
+    text-align: center;
+}
+
+.scr.welcome article h1 {
+    margin-top: 0;
+}
+
+
+/* Landing Screen */
+
+.scr.landing .scr-bd {
+    overflow: initial;
+}
+
+.scr.landing .scr-inr {
+    display: flex;
+    margin: 0 auto;
+}
+
+.scr.landing .scr-inr > * {
+    width: 100%;
+}
+
+.scr.landing .lst-grp button {
+    width: 100%;
+    max-width: initial;
+}
+
+.scr.landing .lst .msg-mty p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--base-bar-height);
+    margin: 0;
+}
+
+
+/* Message Screen */
+
+.scr.message article {
+    text-align: center;
+}
+
+
+/* Manager Screen */
+
+.scr.manager .scr-bd {
+    margin: 0;
+    padding: 0;
+}
+
+.scr.manager .scr-inr {
+    display: flex;
+    align-items: stretch;
+    max-width: none;
+    margin: 0;
+}
+
+.scr.manager .scr-tb {
+    --height: calc(var(--base-bar-offset-height) + var(--divider-size));
+    flex-basis: var(--height);
+    height: var(--height);
+    padding-bottom: var(--divider-size);
+}
+
+.scr.manager .scr-tb::after {
+    position: absolute;
+    inset: auto 0 0;
+    height: var(--divider-size);
+    background-color: currentColor;
+    content: '';
+}
+
+/* Panels */
+
+/* Sidebar */
+
+.scr.manager .sb {
+    contain: strict;
+    display: flex;
+    padding: var(--base-bar-offset);
+}
+
+body[data-layout="discrete"] .scr.manager .sb {
+    display: none;
+}
+
+/* Main */
+
+.scr.manager .main-pnl {
+    contain: strict;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.scr.manager .main-pnl > .tb {
+    --height: calc(var(--base-bar-offset-height) + var(--divider-size));
+    flex: 0 0 var(--height);
+    position: relative;
+    height: var(--height);
+    padding-bottom: var(--divider-size);
+}
+
+.scr.manager .main-pnl > .tb::after {
+    position: absolute;
+    inset: auto var(--base-bar-offset) 0 var(--base-bar-offset);
+    height: var(--divider-size);
+    background-color: currentColor;
+    content: '';
+}
+
+.scr.manager .main-pnl > .tb > .inr {
+    overflow: auto hidden;
+    display: flex;
+    height: 100%;
+    padding: var(--base-bar-offset);
+}
+
+.scr.manager .main-pnl > .tb .brcr-menu {
+    overflow: auto hidden;
+    flex: 1 0 auto;
+    justify-content: flex-start;
+    scrollbar-width: thin;
+}
+
+.scr.manager .main-pnl > .bd {
+    contain: strict;
+    flex: 1 1 auto;
+    display: flex;
+    row-gap: 15px;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: auto;
+    padding: 15px var(--base-bar-offset);
+}
+
+.scr.manager .main-pnl[data-handler="unit-tests"] > .bd {
+    /* Remove gap above unit tests sticky header. */
+    padding-top: 0;
+}
+
+.scr.manager .main-pnl > .bd > :not(.msg-shrt) {
+    /* Gaps are instead created using `row-gap`. */
+    margin: 0;
+}
+
+/* Screen Content Controls */
+
+.scr-cnt-con,
+.scr-cnt-con-bd {
+    display: flex;
+    min-width: 0;
+}
+
+.scr-cnt-con {
+    flex: 1 1 auto;
+}
+
+.scr-cnt-con > .tgl-lo {
+    flex: 0 0 auto;
+    margin: var(--base-bar-offset) auto var(--base-bar-offset)
+        var(--base-bar-offset);
+}
+
+.scr-cnt-con-bd {
+    overflow: auto hidden;
+    padding: var(--base-bar-offset) var(--base-bar-offset)
+        var(--base-bar-offset) 0;
+    scrollbar-width: thin;
+    overscroll-behavior: contain;
+}
+
+/* Categories Menu */
+
+.cat-menu .h {
+    display: none;
+}
+
+
+/* Dialog */
+
+dialog {
+    contain: content;
+    overflow: auto;
+    min-width: 300px;
+    /* Dynamic viewport width */
+    max-width: 100dvw;
+    /* Dynamic viewport height */
+    max-height: 100dvh;
+    border: solid var(--divider-size) currentColor;
+}
+
+/* About LWIS Technologies */
+
+.abt-lwis {
+    max-width: 300px;
+}
+
+.abt-lwis h2 {
+    margin-block: 1em;
+    font-size: 1.5em;
+}
+
+.abt-lwis li {
+    margin-block: 3px;
+}
+
+.abt-lwis .app-logo {
+    max-width: 75px;
+    margin-inline: auto;
+}
+
+.abt-lwis .app-logo img {
+    display: block;
+    max-width: 100%;
+}
+
+.abt-lwis .lwis-logo {
+    max-width: 150px;
+    margin-inline: auto;
+}
+
+.abt-lwis :is(.app-logo, .lwis-logo) :is(a, svg) {
+    display: block;
+}
+
+/* Upgrade Status */
+
+.upg-sts .wtng {
+    position: relative;
+    padding-left: 20px;
+}
+
+.upg-sts:not([data-status="pending"]) .wtng,
+.upg-sts:not([data-status="ok"]) .ok,
+.upg-sts:not([data-status="upgrade"]) .upg,
+.upg-sts:not([data-status="error"]) .err {
+    display: none;
+}
+
+
+/* Popup */
+
+.pp {
+    contain: content;
+    overflow: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    /* Dynamic viewport width */
+    max-width: 100dvw;
+    /* Dynamic viewport height */
+    max-height: 100dvh;
+    padding: 15px;
+}
+
+.pp button {
+    width: 100%;
+    text-align: start;
+}
+
+.pp menu > ul {
+    flex-direction: column;
+}
+
+
+/* Short Notifications */
+
+.shrt-notif {
+    overflow: hidden;
+    max-width: 100%;
+    padding: 10px 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#short-notifications {
+    contain: content;
+    position: fixed;
+    max-width: calc(100% - 30px);
+    bottom: 15px;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: end;
+    gap: 15px;
+}
+
+
+@media (min-width: 1025px) {
+
+    /* Panels */
+
+    /* Sidebar */
+
+    .scr.manager .sb {
+        width: calc(300px + var(--divider-size));
+    }
+}
+
+@media (min-width: 661px) and (max-width: 1024px) {
+
+    /* Panels */
+
+    /* Sidebar */
+
+    .scr.manager .sb {
+        width: calc(300 * 100 / 1024 * 1% + var(--divider-size));
+        min-width: calc(250px + var(--divider-size));
+    }
+}
+
+@media (min-width: 661px) {
+
+    /* Favorites Menu */
+
+    .fav-menu .h {
+        display: none;
+    }
+
+    /* Screen Content Controls */
+
+    .scr-cnt-con-bd {
+        flex: 1 1 auto;
+    }
+
+
+    /* Screens */
+
+    /* Manager Screen */
+
+    .scr.manager .scr-menu {
+        max-width: 25%;
+    }
+
+    /* Panels */
+
+    /* Sidebar */
+
+    .scr.manager .sb {
+        flex: 0 0 auto;
+        padding-right: calc(var(--base-bar-offset) + var(--divider-size));
+    }
+
+    .scr.manager .sb::after {
+        position: absolute;
+        inset: 0 0 0 auto;
+        width: var(--divider-size);
+        background-color: currentColor;
+        content: '';
+    }
+
+
+    /* Popup */
+
+    .pp .cl-btn {
+        display: none;
+    }
+}
+
+@media (max-width: 660px) {
+
+    /* Favorites Menu */
+
+    .fav-menu {
+        display: block;
+    }
+
+    .fav-menu > .h {
+        position: relative;
+        /* Due to the fact that z-index cannot be used on .scr-cnt-con-bd */
+        z-index: 2;
+    }
+
+    .fav-menu > ul {
+        overflow: hidden auto;
+        position: fixed;
+        inset: calc((var(--base-bar-offset-height) + var(--divider-size)) * 2)
+            0 0 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: start;
+        padding: var(--base-bar-offset);
+        background-color: var(--bg-color);
+    }
+
+    .fav-menu:not(.open) > ul {
+        display: none;
+    }
+
+    .fav-menu > ul > li > button:first-child {
+        max-width: none;
+    }
+
+    /* Screen Content Controls */
+
+    .scr-cnt-con {
+        /* This element remains with a single "Toggle layout" button, which
+        should always be fully visible. */
+        flex-shrink: 0;
+    }
+
+    .scr-cnt-con-bd {
+        /* This element should not have z-index, because .fav-menu > ul inside
+        wants to break out overflow-y: hidden. Rule primarily for Safari. */
+        position: absolute;
+        inset: calc(var(--base-bar-offset-height) + var(--divider-size)) 0 auto
+            0;
+        /* In case there is a custom webkit scrollbar, prevent it from
+        increasing elements' height. */
+        height: var(--base-bar-offset-height);
+        padding: var(--base-bar-offset);
+        background-color: var(--bg-color);
+    }
+
+    .scr-cnt-con-bd > :not(.fav-menu) {
+        position: relative;
+        /* Due to the fact that z-index cannot be used on .scr-cnt-con-bd */
+        z-index: 2;
+    }
+
+    body[data-layout="discrete"] .scr-cnt-con-bd {
+        display: none;
+    }
+
+
+    /* Screens */
+
+    /* Generic Screen */
+
+    /* Screen Menu */
+
+    .scr-tb > .scr-menu {
+        flex: 0 1 auto;
+    }
+
+    /* Manager Screen */
+
+    .scr.manager .main-pnl > .tb::after {
+        right: 0;
+        left: 0;
+    }
+
+    /* Panels */
+
+    /* Sidebar */
+
+    .scr.manager .sb {
+        position: fixed;
+        inset: calc(var(--base-bar-offset-height) * 2 + var(--divider-size)) 0
+            0 0;
+        z-index: 1;
+        padding-top: calc(var(--base-bar-offset) + var(--divider-size));
+        background-color: var(--bg-color);
+    }
+
+    .scr.manager .sb::before {
+        position: absolute;
+        inset: 0 0 auto;
+        height: var(--divider-size);
+        background-color: currentColor;
+        content: '';
+    }
+}

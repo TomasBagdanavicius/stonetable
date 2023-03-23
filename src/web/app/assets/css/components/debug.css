@@ -1,0 +1,20 @@
+/* CSS Debug Mode */
+
+.debug .scr-cnt-con-bd {
+    background-color: slategrey;
+}
+
+.debug .scr-tb > .scr-menu {
+    background-color: olive;
+}
+
+@media (max-width: 660px) {
+
+    .debug .fav-menu > ul {
+        background-color: indianred;
+    }
+
+    .debug .scr.manager .sb {
+        background-color: darkslategray;
+    }
+}

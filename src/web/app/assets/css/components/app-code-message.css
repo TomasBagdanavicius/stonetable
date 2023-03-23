@@ -1,0 +1,43 @@
+@import "../../../../assets/css/code-message.css";
+
+/* Output */
+
+.o {
+    padding: 20px 12px;
+    border: dashed 1px var(--bg-color-restrained);
+    border-width: 1px 0;
+    font: 13px/1.5 Menlo, Monaco, "Courier New", monospace;
+    white-space: pre-wrap;
+}
+
+.o :any-link {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-skip-ink: all;
+    text-underline-offset: 3px;
+}
+
+.o :any-link:hover {
+    text-decoration-style: solid;
+}
+
+/* Code Message */
+
+.code-msg {
+    padding: 20px 12px;
+    border-width: 1px 0;
+}
+
+.code-msg .code-msg {
+    margin-top: 1em;
+    border-width: 1px;
+}
+
+.code-msg .arg-l > li::before {
+    background-color: var(--mg-color);
+}
+
+.code-msg [reversed] > li::marker {
+    color: var(--bg-color-restrained);
+}

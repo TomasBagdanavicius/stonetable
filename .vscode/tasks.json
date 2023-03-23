@@ -1,0 +1,73 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Distribution",
+            "type": "shell",
+            "command": "node ./scripts/build.js",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }, {
+            "label": "Delete Distribution",
+            "type": "shell",
+            "command": "./scripts/delete-dist.sh",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }, {
+            "label": "Delete NPM Files",
+            "type": "shell",
+            "command": "./scripts/delete-npm-files.sh",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }, {
+            "label": "NPM Install All",
+            "type": "shell",
+            "command": "npm install",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }, {
+            "label": "Tidy Whitespace",
+            "type": "shell",
+            "command": "./scripts/tidy-whitespace.sh -e 'html css js php' -d ${workspaceFolder}/src",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }, {
+            "label": "Remove PHP EOF Closing Tags",
+            "type": "shell",
+            "command": "./scripts/remove-php-eof-closing-tags.sh -d ${workspaceFolder}/src",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": ["Tidy Whitespace"]
+        }, {
+            "label": "Check Line Length",
+            "type": "shell",
+            "command": "./scripts/line-length.sh -e 'php' -d ${workspaceFolder}/src",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}

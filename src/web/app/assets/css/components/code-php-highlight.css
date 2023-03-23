@@ -1,0 +1,223 @@
+:root {
+    --code-php-highlight-base: #000;
+    --code-php-highlight-open-tag: #800000;
+    --code-php-highlight-close-tag: #800000;
+    --code-php-highlight-comment: #008002;
+    --code-php-highlight-variable: #001180;
+    --code-php-highlight-function: #795e27;
+    --code-php-highlight-keyword: #0a00ff;
+    --code-php-highlight-function-like-keyword: #795e27;
+    --code-php-highlight-expression-keyword: #af00db;
+    --code-php-highlight-tagname: #0a00ff;
+    --code-php-highlight-string: #a21515;
+    --code-php-highlight-number: #0a8658;
+    --code-php-highlight-punctuation: inherit;
+    --code-php-highlight-operator: inherit;
+    --code-php-highlight-function-preceding-ampersand: #0a00ff;
+    --code-php-highlight-compile-time-constant: #0a00ff;
+    --code-php-highlight-namespace: inherit;
+    --code-php-highlight-namespace-base: #0a00ff;
+    --code-php-highlight-class-name: #257e99;
+    --code-php-highlight-heredoc-open: inherit;
+    --code-php-highlight-heredoc-operator: #a21515;
+    --code-php-highlight-heredoc-identifier: inherit;
+    --code-php-highlight-heredoc-close: inherit;
+    --code-php-highlight-inline-html: inherit;
+    --code-php-highlight-unknown: inherit;
+    /* Punctuation Levels */
+    --code-php-highlight-punctuation-level-1n: #0531fa;
+    --code-php-highlight-punctuation-level-2n: #2f9331;
+    --code-php-highlight-punctuation-level-3n: #7c3913;
+    /* Line Numbers */
+    --code-php-highlight-line-number-color: #227793;
+    --code-php-highlight-line-number-focus-color: #0c216f;
+    /* Text Selection */
+    --code-php-highlight-text-selection: #add6ff;
+}
+
+:root[data-theme="dark"] {
+    --code-php-highlight-base: #d4d4d4;
+    --code-php-highlight-open-tag: #559cd6;
+    --code-php-highlight-close-tag: #559cd6;
+    --code-php-highlight-comment: #699a55;
+    --code-php-highlight-variable: #9ddbfe;
+    --code-php-highlight-function: #dcdcaa;
+    --code-php-highlight-keyword: #559cd6;
+    --code-php-highlight-function-like-keyword: #dcdcaa;
+    --code-php-highlight-expression-keyword: #c687c0;
+    --code-php-highlight-tagname: #559cd6;
+    --code-php-highlight-string: #ce9278;
+    --code-php-highlight-number: #b6cda8;
+    --code-php-highlight-punctuation: inherit;
+    --code-php-highlight-operator: inherit;
+    --code-php-highlight-function-preceding-ampersand: #559cd6;
+    --code-php-highlight-compile-time-constant: #559cd6;
+    --code-php-highlight-namespace: inherit;
+    --code-php-highlight-namespace-base: #559cd6;
+    --code-php-highlight-class-name: #4ec9b0;
+    --code-php-highlight-heredoc-open: inherit;
+    --code-php-highlight-heredoc-operator: #ce9278;
+    --code-php-highlight-heredoc-identifier: inherit;
+    --code-php-highlight-heredoc-close: inherit;
+    --code-php-highlight-inline-html: inherit;
+    --code-php-highlight-unknown: inherit;
+    /* Punctuation Levels */
+    --code-php-highlight-punctuation-level-1n: #ffd601;
+    --code-php-highlight-punctuation-level-2n: #da70d6;
+    --code-php-highlight-punctuation-level-3n: #199fff;
+    /* Line Numbers */
+    --code-php-highlight-line-number-color: #858585;
+    --code-php-highlight-line-number-focus-color: #C6C6C6;
+    /* Text Selection */
+    --code-php-highlight-text-selection: #254f78;
+}
+
+.code-php {
+    color: var(--code-php-highlight-base);
+}
+
+.code-php .open-tag {
+    color: var(--code-php-highlight-open-tag);
+}
+
+.code-php .close-tag {
+    color: var(--code-php-highlight-close-tag);
+}
+
+.code-php .comment {
+    color: var(--code-php-highlight-comment);
+}
+
+.code-php .variable,
+.code-php .varname,
+.code-php .varname-open,
+.code-php .varname-close {
+    color: var(--code-php-highlight-variable);
+}
+
+.code-php .function {
+    color: var(--code-php-highlight-function);
+}
+
+.code-php .keyword {
+    color: var(--code-php-highlight-keyword);
+}
+
+.code-php .function-like-keyword {
+    color: var(--code-php-highlight-function-like-keyword);
+}
+
+.code-php .expression-keyword {
+    color: var(--code-php-highlight-expression-keyword);
+}
+
+.code-php .string {
+    color: var(--code-php-highlight-string);
+}
+
+.code-php .number {
+    color: var(--code-php-highlight-number);
+}
+
+.code-php .punctuation {
+    color: var(--code-php-highlight-punctuation);
+}
+
+.code-php .operator {
+    color: var(--code-php-highlight-operator);
+}
+
+.code-php .namespace {
+    color: var(--code-php-highlight-namespace);
+}
+
+.code-php .class-name,
+.code-php .namespace .class-name {
+    color: var(--code-php-highlight-class-name);
+}
+
+.code-php .namespace .base {
+    color: var(--code-php-highlight-namespace-base);
+}
+
+.code-php .compile-time-constant {
+    color: var(--code-php-highlight-compile-time-constant);
+}
+
+/* Heredoc & Inline HTML */
+
+.code-php .heredoc-open {
+    color: var(--code-php-highlight-heredoc-open);
+}
+
+.code-php .heredoc-operator {
+    color: var(--code-php-highlight-heredoc-operator);
+}
+
+.code-php .heredoc-identifier {
+    color: var(--code-php-highlight-heredoc-identifier);
+}
+
+.code-php .heredoc-close {
+    color: var(--code-php-highlight-heredoc-close);
+}
+
+.code-php .inline-html {
+    color: var(--code-php-highlight-inline-html);
+}
+
+/* Punctuation Levels */
+
+.code-php .punctuation.level-1n {
+    color: var(--code-php-highlight-punctuation-level-1n);
+}
+
+.code-php .punctuation.level-2n {
+    color: var(--code-php-highlight-punctuation-level-2n);
+}
+
+.code-php .punctuation.level-3n {
+    color: var(--code-php-highlight-punctuation-level-3n);
+}
+
+/* Miscellaneous */
+
+.code-php ::selection {
+    background-color: var(--code-php-highlight-text-selection);
+}
+
+.code-php .operator.operator-reference {
+    color: var(--code-php-highlight-function-preceding-ampersand);
+}
+
+.code-php .string-key {
+    color: var(--code-php-highlight-tagname);
+}
+
+.code-php .line-num {
+    color: var(--code-php-highlight-line-number-color);
+}
+
+.code-php > :hover .line-num {
+    color: var(--code-php-highlight-line-number-focus-color);
+}
+
+/* Clickable element */
+
+[data-relative-path] {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-skip-ink: all;
+    text-decoration-color: var(--bg-color-restrained);
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+[data-relative-path]:hover {
+    text-decoration-style: solid;
+}
+
+[data-relative-path]:focus {
+    outline: solid 1px var(--accent-color);
+}

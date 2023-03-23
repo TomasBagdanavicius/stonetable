@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+<meta charset="utf-8">
+<title>Stonetable</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src *">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes">
+<meta name="robots" content="noindex,nofollow">
+<meta name="application-name" content="Stonetable" data-app-version="1.0.0" data-app-api-latest-version="https://www.lwis.net/stonetable/api/latest-version.json">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Web application component to the Stonetable PHP project build testing and debugging suite">
+<meta name="creator" content="LWIS Technologies">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="assets/images/logo.svg" type="image/svg+xml" sizes="any">
+<link rel="apple-touch-icon" href="assets/images/stonetable-os-icon-180x180.png">
+<link href="assets/css/app.css" rel="stylesheet">
+<script src="assets/scripts/app.js"></script>
+</head>
+<body data-layout="open">
+
+<!-- Welcome Screen Template -->
+
+<template class="scr-tpl" data-screen-name="welcome" id="welcome-screen-template">
+
+    <article>
+
+        <h1 class="h">Connect</h1>
+
+        <p class="t">Please provide a working URL to the get-endpoints.php file, which is located in /api directory.</p>
+
+        <p>
+            <label class="fld" for="connect-endpoint-url">
+                <span class="ttl">URL:</span>
+                <input type="url" name="url" id="connect-endpoint-url" required>
+            </label>
+        </p>
+
+        <menu>
+            <button class="cont-btn">Continue</button>
+        </menu>
+
+    </article>
+
+</template>
+
+<!-- Landing/Projects Screen Template -->
+
+<template class="scr-tpl" data-screen-name="landing" id="landing-screen-template">
+
+    <div class="lst">
+
+        <header class="lst-hdr">
+
+            <h1 class="h lst-h">My Projects</h1>
+
+            <p>
+                <label class="fld fld-srch" for="projects-search-field">
+                    <span class="ttl">Search all projects</span>
+                    <input type="search" name="project_search_query" id="projects-search-field" placeholder="Search all projects" autocapitalize="off" autocorrect="off">
+                </label>
+            </p>
+
+        </header>
+
+        <div class="lst-bd">
+
+            <div class="lst-grp"></div>
+
+            <footer class="lst-ftr">
+
+                <button class="load-more-btn">Load more</button>
+
+                <article class="msg msg-mty">
+
+                    <p>No projects found</p>
+
+                </article>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+</template>
+
+<!-- Manager Screen Template -->
+
+<template class="scr-tpl" data-screen-name="manager" id="manager-screen-template">
+
+    <div id="toolbar">
+
+        <div class="scr-cnt-con">
+
+            <button class="tgl-lo" title="Toggle layout">Toggle layout</button>
+
+            <div class="scr-cnt-con-bd">
+
+                <menu class="cat-menu">
+
+                    <span class="h">Categories</span>
+
+                    <ul>
+                        <li><button data-query="side=src" title="Open source directory">Source</button></li>
+                        <li><button data-query="side=test/demo/static" title="Open demo directory">Demos</button></li>
+                        <li>
+                            <button data-query="side=test/units/static" title="Open unit tests directory">Units</button>
+                            <ul>
+                                <li><button data-query="main=unit-tests">Show Automated Tests</button></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </menu>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <aside class="sb" id="sidebar">
+
+        <div class="lst lst-file">
+
+            <header class="lst-hdr">
+
+                <h2 class="h lst-h">Files</h2>
+
+                <p>
+                    <label class="fld fld-srch" for="side-search-field">
+                        <span class="ttl">Search current directory</span>
+                        <input type="search" name="file_search_query" id="side-search-field" placeholder="Search current directory" autocapitalize="off" autocorrect="off">
+                    </label>
+                </p>
+
+            </header>
+
+            <div class="lst-bd">
+
+                <div class="lst-grp"></div>
+
+                <footer class="lst-ftr">
+
+                    <button class="load-more-btn">Load more</button>
+
+                    <article class="msg msg-mty">
+
+                        <p>No files found</p>
+
+                    </article>
+
+                </footer>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+    <main class="main-pnl" id="main-panel"></main>
+
+</template>
+
+<template id="about-lwis-template">
+
+    <p class="app-logo">
+        <a href="https://www.lwis.net/stonetable/" title="Visit Stonetable website">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0,0 h 100 v 100 h -100 Z" fill="#3b2c52"/>
+                <path d="M 50,0 l 50,50 v 25 h -100 v -25 Z" fill="#d14a4e"/>
+                <path d="M 50,25 l 50,50 v 25 h -100 v -25 Z" fill="#fcc831"/>
+                <path d="M 50,50 l 50,50 h -100, Z" fill="#5cb592"/>
+            </svg>
+        </a>
+    </p>
+
+    <h2>Stonetable v1.0.0</h2>
+
+    <p class="upg-sts" data-status="pending"><span class="wtng">Checking latest version...</span> <span class="ok">You are running the latest version.</span> <span class="upg">A new <strong>v{version}</strong> version is out. Please <a href="https://www.lwis.net/stonetable/" target="_blank" title="Visit the download page">download the update</a>.</span> <span class="err">Error checking the latest version.</span></p>
+
+    <p>Stonetable is created by <a href="https://www.lwis.net/" target="_blank" title="Visit LWIS Technologies website">LWIS Technologies</a>. This project is released under the <a href="https://github.com/TomasBagdanavicius/stonetable/blob/main/LICENSE" target="_blank" title="Read the MIT License">MIT License</a>.</p>
+
+    <ul>
+        <li><a href="https://www.lwis.net/stonetable/" target="_blank" title="Visit Stonetable website">Stonetable website</a></li>
+        <li><a href="https://github.com/TomasBagdanavicius/stonetable" target="_blank" title="Navigate to GitHub repository">Visit GitHub repository</a></li>
+        <li><a href="https://www.linkedin.com/in/tomas-bagdanavicius" target="_blank" title="Open LinkedIn">Connect with us on LinkedIn</a></li>
+        <li><a href="https://www.lwis.net/stonetable/#support-thanks" target="_blank" title="Please support us">Please donate to support further development</a></li>
+    </ul>
+
+    <p><small>&copy; 2023 LWIS Technologies</small></p>
+
+    <p class="lwis-logo">
+        <a href="https://www.lwis.net/" target="_blank" title="Visit LWIS Technologies website">
+            <svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 76,8 L 110.5,49.5 L 69,100 L 0,100" fill="#000"/>
+                <path d="M 83,0 L 152,0 L 234,100 L 165,100" fill="#000"/>
+                <path d="M 166,0 L 235,0 L 317,100 L 248,100" fill="#000"/>
+                <path d="M 249,0 L 318,0 L 400,100 L 331,100" fill="#000"/>
+            </svg>
+        </a>
+    </p>
+
+</template>
+
+</body>
+</html>

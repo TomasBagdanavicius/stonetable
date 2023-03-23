@@ -1,0 +1,225 @@
+:root {
+    /* Variables */
+    --bg-color: #fff;
+    --bg-text-color: #1e1e1e;
+    --bg-color-restrained: #666;
+    --mg-color: #eee;
+    --mg-text-color: var(--bg-text-color);
+    --fg-color: #ddd;
+    --fg-text-color: var(--mg-text-color);
+    --divider-color: #bbb;
+    --accent-color: royalblue;
+    --accent-text-color: #ccc;
+    --base-bar-height: 45px;
+    --base-bar-offset: 3px;
+    --decorative-radius: 5px;
+    --divider-size: 1px;
+    /* Calculated */
+    --base-bar-offset-height: calc(var(--base-bar-height)
+        + var(--base-bar-offset) * 2);
+    --base-bar-offset-double: calc(var(--base-bar-offset) * 2);
+    --divider-size-negative: calc(0px - var(--divider-size));
+    /* Properties */
+    color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    /* Variables */
+    --bg-color: #1e1e1e;
+    --bg-text-color: #ccc;
+    --bg-color-restrained: #666;
+    --mg-color: #111;
+    --mg-text-color: var(--bg-text-color);
+    --fg-color: #161616;
+    --fg-text-color: var(--mg-text-color);
+    --divider-color: var(--mg-color);
+    /* Properties */
+    color-scheme: dark;
+}
+
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:any-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-skip-ink: all;
+}
+
+::backdrop {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+::placeholder {
+    opacity: 0;
+}
+
+html {
+    font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
+}
+
+body {
+    --current-background-color: var(--bg-color);
+    background-color: var(--current-background-color);
+    color: var(--bg-text-color);
+    text-size-adjust: none;
+    /* Prevent WebKit-based browsers from resizing text (eg. when they think the
+    text is too small, etc.). */
+    -webkit-text-size-adjust: 100%;
+}
+
+p {
+    margin: 1em 0;
+}
+
+h1,
+h2 {
+    margin: 1em 0 .5em;
+    font-size: 1.5em;
+}
+
+button {
+    appearance: none;
+    position: relative;
+    display: block;
+    min-height: var(--base-bar-height);
+    padding: var(--base-bar-offset) 12px;
+    border: 0;
+    border-radius: var(--decorative-radius);
+    background-color: initial;
+    color: inherit;
+    font: inherit;
+    line-height: 19px;
+    cursor: pointer;
+    text-align: center;
+    outline-offset: -1px;
+}
+
+button:hover {
+    --current-background-color: var(--mg-color);
+    background-color: var(--current-background-color);
+}
+
+button:focus {
+    outline: 0;
+    /* todo: revisit this when Safari 16.4 is out and move to outline prop */
+    box-shadow: 0 0 0 1px var(--accent-color) inset;
+}
+
+ul,
+ol,
+menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+label {
+    cursor: pointer;
+}
+
+input {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+}
+
+input:focus {
+    outline: 0;
+}
+
+[type=text],
+[type=url],
+[type=search] {
+    height: var(--base-bar-height);
+    text-overflow: ellipsis ellipsis;
+}
+
+[type=search]::-webkit-search-cancel-button,
+[type=search]::-webkit-search-decoration,
+[type=search]::-webkit-search-results-button,
+[type=search]::-webkit-search-results-decoration {
+    display: none;
+}
+
+mark {
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+}
+
+.h {
+    display: block;
+}
+
+/* Hide */
+
+.fld input:disabled + .mty-ctrl,
+.lst-ftr :disabled,
+.lst:not(.no-data) .msg-mty,
+.lst.no-rslt .fld-srch {
+    display: none;
+}
+
+/* Disable */
+
+.scr.welcome .cont-btn:disabled:not(.wtng) {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Screen */
+
+.scr {
+    --current-background-color: var(--bg-color);
+    /* Required in fullscreen mode */
+    background-color: var(--current-background-color);
+}
+
+/* Popup */
+
+.pp {
+    --current-background-color: var(--mg-color);
+    border-radius: var(--decorative-radius);
+    /* Required, because this is an overlay class object. */
+    background-color: var(--current-background-color);
+}
+
+.pp button:hover {
+    --current-background-color: var(--fg-color);
+}
+
+/* Short Notifications */
+
+.shrt-notif {
+    border-radius: var(--decorative-radius);
+    background-color: var(--accent-color);
+    color: var(--accent-text-color);
+    cursor: default;
+}
+
+/* Dialog */
+
+dialog {
+    --current-background-color: var(--mg-color);
+    background-color: var(--current-background-color);
+    text-align: center;
+}
+
+/* About LWIS Technologies */
+
+.abt-lwis .lwis-logo path {
+    fill: currentColor;
+}

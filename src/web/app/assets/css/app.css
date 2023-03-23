@@ -1,0 +1,8 @@
+@layer base,appcodemessages,layout,accessories;
+
+@import "components/base.css" layer(base);
+/* This is a mixed component, therefore considered as base component. */
+@import "components/app-code-message.css" layer(appcodemessages);
+@import "components/layout.css" layer(layout);
+@import "components/accessories.css";
+@import "components/theme.css" layer(theme);

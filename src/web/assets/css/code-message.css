@@ -1,0 +1,115 @@
+/* Code Message */
+
+.code-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 15px 0 0;
+    padding: 15px;
+    border: dashed 1px #ccc;
+}
+
+.code-msg > * {
+    margin: 0;
+}
+
+.code-msg :any-link {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 4px;
+    text-decoration-color: #666;
+}
+
+.code-msg :any-link:hover {
+    text-decoration-style: solid;
+}
+
+.code-msg a,
+.code-msg .code {
+    overflow-wrap: anywhere;
+}
+
+.code-msg code {
+    font-family: Menlo, Monaco, "Courier New", monospace;
+}
+
+.code-msg code.var {
+    color: var(--code-variable-name-color, lightblue);
+}
+
+.code-msg .arg-l {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.code-msg .arg-l::before {
+    content: '(';
+}
+
+.code-msg .arg-l::after {
+    content: ')';
+}
+
+.code-msg .arg-l > li {
+    counter-increment: argument-counter;
+}
+
+.code-msg .arg-l > li::before {
+    display: inline-flex;
+    padding: 1px 3px;
+    border-radius: 5px;
+    background-color: #111;
+    font-size: 80%;
+    content: counter(argument-counter);
+}
+
+.code-msg .arg-l > li:not(:last-child) {
+    margin-right: 5px;
+}
+
+.code-msg .arg-l > li:not(:last-child)::after {
+    content: ',';
+}
+
+.code-msg .arg-l .type {
+    color: #559cd6;
+    font-size: 80%;
+    font-family: Menlo, Monaco, "Courier New", monospace;
+}
+
+.code-msg dl {
+    display: grid;
+    column-gap: 15px;
+    grid-template-columns: max-content 1fr;
+    margin: 0;
+}
+
+.code-msg dl > dd {
+    margin: 0;
+}
+
+.code-msg [reversed] {
+    list-style-type: decimal;
+    padding-left: 40px;
+}
+
+/* Types */
+
+.code-msg-err {
+    border-color: #e42a2a;
+}
+
+.code-msg-warn {
+    border-color: #f48424;
+}
+
+.code-msg-note {
+    border-color: #ece130;
+}
+
+.code-msg-dep {
+    border-color: #516f79;
+}

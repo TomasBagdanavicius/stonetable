@@ -1,0 +1,320 @@
+@import "code-php-highlight.css";
+
+:root {
+    --code-variable-name-color: var(--code-php-highlight-variable);
+}
+
+/* Waiting */
+
+.wtng {
+    color: var(--bg-color-restrained);
+}
+
+
+/* Code Lines */
+
+code,
+.code-lns {
+    font: 13px/1.5 Menlo, Monaco, "Courier New", monospace;
+}
+
+.code-lns > :hover > * {
+    background-color: var(--mg-color);
+}
+
+.code-lns > * > .line-num {
+    border-radius: var(--decorative-radius) 0 0 var(--decorative-radius);
+    color: var(--bg-color-restrained);
+}
+
+.code-lns > * > .cnt {
+    border-radius: 0 var(--decorative-radius) var(--decorative-radius) 0;
+}
+
+
+/* Nested Button */
+
+.scr-tb .has-opt,
+.lst-file .lst-grp > * {
+    border-radius: var(--decorative-radius);
+}
+
+.scr-tb .has-opt:is(:hover,:focus-within),
+.lst-file .lst-grp > :is(:hover, :focus-within) {
+    --current-background-color: var(--mg-color);
+    background-color: var(--current-background-color);
+}
+
+.scr-tb .has-opt > :first-child,
+.lst-file .lst-grp > * > :first-child {
+    padding-right: 6px;
+}
+
+.scr-tb .has-opt:hover > :first-child,
+.lst-file .lst-grp > :hover > :first-child {
+    background-color: transparent;
+}
+
+.scr-tb .has-opt > :last-child,
+.lst-file .lst-grp > * > .opt-btn {
+    margin: var(--base-bar-offset);
+}
+
+.scr-tb .has-opt:hover > :last-child,
+.lst-file .lst-grp > :hover > .opt-btn {
+    --current-background-color: var(--fg-color);
+}
+
+.scr-tb .has-opt > :last-child,
+.lst-file .lst-grp > * > .opt-btn {
+    --size: calc(var(--base-bar-height) - 6px);
+    --enclosed-height: var(--size);
+    --compact-width: var(--size);
+    flex-basis: var(--size);
+}
+
+.scr-tb .has-opt > :last-child {
+    margin-left: -6px;
+}
+
+.scr-tb .has-opt > :first-child {
+    z-index: 1;
+}
+
+
+/* Field */
+
+.fld {
+    border-bottom-style: solid;
+    border-bottom-color: var(--divider-color);
+}
+
+.fld:focus-within {
+    border-bottom-color: var(--accent-color);
+}
+
+.fld input {
+    font-weight: 700;
+}
+
+.fld:focus-within .ttl,
+.fld:not(.blk-within) .ttl {
+    color: var(--bg-color-restrained);
+    font-size: 12px;
+    line-height: 15px;
+}
+
+.fld:focus-within::before,
+.fld:focus-within::after {
+    color: var(--accent-color);
+}
+
+
+/* Messages */
+
+/* Short */
+
+.msg-shrt {
+    color: var(--bg-color-restrained);
+    font-size: 1.5em;
+}
+
+
+/* Listings */
+
+/* File Listing */
+
+.lst-file .opt-btn,
+.lst-file .fld-srch .ttl,
+.lst-file .fld-srch.blk-within:focus-within input::placeholder {
+    color: var(--bg-color-restrained);
+}
+
+.lst-file .fld-srch.blk-within:focus-within .ttl {
+    font-size: 1em;
+}
+
+/* Test Cases */
+
+/* Listing Header */
+
+.lst-test-case {
+    --error-color: red;
+    --success-color: green;
+}
+
+.lst-test-case .lst-hdr {
+    background-color: var(--current-background-color);
+}
+
+.lst-test-case .lst-hdr::after {
+    background-color: var(--divider-color);
+}
+
+.lst-test-case .lst-hdr .stats :is(.pass, .pass + *) {
+    color: var(--success-color);
+}
+
+.lst-test-case .lst-hdr .stats .fail:not([data-count="0"]),
+.lst-test-case .lst-hdr .stats .fail:not([data-count="0"]) + * {
+    color: var(--error-color);
+}
+
+/* Listing Group */
+
+.lst-test-case > .lst-grp .cnt {
+    border-radius: var(--decorative-radius);
+}
+
+.lst-test-case > .lst-grp .cat-ttl {
+    line-height: 1.25;
+}
+
+.lst-test-case > .lst-grp .cat-ttl .base {
+    color: var(--accent-color);
+}
+
+.lst-test-case > .lst-grp .fail-cn {
+    color: var(--error-color);
+    font-style: normal;
+}
+
+.lst-test-case > .lst-grp .cnt > .state {
+    --icon-color: var(--bg-color-restrained);
+    border: solid 2px var(--icon-color);
+    border-radius: 50%;
+    background: none;
+}
+
+.lst-test-case [data-state="failed"] > .cnt > .state {
+    --icon-size: 15px;
+}
+
+.lst-test-case > .lst-grp .cnt > .state[role="button"]:focus {
+    outline: solid 1px var(--accent-color);
+    outline-offset: 2px;
+}
+
+.lst-test-case > .lst-grp > :hover > .cnt,
+.lst-test-case > .lst-grp > :focus-within > .cnt {
+    background-color: var(--mg-color);
+}
+
+.lst-test-case :is(.sel, [data-state="passed"]) > .cnt > .state {
+    --icon-offset: 5px;
+}
+
+.lst-test-case [data-state="passed"] > .cnt > .state {
+    --icon-color: var(--success-color);
+}
+
+.lst-test-case [data-state="failed"] > .cnt > .state {
+    --icon-color: var(--error-color);
+}
+
+/* File List */
+
+.lst-test-case ol .err {
+    color: var(--error-color);
+    font-style: normal;
+}
+
+.lst-test-case ol > [data-state="passed"] > .cnt::before,
+.lst-test-case ol > [data-state="passed"] > .cnt::after {
+    --icon-color: var(--success-color);
+}
+
+.lst-test-case ol > [data-state="failed"] > .cnt::before,
+.lst-test-case ol > [data-state="failed"] > .cnt::after {
+    --icon-color: var(--error-color);
+}
+
+
+/* Screens */
+
+.scr-inr.wtng::after,
+.scr.manager .main-pnl.wtng::after {
+    --spinner-size: 50px;
+}
+
+/* Generic Screen */
+
+.scr {
+    background-color: var(--bg-color);
+}
+
+/* Manager Screen */
+
+.scr.manager .scr-tb::after {
+    background-color: var(--divider-color);
+}
+
+.scr.manager .sb::after {
+    background-color: var(--divider-color);
+}
+
+.scr.manager .main-pnl > .tb::after {
+    background-color: var(--divider-color);
+}
+
+
+/* Dialog */
+
+dialog {
+    border-color: var(--divider-color);
+    border-radius: var(--decorative-radius);
+    background-color: var(--mg-color);
+    color: var(--mg-text-color);
+}
+
+dialog button:hover {
+    --current-background-color: var(--fg-color);
+}
+
+/* About LWIS Technologies */
+
+.abt-lwis small {
+    font-size: 14px;
+    color: var(--bg-color-restrained);
+}
+
+.abt-lwis h2 {
+    font-size: 1.5em;
+}
+
+.abt-lwis :not(.app-logo,.lwis-logo) :any-link {
+    margin-inline: -3px;
+    padding: 3px;
+    border-radius: 3px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    text-decoration: underline var(--bg-color-restrained);
+    -webkit-text-decoration: underline var(--bg-color-restrained);
+}
+
+.abt-lwis :not(.app-logo,.lwis-logo) :any-link:hover {
+    background-color: var(--fg-color);
+}
+
+.abt-lwis .lwis-logo path {
+    fill: var(--bg-color-restrained);
+}
+
+
+/* Popup */
+
+.pp {
+    color: var(--mg-text-color);
+}
+
+
+@media (max-width: 660px) {
+
+    /* Screens */
+
+    /* Manager Screen */
+
+    .scr.manager .sb::before {
+        background-color: var(--divider-color);
+    }
+}

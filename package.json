@@ -1,0 +1,13 @@
+{
+  "author": "LWIS Technologies",
+  "devDependencies": {
+    "cssnano": "latest",
+    "eslint": "latest",
+    "html-minifier-terser": "latest",
+    "postcss": "latest",
+    "postcss-import": "latest",
+    "svgo": "latest",
+    "uglify-js": "latest",
+    "optipng": "latest"
+  }
+}

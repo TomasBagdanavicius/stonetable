@@ -1,0 +1,14 @@
+{
+    "name": "Stonetable Web Application",
+    "short_name": "Stonetable",
+    "start_url": "index.html",
+    "display": "fullscreen",
+    "description": "Web application component to the Stonetable PHP project build testing and debugging suite",
+    "icons": [
+        {
+            "src": "assets/images/logo.svg",
+            "type": "image/svg+xml",
+            "sizes": "any"
+        }
+    ]
+}

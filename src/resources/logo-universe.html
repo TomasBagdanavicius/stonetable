@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<title>Logo Color Palettes</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes">
+<style>
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<script>
+
+const palettes = [
+  ['rgb(245, 124, 0)', 'rgb(235, 39, 91)', 'rgb(0, 174, 155)', 'rgb(0, 123, 255)'],
+  ['rgb(36, 68, 92)', 'rgb(68, 108, 179)', 'rgb(158, 196, 255)', 'rgb(250, 250, 250)'],
+  ['rgb(255, 107, 107)', 'rgb(255, 219, 107)', 'rgb(103, 240, 234)', 'rgb(74, 20, 140)'],
+  ['rgb(230, 126, 34)', 'rgb(231, 76, 60)', 'rgb(155, 89, 182)', 'rgb(52, 152, 219)'],
+  ['rgb(214, 137, 16)', 'rgb(217, 30, 24)', 'rgb(15, 157, 88)', 'rgb(44, 62, 80)'],
+  ['rgb(221, 75, 57)', 'rgb(234, 126, 49)', 'rgb(83, 51, 237)', 'rgb(62, 149, 205)'],
+  ['rgb(230, 230, 230)', 'rgb(51, 51, 51)', 'rgb(98, 206, 124)', 'rgb(0, 102, 204)'],
+  ['rgb(255, 87, 34)', 'rgb(255, 195, 18)', 'rgb(52, 168, 83)', 'rgb(74, 79, 84)'],
+  ['rgb(191, 85, 236)', 'rgb(46, 204, 113)', 'rgb(242, 38, 19)', 'rgb(52, 152, 219)'],
+  ['rgb(123, 67, 151)', 'rgb(255, 193, 7)', 'rgb(0, 150, 136)', 'rgb(255, 87, 34)'],
+  ['rgb(219, 68, 55)', 'rgb(244, 208, 63)', 'rgb(26, 188, 156)', 'rgb(44, 62, 80)'],
+  ['rgb(231, 76, 60)', 'rgb(241, 196, 15)', 'rgb(46, 204, 113)', 'rgb(34, 153, 84)'],
+  ['rgb(142, 68, 173)', 'rgb(44, 62, 80)', 'rgb(41, 128, 185)', 'rgb(236, 240, 241)'],
+  ['rgb(46, 204, 113)', 'rgb(52, 73, 94)', 'rgb(231, 76, 60)', 'rgb(230, 126, 34)'],
+  ['rgb(44, 62, 80)', 'rgb(52, 152, 219)', 'rgb(241, 196, 15)', 'rgb(155, 89, 182)'],
+  ['rgb(241, 196, 15)', 'rgb(142, 68, 173)', 'rgb(0, 150, 136)', 'rgb(231, 76, 60)'],
+  ['rgb(207, 0, 15)', 'rgb(235, 149, 50)', 'rgb(243, 156, 18)', 'rgb(52, 73, 94)'],
+  ['rgb(26, 188, 156)', 'rgb(46, 204, 113)', 'rgb(52, 152, 219)', 'rgb(155, 89, 182)'],
+  ['rgb(231, 76, 60)', 'rgb(241, 196, 15)', 'rgb(46, 204, 113)', 'rgb(52, 73, 94)'],
+  ['rgb(220, 118, 51)', 'rgb(149, 165, 166)', 'rgb(230, 126, 34)', 'rgb(241, 196, 15)'],
+  ['rgb(41, 128, 185)', 'rgb(241, 196, 15)', 'rgb(231, 76, 60)', 'rgb(52, 73, 94)'],
+  ['rgb(0, 128, 128)', 'rgb(255, 215, 0)', 'rgb(255, 105, 180)', 'rgb(128, 128, 128)'],
+  ['rgb(75, 119, 190)', 'rgb(255, 204, 0)', 'rgb(255, 102, 102)', 'rgb(44, 62, 80)'],
+  ['rgb(165, 105, 189)', 'rgb(34, 49, 63)', 'rgb(142, 68, 173)', 'rgb(127, 140, 141)'],
+  ['rgb(39, 174, 96)', 'rgb(192, 57, 43)', 'rgb(142, 68, 173)', 'rgb(44, 62, 80)'],
+  ['rgb(39, 174, 96)', 'rgb(52, 152, 219)', 'rgb(231, 76, 60)', 'rgb(241, 196, 15)'],
+  ['rgb(255, 99, 71)', 'rgb(30, 144, 255)', 'rgb(218, 165, 32)', 'rgb(128, 128, 128)'],
+  ['rgb(46, 204, 113)', 'rgb(41, 128, 185)', 'rgb(241, 196, 15)', 'rgb(231, 76, 60)'],
+  ['rgb(255, 215, 0)', 'rgb(0, 128, 128)', 'rgb(255, 105, 180)', 'rgb(0, 0, 0)'],
+  ['rgb(80, 62, 175)', 'rgb(236, 28, 36)', 'rgb(239, 186, 8)', 'rgb(63, 195, 128)'],
+  ['rgb(27, 20, 100)', 'rgb(203, 59, 29)', 'rgb(230, 173, 46)', 'rgb(53, 148, 90)'],
+  ['rgb(15, 82, 87)', 'rgb(213, 0, 0)', 'rgb(255, 190, 11)', 'rgb(0, 143, 104)'],
+  ['rgb(77, 49, 73)', 'rgb(204, 17, 85)', 'rgb(252, 209, 22)', 'rgb(33, 152, 108)'],
+  ['rgb(59, 29, 83)', 'rgb(223, 48, 56)', 'rgb(255, 206, 84)', 'rgb(44, 173, 148)'],
+  ['rgb(130, 64, 170)', 'rgb(252, 17, 129)', 'rgb(255, 188, 36)', 'rgb(38, 222, 129)'],
+  ['rgb(42, 62, 82)', 'rgb(209, 73, 78)', 'rgb(253, 200, 48)', 'rgb(92, 181, 146)'],
+  ['rgb(88, 53, 148)', 'rgb(226, 35, 26)', 'rgb(252, 194, 0)', 'rgb(13, 162, 126)'],
+  ['rgb(59, 44, 82)', 'rgb(212, 26, 31)', 'rgb(255, 188, 8)', 'rgb(61, 168, 112)'],
+  ['rgb(57, 44, 105)', 'rgb(228, 40, 54)', 'rgb(255, 198, 0)', 'rgb(37, 165, 184)'],
+];
+
+const width = 180;
+const height = 180;
+const innerWidth = 100;
+const innerHeight = 100;
+
+(async () => {
+
+  const response = await fetch('logo.svg');
+  const text = await response.text();
+
+  return text;
+
+})().then(data => {
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data, "application/xml");
+    const svg = doc.getElementsByTagName('svg')[0];
+
+    svg.setAttribute('width', innerWidth);
+    svg.setAttribute('height', innerHeight);
+
+    for (const [rgb1, rgb2, rgb3, rgb4] of palettes) {
+
+        const individualSvg = svg.cloneNode(true);
+        individualSvg.children.item(0).setAttribute('fill', rgb1);
+        individualSvg.children.item(1).setAttribute('fill', rgb2);
+        individualSvg.children.item(2).setAttribute('fill', rgb3);
+        individualSvg.children.item(3).setAttribute('fill', rgb4);
+
+        document.body.append(individualSvg);
+    }
+
+});
+
+</script>
+
+</body>
+</html>
