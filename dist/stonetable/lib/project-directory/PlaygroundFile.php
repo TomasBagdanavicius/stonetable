@@ -3,15 +3,15 @@
 /**
  * Represents a playground file.
  *
- * Requires PHP 8.1 or higher.
+ * PHP version 8.1
  *
- * @package Project Directory
- * @author Tomas Bagdanavičius <tomas.bagdanavicius@lwis.net>
- * @license MIT License
+ * @package   Project Directory
+ * @author    Tomas Bagdanavičius <tomas.bagdanavicius@lwis.net>
+ * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version 1.0.0
- * @since 1.0.0
+ * @version   1.0.1
+ * @since     1.0.0
  */
 
 declare(strict_types=1);
@@ -33,28 +33,29 @@ class PlaygroundFile extends TestFile {
     /** Gets all data describing this playground file. */
     public function getDescriptionData(): array {
 
+        $data = parent::getDescriptionData();
+        $data['group'] = ($data['category'] . '-playground');
         $static_file = $this->getStaticFileInstance();
-        $my_data = [];
 
         if( $static_file ) {
 
-            $my_data['staticFilePathname'] = $static_file->filename;
-            $my_data['staticFileIdeUri'] = $static_file->getIdeUri();
-            $my_data['staticFileRelativePathname']
+            $data['staticFilePathname'] = $static_file->filename;
+            $data['staticFileIdeUri'] = $static_file->getIdeUri();
+            $data['staticFileRelativePathname']
                 = $static_file->getRelativePathname();
 
             $source_file = $static_file->getSourceFileInstance();
 
             if( $source_file ) {
 
-                $my_data['sourceFilePathname'] = $source_file->filename;
-                $my_data['sourceFileIdeUri'] = $source_file->getIdeUri();
-                $my_data['sourceFileRelativePathname']
+                $data['sourceFilePathname'] = $source_file->filename;
+                $data['sourceFileIdeUri'] = $source_file->getIdeUri();
+                $data['sourceFileRelativePathname']
                     = $source_file->getRelativePathname();
             }
         }
 
-        return [...parent::getDescriptionData(), ...$my_data];
+        return $data;
     }
 
     /** Gets path name relative to the playground files directory. */
@@ -139,10 +140,16 @@ class PlaygroundFile extends TestFile {
     /**
      * Tells if this playground file has been modified in comparison to the
      * contents in the static file equivalent.
+     *
+     * @return bool|null Null when file is empty, otherwise boolean.
      */
-    public function isModified(): bool {
+    public function isModified(): ?bool {
 
         $static_file_instance = $this->getStaticFileInstance();
+
+        if( $static_file_instance === null ) {
+            return null;
+        }
 
         [
             'comparable_contents' => $static_comparable_contents

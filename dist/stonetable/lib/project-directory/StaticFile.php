@@ -3,15 +3,15 @@
 /**
  * Represents demo or unit static file.
  *
- * Requires PHP 8.1 or higher.
+ * PHP version 8.1
  *
- * @package Project Directory
- * @author Tomas Bagdanavičius <tomas.bagdanavicius@lwis.net>
- * @license MIT License
+ * @package   Project Directory
+ * @author    Tomas Bagdanavičius <tomas.bagdanavicius@lwis.net>
+ * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version 1.0.0
- * @since 1.0.0
+ * @version   1.0.1
+ * @since     1.0.0
  */
 
 declare(strict_types=1);
@@ -33,14 +33,15 @@ class StaticFile extends TestFile {
     /** Gets all data describing this static file. */
     public function getDescriptionData(): array {
 
+        $data = parent::getDescriptionData();
+        $data['group'] = ($data['category'] . '-static');
         $source_file = $this->getSourceFileInstance();
-        $my_data = [];
 
         if( $source_file ) {
 
-            $my_data['sourceFilePathname'] = $source_file->filename;
-            $my_data['sourceFileIdeUri'] = $source_file->getIdeUri();
-            $my_data['sourceFileRelativePathname']
+            $data['sourceFilePathname'] = $source_file->filename;
+            $data['sourceFileIdeUri'] = $source_file->getIdeUri();
+            $data['sourceFileRelativePathname']
                 = $source_file->getRelativePathname();
         }
 
@@ -48,13 +49,13 @@ class StaticFile extends TestFile {
 
         if( $playground_file ) {
 
-            $my_data['playgroundFilePathname'] = $playground_file->filename;
-            $my_data['playgroundFileRelativePathname']
+            $data['playgroundFilePathname'] = $playground_file->filename;
+            $data['playgroundFileRelativePathname']
                 = $playground_file->getRelativePathname();
-            $my_data['playgroundFileIdeUri'] = $playground_file->getIdeUri();
+            $data['playgroundFileIdeUri'] = $playground_file->getIdeUri();
         }
 
-        return [...parent::getDescriptionData(), ...$my_data];
+        return $data;
     }
 
     /** Adds in special comments required by this file. */

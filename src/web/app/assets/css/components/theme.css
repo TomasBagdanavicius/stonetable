@@ -257,6 +257,14 @@ code,
     background-color: var(--divider-color);
 }
 
+.scr.manager .main-pnl > .bd.i-check {
+    --icon-color: green;
+    --icon-offset: calc(50% - 70px / 2);
+    --icon-weight: 4px;
+    --icon-wing-size: 100px;
+    --icon-smaller-wing-size: 50px;
+}
+
 
 /* Dialog */
 

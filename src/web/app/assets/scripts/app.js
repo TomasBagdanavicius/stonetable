@@ -134,7 +134,7 @@ function stringInsertAt(string, index, substring) {
  * @param {string} string - The calling string
  * @param {string} searchString - Substring to search for
  * @param {number} index - Starting index position
- * @returns {array} - The index positions of all occurrences of searchString
+ * @returns {array} The index positions of all occurrences of searchString
  *     found, or an empty array if not found.
  */
 function stringIndexOfAll(string, searchString, index = 0) {
@@ -338,7 +338,7 @@ function switchOnChosenColorMode(colorMode) {
 
 /**
  * Gets the current active theme
- * @returns {string} - Theme name (dark or light)
+ * @returns {string} Theme name (dark or light)
  */
 function getCurrentTheme() {
     return htmlElem.getAttribute('data-theme');
@@ -346,7 +346,7 @@ function getCurrentTheme() {
 
 /**
  * Gets the current active color mode
- * @returns {string} - Color mode (os, light, dark)
+ * @returns {string} Color mode (os, light, dark)
  */
 function getCurrentColorMode() {
     return htmlElem.getAttribute('data-color-mode');
@@ -451,7 +451,7 @@ function createSimpleMessageElement(text) {
  * @param {HTMLElement} relElem - HTML Element that is relative to the position
  *     to be calculated
  * @param {HTMLElement} posElem - HTML element that is going to be positioned
- * @returns {array} - Array containing left and top positions
+ * @returns {array} Array containing left and top positions
  */
 function getTopLeftOffset(name, relElem, posElem) {
     let top, left;
@@ -518,7 +518,7 @@ function getTopLeftOffset(name, relElem, posElem) {
  * Takes the current location URL and checks whether given search parameters and
  *     their corresponding values are in the URL
  * @param {object} params - Parameter key value pairs to check
- * @returns {URL|null} - If nothing was changed in the URL, returns null,
+ * @returns {URL|null} If nothing was changed in the URL, returns null,
  *     otherwise URL object with amended URL value
  */
 function amendLocationUrl(params) {
@@ -546,7 +546,7 @@ function amendLocationUrl(params) {
  * @param {URL} url - URL object which should be used to remove search params
  * @param {array} params - A list of search parameter names
  * @param {boolean} returnIndeces - Whether to return indices
- * @returns {URL|array} - When `returnIndeces` is set to true, it will return an
+ * @returns {URL|array} When `returnIndeces` is set to true, it will return an
  *     array containing the URL and removed count number
  */
 function removeParamsFromUrl(url, params, returnIndeces = false) {
@@ -587,7 +587,7 @@ function removeLocationParams(params) {
  * @param {iterable} elements - A collection of elements
  * @param {object} options - Metadata for the control buttons
  * @param {array} classes - A list of classes to add to the dialog element
- * @returns {HTMLElement} - The dialog element
+ * @returns {HTMLElement} The dialog element
  */
 function createDialogWith(elements, options, classes = []) {
     const dialogElem = createElement('dialog', {
@@ -675,7 +675,7 @@ function raiseDialogMessage(text, options, classes, onClose) {
  * Gets the latest app version by sending a request to the app's API endpoint
  * @param {AbortSignal} signal - Arbitrary abort signal for the request
  * @param {number} timeout - Request timeout in miliseconds
- * @returns {Promise} - A promise that fulfills with the version number
+ * @returns {Promise} A promise that fulfills with the version number
  */
 async function getLatestAppVersion(signal, timeout = 3000) {
     if (!signal) {
@@ -728,7 +728,7 @@ class ScreenCloseException extends DOMException {
  * @param {string|URL} url - Request URL representing an API endpoint
  * @param {AbortController} abortController - Custom abort controller
  * @param {number} timeout - Request timeout in miliseconds
- * @returns {Promise} - A promise that fulfills with the payload data
+ * @returns {Promise} A promise that fulfills with the payload data
  */
 async function apiRequest(url, abortController, timeout = 5000) {
     if (!abortController) {
@@ -1920,6 +1920,12 @@ const genericScreen = {
             event: function() {
                 const template = document.getElementById('about-lwis-template');
                 const fragment = template.content.cloneNode(true);
+                fragment.querySelectorAll('.cur-ver').forEach(elem => {
+                    elem.textContent = appVersion
+                });
+                fragment.querySelectorAll('.cur-year').forEach(elem => {
+                    elem.textContent = (new Date()).getFullYear();
+                });
                 const upgradeStatus = fragment.querySelector('.upg-sts');
                 let onClose;
                 let requestValid = true;
@@ -1927,17 +1933,16 @@ const genericScreen = {
                     upgradeStatus.dataset.status = 'pending';
                     const timeout = 3000;
                     const signal = AbortSignal.timeout(timeout);
-                    getLatestAppVersion(signal).then(version => {
+                    getLatestAppVersion(signal).then(latestVersion => {
                         if (requestValid) {
-                            if (version == appVersion) {
+                            if (latestVersion == appVersion) {
                                 upgradeStatus.dataset.status = 'ok';
                             } else {
                                 upgradeStatus.dataset.status = 'upgrade';
-                                const upgradeMsg = upgradeStatus.querySelector(
-                                    '.upg'
-                                );
-                                upgradeMsg.innerHTML = upgradeMsg.innerHTML
-                                    .replace('{version}', version);
+                                upgradeStatus.querySelectorAll('.last-ver')
+                                .forEach(elem => {
+                                    elem.textContent = latestVersion
+                                });
                             }
                         }
                     }).catch(error => {
@@ -1962,6 +1967,10 @@ const genericScreen = {
                 }
             },
             buttonClassList: ['tgl-fscr-btn'],
+            enabled: (
+                document.fullscreenEnabled
+                || document.webkitFullscreenEnabled
+            )
         }, {
             title: "Toggle between OS, light, and dark color modes",
             text: "Toggle color modes",
@@ -1975,7 +1984,7 @@ const genericScreen = {
     /**
      * Amends the location to contain given state parameters
      * @param {object} params - State parameters
-     * @returns {URL|null} - Null when no state parameters where published into
+     * @returns {URL|null} Null when no state parameters where published into
      *     the URL
      */
     publishParamsIntoURL(params) {
@@ -2043,7 +2052,7 @@ const genericScreen = {
     },
     /**
      * Builds screen wrappers - screen container, toolbar, body, body inner
-     * @returns {array} - Array with screen container and screen inner wrapper
+     * @returns {array} Array with screen container and screen inner wrapper
      */
     buildWrappers() {
         const container = createElement('div', {
@@ -2072,7 +2081,7 @@ const genericScreen = {
     },
     /**
      * Closes currently active screen
-     * @returns {null|boolean} - Null when there is nothing to be closed
+     * @returns {null|boolean} Null when there is nothing to be closed
      */
     close() {
         if (!this.isLoaded) {
@@ -2148,20 +2157,24 @@ const genericScreen = {
     },
     /**
      * Builds screen toolbar
-     * @returns {HTMLDivElement} - The screen toolbar container
+     * @returns {HTMLDivElement} The screen toolbar container
      */
     buildToolbar() {
         const toolbar = createElement('div', {
             classes: ['tb', 'scr-tb'],
-            id: 'screen-toolbar',
+            id: 'screen-toolbar'
         });
         const menu = createElement('menu', {
             classes: ['scr-menu'],
         });
-        const menuItems = [
+        let menuItems = [
             ...this.menuItems,
             ...genericScreen.menuItems
         ];
+        // Take out menu items that are not enabled.
+        menuItems = menuItems.filter(
+            item => !Object.hasOwn(item, 'enabled') || item.enabled
+        );
         // Sort by position.
         menuItems.sort((a, b) => {
             if (!Object.hasOwn(a, 'position') ) {
@@ -2199,7 +2212,7 @@ const genericScreen = {
     /**
      * Instantiates a new abort controller and adds it to the set of active
      *     abort controllers
-     * @returns {AbortController} - Granted abort controller
+     * @returns {AbortController} Granted abort controller
      */
     provideAbortController(timeout) {
         const abortController = new AbortController();
@@ -2742,7 +2755,7 @@ const managerScreen = {
                         this.populateCodeLines(data.parts, data.meta.lineCount);
                         break;
                     case 'demo-output':
-                        this.populateDemoData(data.parts);
+                        this.populateDemoData(data.parts, data.meta);
                         break;
                     case 'unit-tests':
                         this.populateUnitTestsData(data.parts, data.meta);
@@ -2907,9 +2920,17 @@ const managerScreen = {
     /**
      * Populates demo data into the main panel
      * @param {object} data - Data payload
+     * @param {object} meta - Info about the data payload
      */
-    populateDemoData(data) {
-        if (data.length) {
+    populateDemoData(data, meta) {
+        const isEmptyUnitTest = (
+            meta.category === 'unit'
+            && data.length === 1
+            && typeof data[0] !== 'undefined'
+            && data[0].format === 'output'
+            && data[0].contents === 'ok'
+        );
+        if (!isEmptyUnitTest && data.length) {
             for (const {format, contents} of data) {
                 if (format === 'output') {
                     const container = createElement('div', {
@@ -2924,6 +2945,10 @@ const managerScreen = {
                     );
                 }
             }
+        // Empty unit test.
+        } else if (isEmptyUnitTest) {
+            // Adds a checkmark icon.
+            this.mainPanelBody.classList.add('i-host', 'i-check');
         // No data parts.
         } else {
             this.putOnMainPanelBodyMessage(`Empty Output`);
@@ -3036,7 +3061,7 @@ const managerScreen = {
     /**
      * Builds context menu
      * @param {object} data - Data to be used for context menu elements
-     * @returns {HTMLMenuElement} - Menu element
+     * @returns {HTMLMenuElement} Menu element
      */
     buildContextMenu(data) {
         console.log(`build context menu`);
@@ -3229,7 +3254,7 @@ const managerScreen = {
      * @param {object} data - Item metadata
      * @param {HTMLElement} item - Item shell
      * @param {boolean} includeOptionsButton - Whether to include options button
-     * @returns {HTMLElement} - Item with appended elements
+     * @returns {HTMLElement} Item with appended elements
      */
     buildFileListingItem(data, item, includeOptionsButton = true) {
         item.classList.add('type-' + data.type);
@@ -3285,7 +3310,7 @@ const managerScreen = {
      * Checks if favorite exists
      * @param {string} place - Area where favorite loads into (side or main)
      * @param {string} path - Path to file
-     * @returns
+     * @returns {boolean}
      */
     favoriteExists(place, path) {
         const projectFavorites = this.fetchProjectFavorites();
@@ -3302,7 +3327,7 @@ const managerScreen = {
      * @param {string} place - Area where bookmark loads into (side or main)
      * @param {string} path - Path to file
      * @param {object} data - File metadata
-     * @returns
+     * @returns {boolean|null}
      */
     addToFavorites(title, place, path, data) {
         if (this.favoriteExists(place, path) !== false) {
@@ -3329,8 +3354,8 @@ const managerScreen = {
     },
     /**
      * Fetches favorites for all projects
-     * @returns {object} - Object where first level element keys are project
-     *     names and values represent an object of favorite list
+     * @returns {object} Object where first level element keys are project names
+     *     and values represent an object of favorite list
      */
     fetchAllFavorites() {
         const favoritesStore = localStorage.getItem(
@@ -3343,7 +3368,7 @@ const managerScreen = {
     },
     /**
      * Fetches favorites for currently loaded project
-     * @returns {object} - Project favorite list
+     * @returns {object} Project favorite list
      */
     fetchProjectFavorites() {
         const favoritesObj = this.fetchAllFavorites();
@@ -3355,7 +3380,7 @@ const managerScreen = {
     /**
      * Writes the full favorites payload to local storage
      * @param {object} favorites - Favorites payload
-     * @returns {boolean} - Boolean status
+     * @returns {boolean} Boolean status
      */
     saveAllFavorites(favorites) {
         try {
@@ -3372,7 +3397,7 @@ const managerScreen = {
     /**
      * Saves favorite data for the currently loaded project
      * @param {object} projectFavorites - Favorite data
-     * @returns {boolean} - Boolean status
+     * @returns {boolean} Boolean status
      */
     saveProjectFavorites(projectFavorites) {
         const favorites = this.fetchAllFavorites();
@@ -3490,7 +3515,7 @@ const managerScreen = {
     /**
      * Deletes a single favorite from currently loaded project
      * @param {number} index - Index number of the favorite to delete
-     * @returns {boolean} - Boolean status
+     * @returns {boolean} Boolean status
      */
     removeFavorite(index) {
         const favorites = this.fetchAllFavorites();
@@ -3537,7 +3562,7 @@ const managerScreen = {
      *     element or a raw element that will be populated into popup
      * @param {HTMLElement} relElem - Element that should be considered to be
      *     relative to popup
-     * @returns
+     * @returns {HTMLButtonElement}
      */
     createOptionsButtonFor(elem, relElem) {
         const button = this.createOptionsButton();
@@ -3638,7 +3663,7 @@ const welcomeScreen = {
     /**
      * Checks if given URL is an endpoint which can connect to API
      * @param {string|URL} url - URL to verify
-     * @returns {object} - Connect data
+     * @returns {object} Connect data
      */
     async verifyConnectEndpointUrl(url) {
         return await apiRequest(
@@ -3658,7 +3683,7 @@ const welcomeScreen = {
     /**
      * Validates connect data
      * @param {object} data - Connect data
-     * @returns {boolean} - Boolean state
+     * @returns {boolean} Boolean state
      */
     validateConnectData(data) {
         return (
@@ -3698,7 +3723,7 @@ const welcomeScreen = {
     },
     /**
      * Fetches connect data from local storage
-     * @returns {object} - Connect data
+     * @returns {object} Connect data
      */
     getConnectData() {
         const dataStr

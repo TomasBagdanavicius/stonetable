@@ -374,6 +374,8 @@ function assert_true( mixed $value, string $error_message ): void {
 
     if( $value !== true ) {
         throw new \AssertionError($error_message, code: 1);
+    } else {
+        echo 'ok';
     }
 }
 

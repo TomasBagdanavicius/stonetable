@@ -3,15 +3,15 @@
 /**
  * A generic test file object.
  *
- * Requires PHP 8.1 or higher.
+ * PHP version 8.1
  *
- * @package Project Directory
- * @author Tomas Bagdanavičius <tomas.bagdanavicius@lwis.net>
- * @license MIT License
+ * @package   Project Directory
+ * @author    Tomas Bagdanavičius <tomas.bagdanavicius@lwis.net>
+ * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version 1.0.0
- * @since 1.0.0
+ * @version   1.0.1
+ * @since     1.0.0
  */
 
 declare(strict_types=1);
@@ -26,6 +26,27 @@ class TestFile extends ProjectFile {
     ) {
 
         parent::__construct($filename, $root_directory);
+    }
+
+    /** Gets all data describing this test file. */
+    public function getDescriptionData(): array {
+
+        $my_data = [];
+
+        $tests_dirname = $this->root_directory->tests_dirname;
+        $path = $this->pathname;
+        $ds = DIRECTORY_SEPARATOR;
+        $prefix = ($tests_dirname . $ds);
+
+        $my_data['category'] = match(true) {
+            str_starts_with($path, ($prefix . 'demo' . $ds)) => 'demo',
+            str_starts_with($path, ($prefix . 'units' . $ds)) => 'unit',
+            default => 'test'
+        };
+
+        $my_data['group'] = 'test';
+
+        return [...parent::getDescriptionData(), ...$my_data];
     }
 
     /** Adds in special comments required by this file. */

@@ -1,6 +1,6 @@
-<img src="https://www.lwis.net/stonetable/images/stonetable-logo.svg" width="75" height="75" style="display:block;margin:0 auto 1em">
+<p align="center"><img src="https://www.lwis.net/stonetable/images/stonetable-logo.svg" width="75" height="75" alt="Stonetable logo"></p>
 
-<h1 style="text-align:center">Stonetable</h1>
+<h1 align="center">Stonetable</h1>
 
 Stonetable is lightweight, dependency-free, conceptual PHP project build and code testing and debugging suite, which offers 3 main components:
 

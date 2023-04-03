@@ -28,6 +28,7 @@
         /* Calculated */
         --icon-size-half: calc(var(--icon-size) / 2);
         --icon-weight-half: calc(var(--icon-weight) / 2);
+        --icon-weight-half-negative: calc(0px - var(--icon-weight-half));
         --icon-weight-double: calc(var(--icon-weight) * 2);
         /* Properties */
         position: relative;
@@ -666,6 +667,8 @@
     .i-check,
     .lst-test-case :is(.sel:not([data-state]), [data-state="passed"]) > .cnt > .state,
     .lst-test-case ol > [data-state="passed"] > .cnt {
+        /* todo: use sin() and cos() functions to center this icon when full
+        compatability is available. */
         --icon-offset: 50%;
         --icon-wing-size: 20px;
         --icon-smaller-wing-size: 10px;
@@ -700,7 +703,7 @@
     .i-check::after,
     .lst-test-case :is(.sel:not([data-state]), [data-state="passed"]) > .cnt > .state::after,
     .lst-test-case ol > [data-state="passed"] > .cnt::after {
-        margin-left: -1px;
+        margin-left: var(--icon-weight-half-negative);
         transform: var(--original-transform) rotate(45deg);
     }
 

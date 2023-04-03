@@ -6,6 +6,7 @@
 	"recommendations": [
 		"stkb.rewrap",
 		"neilbrayfield.php-docblocker",
-		"bmewburn.vscode-intelephense-client"
+		"bmewburn.vscode-intelephense-client",
+		"streetsidesoftware.code-spell-checker"
 	]
 }
