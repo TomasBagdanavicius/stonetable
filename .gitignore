@@ -5,3 +5,4 @@ node_modules/
 /scripts/push-release.sh
 /tmp
 /docs/commands.txt
+/docs/release-steps.md
