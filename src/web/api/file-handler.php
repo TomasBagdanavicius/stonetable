@@ -15,9 +15,7 @@ if( !$project_pathname = get_value_exists('project_path') ) {
     send_error("Please provide a project path");
 }
 
-if( !$path = get_value_exists('path', '/') ) {
-    send_error("Please provide a path");
-}
+$path = get_value_exists('path', DIRECTORY_SEPARATOR);
 
 require_once (LIB_PATH . '/php-code-test-suite/Autoload.php');
 

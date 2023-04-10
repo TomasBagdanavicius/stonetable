@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -102,9 +102,10 @@ class StaticFile extends TestFile {
     /** Generates source file equivalent file name. */
     public function buildSourceFilename(): string {
 
-        return ($this->root_directory->source_dirname
-            . DIRECTORY_SEPARATOR
-            . $this->getStaticRelativePathname());
+        return ProjectRootDirectory::joinPath(
+            $this->root_directory->source_dirname,
+            $this->getStaticRelativePathname()
+        );
     }
 
     /**
@@ -193,10 +194,10 @@ class StaticFile extends TestFile {
     /** Creates a playground file equivalent in its dedicated location. */
     public function createPlaygroundFile(): PlaygroundFile|false {
 
-        $filename = ($this->branched_test_directory->playground_dirname
-            . DIRECTORY_SEPARATOR
-            . $this->getStaticRelativePathname());
-
+        $filename = ProjectRootDirectory::joinPath(
+            $this->branched_test_directory->playground_dirname,
+            $this->getStaticRelativePathname()
+        );
         $filename_dirname = dirname($filename);
 
         if( !file_exists($filename_dirname) ) {

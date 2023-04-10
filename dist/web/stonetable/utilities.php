@@ -203,6 +203,35 @@ class AppSpecialComment extends SpecialComment {
 }
 
 /**
+ * Appoints custom special comment objects based on provided project file type.
+ *
+ * @param array       $special_comment_storage A named list of special comments.
+ * @param ProjectFile $project_file            Project file object that will
+ *                                             recive the custom special
+ *                                             comments.
+ * @return array|null Null when no custom comments should be appointed.
+ */
+function on_special_comment_setup(
+    array $special_comment_storage,
+    ProjectFile $project_file
+): ?array {
+
+    if(
+        ($project_file instanceof SourceFile)
+        || ($project_file instanceof TestFile)
+    ) {
+
+        return [
+            'app' => new AppSpecialComment($project_file),
+        ];
+
+    } else {
+
+        return null;
+    }
+}
+
+/**
  * Sets up a instance of the project root directory object.
  *
  * @param string $pathname Path name to the project.
@@ -245,32 +274,12 @@ function get_project_root_object( string $pathname ): ProjectRootDirectory {
         return $data;
     };
 
-    $on_special_comment_setup = function(
-        array $special_comment_storage,
-        ProjectFile $project_file
-    ): ?array {
-
-        if(
-            ($project_file instanceof SourceFile)
-            || ($project_file instanceof TestFile)
-        ) {
-
-            return [
-                'app' => new AppSpecialComment($project_file),
-            ];
-
-        } else {
-
-            return null;
-        }
-    };
-
     try {
 
         return new ProjectRootDirectory(
             $pathname,
             on_description_data: $on_description_data,
-            on_special_comment_setup: $on_special_comment_setup
+            on_special_comment_setup: on_special_comment_setup(...)
         );
 
     } catch( Throwable $exception ) {

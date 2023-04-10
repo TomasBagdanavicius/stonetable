@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -29,10 +29,18 @@ function pre( mixed $value ): never {
     exit;
 }
 
-/** Runs "var_dump()" with the given value and exits immediatelly afterwards. */
-function vare( mixed $value ): never {
+/**
+ * Runs "var_dump()" with the given value(s) and exits immediatelly afterwards.
+ */
+function vare(): never {
 
-    var_dump($value);
+    if( !func_num_args() ) {
+        throw new \ArgumentCountError(
+            "vare() expects at least 1 argument, 0 given"
+        );
+    }
+
+    var_dump(...func_get_args());
     exit;
 }
 
@@ -64,4 +72,31 @@ function ok(): never {
 function hr( int $length = 30 ): void {
 
     prl(PHP_EOL . str_repeat('-', $length) . PHP_EOL);
+}
+
+/**
+ * Creates a CTLD constant that will store line break solution based on the
+ * "content-type" HTTP header.
+ */
+function define_content_type_line_break(): void {
+
+    $headers_list = headers_list();
+    $content_type = null;
+
+    foreach( $headers_list as $header ):
+
+        if( str_starts_with(strtolower($header), 'content-type:') ) {
+            [$content_type] = explode(';', trim(substr($header, 13)));
+            break;
+        }
+
+    endforeach;
+
+    // Content type aware line break.
+    define(
+        'CTLB',
+        ( $content_type === 'text/plain' )
+            ? "\n"
+            :'<br>'
+    );
 }

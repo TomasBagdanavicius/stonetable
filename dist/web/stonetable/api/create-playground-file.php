@@ -8,9 +8,7 @@ if( !$project_pathname = get_value_exists('project_path') ) {
     send_error("Please provide a project path");
 }
 
-if( !$path = get_value_exists('path', '/') ) {
-    send_error("Please provide a path");
-}
+$path = get_value_exists('path', DIRECTORY_SEPARATOR);
 
 use PD\StaticFile;
 

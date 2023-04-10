@@ -24,6 +24,12 @@ function fooBar(): string {
     return "foobar";
 }
 
-function loremIpsum(?string $text = null): string {
+function loremIpsum(
+    ?string $text = null,
+    ?string $param2 = null,
+    bool $param3 = false,
+    array $param4 = [],
+    object $param5 = new stdClass
+): string {
     return $text ?? "Lorem ipsum...";
 }

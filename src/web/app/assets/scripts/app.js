@@ -1185,11 +1185,13 @@ Object.assign(SearchableApiListing.prototype, {
         });
     },
     resetData(endpointUrl) {
-        this.searchInput.value = '';
-        this.searchInput.dispatchEvent(new Event('input', {
-            bubbles: true,
-            cancelable: false
-        }));
+        if (this.searchInput.value != '' ) {
+            this.searchInput.value = '';
+            this.searchInput.dispatchEvent(new Event('input', {
+                bubbles: true,
+                cancelable: false
+            }));
+        }
         this.setEndpointUrl(endpointUrl);
         this.flushGroupContents();
         this.pageNumber = 0;
@@ -1998,14 +2000,14 @@ const genericScreen = {
     },
     /**
      * Removes all or chosen parameters from state object and location
-     * @param {array} chosenParams A list of params to remove
+     * @param {array} params A list of params to remove
      */
-    releaseParams(chosenParams) {
+    releaseParams(params, stateAction = 'push') {
         for (const [key] of Object.entries(stateObj)) {
             if (
                 (this.queryParams.includes(key)
                 || this.internalParams.includes(key))
-                && (!chosenParams || chosenParams.includes(key))
+                && (!params || params.includes(key))
             ) {
                 delete stateObj[key];
             }
@@ -2015,13 +2017,18 @@ const genericScreen = {
         for (const [key] of urlParams.entries()) {
             if (
                 this.queryParams.includes(key)
-                && (!chosenParams || chosenParams.includes(key))
+                && (!params || params.includes(key))
             ) {
                 url.searchParams.delete(key);
             }
         }
-        console.log('push state', stateObj, url.toString());
-        history.pushState(stateObj, '', url);
+        if (stateAction == 'push') {
+            console.log('push state', stateObj, url.toString());
+            history.pushState(stateObj, '', url);
+        } else {
+            console.log('replace state', stateObj, url.toString());
+            history.replaceState(stateObj, '', url);
+        }
     },
     /**
      * Sets and saved state parameters
@@ -2400,7 +2407,7 @@ const landingScreen = {
         super.close();
         this.releaseParams([
             'project_search_query'
-        ]);
+        ], 'replace');
     },
 };
 
@@ -2471,7 +2478,6 @@ const managerScreen = {
         {
             title: "Close screen",
             event: function() {
-                this.releaseParams();
                 landingScreen.load();
             },
             buttonClassList: ['cl-btn', 'scr-cl-btn'],
@@ -2509,9 +2515,9 @@ const managerScreen = {
                 this.bindCloseButtons(screenInner);
                 this.bindFullscreenButtons(screenInner);
                 this.adoptToolbarContents(screenContainer);
-                shortNotifications.send(
-                    params.project + " loaded"
-                );
+                if (!synthetic) {
+                    shortNotifications.send(`${params.project} loaded`);
+                }
                 this.sidebar = screenInner.querySelector('#sidebar');
                 this.mainPanel = screenInner.querySelector('#main-panel');
                 appTitleParts.unshift(params.project);
@@ -2544,7 +2550,8 @@ const managerScreen = {
                         // Adds the "go to parent directory" button.
                         if (
                             Object.hasOwn(payload, 'parentDir')
-                            && !this.listingGroup.firstElementChild?.classList.contains('dir-prt')
+                            && !this.listingGroup.firstElementChild
+                                ?.classList.contains('dir-prt')
                         ) {
                             let item = createElement('div', {
                                 classes: ['dir-prt'],
@@ -2583,7 +2590,7 @@ const managerScreen = {
                 }
                 const hasMain = Object.hasOwn(params, 'main');
                 if (hasMain) {
-                    this.loadIntoMainPanel(params.main);
+                    this.loadIntoMainPanel(params.main, !synthetic);
                 } else {
                     this.putOnNoFileMessage();
                 }
@@ -2657,6 +2664,7 @@ const managerScreen = {
         if (super.close()) {
             appTitleParts.shift();
             resetAppTitle();
+            this.releaseParams(undefined, 'replace');
         }
     },
     /**
@@ -3831,8 +3839,10 @@ function factoryParams(params, synthetic = false) {
 }
 
 window.addEventListener('popstate', e => {
-    factoryParams(e.state, true);
-    console.log(`popstate`, e.state);
+    console.log(`popstate`, e.state, e);
+    if (e.state) {
+        factoryParams(e.state, true);
+    }
 });
 
 const init = () => {

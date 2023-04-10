@@ -9,6 +9,10 @@
             "src": "assets/images/logo.svg",
             "type": "image/svg+xml",
             "sizes": "any"
+        }, {
+            "src": "assets/images/stonetable-icon-512x512.webp",
+            "type": "image/webp",
+            "sizes": "128x128 192x192 256x256 512x512"
         }
     ]
 }

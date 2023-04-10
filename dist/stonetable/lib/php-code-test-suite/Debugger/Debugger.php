@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -267,37 +267,39 @@ class Debugger {
                 foreach( $arguments as $argument ) {
 
                     $result .= '<li>';
+                    $result .= sprintf(
+                        '<span class="type">%s</span>'
+                            . ' ',
+                        $argument['type']
+                    );
 
                     if(
                         $argument['type'] !== 'NULL'
                         && $argument['type'] !== 'array'
                     ) {
 
+                        if( !$argument['allow_html_entities'] ) {
+
+                            $text = $argument['text'];
+
+                        } else {
+
+                            $needle = 'array ';
+
+                            if( !str_starts_with($argument['text'], $needle) ) {
+                                $text = htmlentities($argument['text']);
+                            } else {
+                                $text = 'array';
+                            }
+                        }
+
                         $result .= sprintf(
-                            '<span class="type">%s</span>'
-                            . ' ',
-                            $argument['type']
+                            '<span class="text">%s</span>',
+                            $text
                         );
                     }
 
-                    if( !$argument['allow_html_entities'] ) {
-
-                        $text = $argument['text'];
-
-                    } else {
-
-                        $needle = 'array ';
-
-                        $text = ( !str_starts_with($argument['text'], $needle) )
-                            ? htmlentities($argument['text'])
-                            : 'array';
-                    }
-
-                    $result .= sprintf(
-                        '<span class="text">%s</span>'
-                        . '</li>',
-                        $text
-                    );
+                    $result .= '</li>';
                 }
 
                 $result .= '</ol>';

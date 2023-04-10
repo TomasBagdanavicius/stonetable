@@ -48,7 +48,9 @@ First off, it's important to decide where you will want to install Stonetable. T
 #### Requirements
 
 - Any web server
-- PHP 8.1 or higher
+- PHP 8.1 or higher with extensions:
+    - `mbstring`
+    - `intl`
 - Any major web browser that is up to date
 
 #### Steps

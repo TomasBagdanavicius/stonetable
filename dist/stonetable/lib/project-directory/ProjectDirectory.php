@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -68,9 +68,10 @@ class ProjectDirectory extends ProjectFileObject implements \IteratorAggregate {
     ): ?ProjectFileObject {
 
         $relative_pathname = ltrim($relative_pathname, '/\\');
-        $find_pathname = ($this->dirname
-            . DIRECTORY_SEPARATOR
-            . $relative_pathname);
+        $find_pathname = ProjectRootDirectory::joinPath(
+            $this->dirname,
+            $relative_pathname
+        );
 
         if( !file_exists($find_pathname) ) {
             return null;
@@ -149,7 +150,6 @@ class ProjectDirectory extends ProjectFileObject implements \IteratorAggregate {
                         \FilesystemIterator::KEY_AS_PATHNAME
                         | \FilesystemIterator::CURRENT_AS_FILEINFO
                         | \FilesystemIterator::SKIP_DOTS
-                        | \FilesystemIterator::UNIX_PATHS
                     )
                 ),
                 $this->getFilterHandler($this->dirname),

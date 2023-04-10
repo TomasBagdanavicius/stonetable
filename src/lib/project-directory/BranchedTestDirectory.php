@@ -12,7 +12,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -41,13 +41,14 @@ class BranchedTestDirectory extends ProjectDirectory {
 
         parent::__construct($dirname, $root_directory);
 
-        $this->static_dirname = ($dirname
-            . DIRECTORY_SEPARATOR
-            . self::STATIC_DIR_NAME);
-
-        $this->playground_dirname = ($dirname
-            . DIRECTORY_SEPARATOR
-            . self::PLAYGROUND_DIR_NAME);
+        $this->static_dirname = ProjectRootDirectory::joinPath(
+            $dirname,
+            self::STATIC_DIR_NAME
+        );
+        $this->playground_dirname = ProjectRootDirectory::joinPath(
+            $dirname,
+            self::PLAYGROUND_DIR_NAME
+        );
     }
 
     /** Tells if the static files directory exists. */
@@ -73,9 +74,10 @@ class BranchedTestDirectory extends ProjectDirectory {
         string $relative_pathname
     ): string {
 
-        return ($this->static_dirname
-            . DIRECTORY_SEPARATOR
-            . $relative_pathname);
+        return ProjectRootDirectory::joinPath(
+            $this->static_dirname,
+            $relative_pathname
+        );
     }
 
     /**
@@ -87,9 +89,10 @@ class BranchedTestDirectory extends ProjectDirectory {
         string $relative_pathname
     ): string {
 
-        return ($this->playground_dirname
-            . DIRECTORY_SEPARATOR
-            . $relative_pathname);
+        return ProjectRootDirectory::joinPath(
+            $this->playground_dirname,
+            $relative_pathname
+        );
     }
 
     /**

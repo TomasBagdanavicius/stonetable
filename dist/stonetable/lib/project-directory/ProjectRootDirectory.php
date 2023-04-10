@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -86,11 +86,11 @@ class ProjectRootDirectory extends ProjectDirectory {
         }
 
         $dirname = rtrim($dirname, '/\\');
-        $config_file_pathname = ($dirname
-            . DIRECTORY_SEPARATOR
-            . self::SYS_CONFIG_DIR_NAME
-            . DIRECTORY_SEPARATOR
-            . self::SYS_CONFIG_FILE_NAME);
+        $config_file_pathname = self::joinPath(
+            $dirname,
+            self::SYS_CONFIG_DIR_NAME,
+            self::SYS_CONFIG_FILE_NAME
+        );
 
         if( file_exists($config_file_pathname) ) {
 
@@ -106,31 +106,21 @@ class ProjectRootDirectory extends ProjectDirectory {
         }
 
         $this->source_dirname = ( $this->config['source_dirname']
-            ?? ($dirname
-                . DIRECTORY_SEPARATOR
-                . MainDirectoriesEnum::SOURCE->value) );
-
+            ?? self::joinPath($dirname, MainDirectoriesEnum::SOURCE->value) );
         $this->tests_dirname = ( $this->config['tests_dirname']
-            ?? ($dirname
-                . DIRECTORY_SEPARATOR
-                . MainDirectoriesEnum::TESTS->value) );
-
-        $this->demo_static_dirname = ($this->tests_dirname
-            . DIRECTORY_SEPARATOR
-            . 'demo'
-            . DIRECTORY_SEPARATOR
-            . BranchedTestDirectory::STATIC_DIR_NAME);
-
-        $this->units_static_dirname = ($this->tests_dirname
-            . DIRECTORY_SEPARATOR
-            . 'units'
-            . DIRECTORY_SEPARATOR
-            . BranchedTestDirectory::STATIC_DIR_NAME);
-
+            ?? self::joinPath($dirname, MainDirectoriesEnum::TESTS->value) );
+        $this->demo_static_dirname = self::joinPath(
+            $this->tests_dirname,
+            'demo',
+            BranchedTestDirectory::STATIC_DIR_NAME
+        );
+        $this->units_static_dirname = self::joinPath(
+            $this->tests_dirname,
+            'units',
+            BranchedTestDirectory::STATIC_DIR_NAME
+        );
         $this->projects_dirname = dirname($dirname);
-
         $this->factory = new ProjectFileObjectFactory($this);
-
         $patterns = $this->getPatterns();
 
         foreach( $patterns as $data ) {
@@ -148,47 +138,67 @@ class ProjectRootDirectory extends ProjectDirectory {
 
         return [
             [
-                'pattern' => ($this->source_dirname . '/*'),
+                'pattern' => self::joinPath($this->source_dirname, '*'),
                 'class_name' => 'PD\SourceFile',
                 'type' => 'file',
             ], [
-                'pattern' => ($this->tests_dirname . '/demo'),
+                'pattern' => self::joinPath($this->tests_dirname, 'demo'),
                 'class_name' => 'PD\BranchedTestDirectory',
                 'type' => 'dir',
             ], [
-                'pattern' => ($this->tests_dirname . '/demo/static/*'),
+                'pattern' => self::joinPath(
+                    $this->tests_dirname,
+                    'demo',
+                    'static',
+                    '*'
+                ),
                 'class_name' => 'PD\StaticFile',
                 'type' => 'file',
                 'dependencies' => [
-                    ($this->tests_dirname . '/demo'),
+                    self::joinPath($this->tests_dirname, 'demo'),
                 ],
             ], [
-                'pattern' => ($this->tests_dirname . '/demo/playground/*'),
+                'pattern' => self::joinPath(
+                    $this->tests_dirname,
+                    'demo',
+                    'playground',
+                    '*'
+                ),
                 'type' => 'file',
                 'class_name' => 'PD\PlaygroundFile',
                 'dependencies' => [
-                    ($this->tests_dirname . '/demo'),
+                    self::joinPath($this->tests_dirname, 'demo'),
                 ],
             ], [
-                'pattern' => ($this->tests_dirname . '/units'),
+                'pattern' => self::joinPath($this->tests_dirname, 'units'),
                 'type' => 'dir',
                 'class_name' => 'PD\BranchedTestDirectory',
             ], [
-                'pattern' => ($this->tests_dirname . '/units/static/*'),
+                'pattern' => self::joinPath(
+                    $this->tests_dirname,
+                    'units',
+                    'static',
+                    '*'
+                ),
                 'type' => 'file',
                 'class_name' => 'PD\StaticFile',
                 'dependencies' => [
-                    ($this->tests_dirname . '/units'),
+                    self::joinPath($this->tests_dirname, 'units'),
                 ],
             ], [
-                'pattern' => ($this->tests_dirname . '/units/playground/*'),
+                'pattern' => self::joinPath(
+                    $this->tests_dirname,
+                    'units',
+                    'playground',
+                    '*'
+                ),
                 'type' => 'file',
                 'class_name' => 'PD\PlaygroundFile',
                 'dependencies' => [
-                    ($this->tests_dirname . '/units'),
+                    self::joinPath($this->tests_dirname, 'units'),
                 ],
             ], [
-                'pattern' => ($this->tests_dirname . '/*'),
+                'pattern' => self::joinPath($this->tests_dirname, '*'),
                 'type' => 'file',
                 'class_name' => 'PD\TestFile',
             ],
@@ -289,10 +299,10 @@ class ProjectRootDirectory extends ProjectDirectory {
 
             foreach( $import_vendors as $project_name ) {
 
-                $project_dirname = ($this->projects_dirname
-                    . DIRECTORY_SEPARATOR
-                    . $project_name);
-
+                $project_dirname = self::joinPath(
+                    $this->projects_dirname,
+                    $project_name
+                );
                 $project_instance = new self($project_dirname);
 
                 if( $import_vendor_name = $project_instance->getVendorName() ) {
@@ -362,13 +372,30 @@ class ProjectRootDirectory extends ProjectDirectory {
         string $pathname
     ): false|string {
 
-        if( !str_starts_with($pathname, $_SERVER['DOCUMENT_ROOT']) ) {
+        $doc_root = ( $_SERVER['DOCUMENT_ROOT'] ?: $_SERVER['DOC_ROOT'] );
+
+        if( !str_starts_with($pathname, $doc_root) ) {
             return false;
         }
 
-        return (
-            self::getUrlAddress()
-            . substr($pathname, strlen($_SERVER['DOCUMENT_ROOT']))
-        );
+        $uri_path = substr($pathname, strlen($doc_root));
+        $uri_path = preg_replace('#\\\+#', '/', $uri_path);
+
+        return (self::getUrlAddress() . $uri_path);
+    }
+
+    /**
+     * Joins given function arguments with a directory separator string
+     *
+     * @return string If no arguments are given, it returns an empty string,
+     *                otherwise a joined string.
+     */
+    public static function joinPath(): string {
+
+        if( !func_num_args() ) {
+            return '';
+        }
+
+        return implode(DIRECTORY_SEPARATOR, func_get_args());
     }
 }

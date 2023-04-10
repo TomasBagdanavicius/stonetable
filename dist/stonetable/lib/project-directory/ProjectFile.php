@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -27,7 +27,7 @@ use UnexpectedValueException;
 class ProjectFile extends ProjectFileObject {
 
     /** SplFileObject representation of this file. */
-    public readonly \SplFileObject $file;
+    protected ?\SplFileObject $file;
 
     /** Collection of special comment objects. */
     protected array $special_comments = [];
@@ -54,6 +54,18 @@ class ProjectFile extends ProjectFileObject {
 
         $this->file = new \SplFileObject($filename);
         $this->special_comments = static::setupSpecialComments([]);
+    }
+
+    /** Closes the SplFileObject file handler. */
+    public function fileClose(): void {
+
+        $this->file = null;
+    }
+
+    /** Getter for the "file" property. */
+    public function getFile(): ?\SplFileObject {
+
+        return $this->file;
     }
 
     /** Gets data describing the file. */

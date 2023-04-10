@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -88,7 +88,8 @@ class OutputTextFormatter {
 
             if( str_starts_with($pathname, $shorten_path) ) {
 
-                return ('.../'
+                return ('...'
+                    . DIRECTORY_SEPARATOR
                     . substr($pathname, strlen($shorten_path) + 1));
             }
         }
@@ -246,7 +247,10 @@ class OutputTextFormatter {
 
         $regex_str = sprintf(
             // Not preceeded by "file/".
-            '#(?<!file\/)(%s([a-zA-Z\/\_-]+(\.(%s))?))(\son\sline\s(\d+))?#m',
+            '#(?<!file\/)(%s('
+            // Accepted filepath characters.
+            . '[a-zA-Z0-9\/\_-]'
+            . '+(\.(%s))?))(\son\sline\s(\d+))?#m',
             preg_quote($path_prefix . '/', '/'),
             implode('|', $this->editable_file_formats)
         );
@@ -262,7 +266,11 @@ class OutputTextFormatter {
                 [$filename, $line_number] = $match;
                 $relative_path = $matches[2][$index][0];
                 $extension = $matches[3][$index][0];
-                $text_relative_path = ('.../' . $relative_path);
+                $text_relative_path = (
+                    '...'
+                    . DIRECTORY_SEPARATOR
+                    . $relative_path
+                );
 
                 $is_link = (
                     $this->format_html
@@ -406,7 +414,7 @@ class OutputTextFormatter {
         $file_uri = $base_uri;
 
         $file_uri .= substr(
-            str_replace('\\', '/', $namespace),
+            str_replace('\\', DIRECTORY_SEPARATOR, $namespace),
             strlen($prefix)
         );
 
@@ -436,7 +444,11 @@ class OutputTextFormatter {
         }
 
         if( str_starts_with($filename, $doc_root) ) {
-            $filename = ('.../' . substr($filename, strlen($doc_root) + 1));
+            $filename = (
+                '...'
+                . DIRECTORY_SEPARATOR
+                . substr($filename, strlen($doc_root) + 1)
+            );
         }
 
         return $filename;

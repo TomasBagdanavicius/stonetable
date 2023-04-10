@@ -18,4 +18,4 @@ echo $hello;
 echo fooBar(), PHP_EOL;
 
 // Emulates error due to incorrect parameter type.
-echo loremIpsum(100), PHP_EOL;
+echo loremIpsum(100, null, false, [], new stdClass), PHP_EOL;

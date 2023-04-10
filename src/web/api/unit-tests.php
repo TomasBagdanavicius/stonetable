@@ -8,7 +8,7 @@ if( !$project_pathname = get_value_exists('project_path') ) {
     send_error("Please provide a project path");
 }
 
-$path = get_value_exists('path', '/');
+$path = get_value_exists('path', DIRECTORY_SEPARATOR);
 
 $project_root_directory = get_project_root_object($project_pathname);
 $iterator = $project_root_directory->getUnitsFileRecursiveIterator();
@@ -42,7 +42,7 @@ foreach( $iterator as $file ):
             $category_map[$category_id] = $category_name;
 
             $data['parts'][$category_id] = [
-                'name' => ($category_name ?: '/'),
+                'name' => ($category_name ?: DIRECTORY_SEPARATOR),
                 'files' => [
                     1 => $description_data,
                 ],

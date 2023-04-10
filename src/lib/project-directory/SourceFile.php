@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -84,9 +84,10 @@ class SourceFile extends ProjectFile {
     /** Generates demo file equivalent file name. */
     public function buildDemoFilePathname(): string {
 
-        return ($this->root_directory->demo_static_dirname
-            . DIRECTORY_SEPARATOR
-            . $this->getSourceRelativePathname());
+        return ProjectRootDirectory::joinPath(
+            $this->root_directory->demo_static_dirname,
+            $this->getSourceRelativePathname()
+        );
     }
 
     /**
@@ -183,9 +184,10 @@ class SourceFile extends ProjectFile {
             }
         }
 
-        $template_filename = ($this->root_directory->demo_static_dirname
-            . DIRECTORY_SEPARATOR
-            . '+new.php');
+        $template_filename = ProjectRootDirectory::joinPath(
+            $this->root_directory->demo_static_dirname,
+            '+new.php'
+        );
 
         if( !file_exists($template_filename) ) {
             return false;

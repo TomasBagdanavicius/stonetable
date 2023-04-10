@@ -9,7 +9,7 @@ $config = [
         'test-project-1'
     ],
     'hidden_files' => [
-        'test/demo/static/+new.php',
+        implode(DIRECTORY_SEPARATOR, ['test', 'demo', 'static', '+new.php']),
     ],
     'special_comments' => [
         'src' => [
@@ -18,7 +18,7 @@ $config = [
         ],
         'test' => [
             'ignore_files' => [
-                'demo/static/+new.php',
+                implode(DIRECTORY_SEPARATOR, ['demo', 'static', '+new.php']),
             ],
         ],
     ],

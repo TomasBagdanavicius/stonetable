@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.1
+ * @version   1.0.2
  * @since     1.0.0
  */
 
@@ -72,13 +72,8 @@ class ProjectFileObjectFactory {
      */
     public function matchPattern( string $pathname, string $pattern ): bool {
 
-        #todo: is this required?
-        if( $pathname === $pattern ) {
-            #return true;
-        }
-
-        $pathname_parts = explode('/', $pathname);
-        $pattern_parts = explode('/', $pattern);
+        $pathname_parts = explode(DIRECTORY_SEPARATOR, $pathname);
+        $pattern_parts = explode(DIRECTORY_SEPARATOR, $pattern);
 
         foreach( $pattern_parts as $index => $pattern_part ) {
 

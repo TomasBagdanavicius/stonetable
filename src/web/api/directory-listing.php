@@ -8,9 +8,12 @@ if( !$project_pathname = get_value_exists('project_path') ) {
     send_error("Please provide a project path");
 }
 
-$path = get_value_exists('path', '/');
+$path = get_value_exists('path', DIRECTORY_SEPARATOR);
+$path = preg_replace('#[/\\\]+#', DIRECTORY_SEPARATOR, $path);
 
 $search_query = get_value_exists('file_search_query', null);
+
+use PD\ProjectFile;
 
 $project_root_directory = get_project_root_object($project_pathname);
 
@@ -121,6 +124,11 @@ foreach( $file_iterator as $project_file_object ) {
                 $data[] = $project_file_object->getDescriptionData();
             }
         }
+    }
+
+    // Since this is in a loop and might open many files, close finished ones.
+    if( $project_file_object instanceof ProjectFile ) {
+        $project_file_object->fileClose();
     }
 }
 

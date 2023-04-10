@@ -112,6 +112,12 @@ code,
 
 /* Messages */
 
+/* Empty Result */
+
+.msg-mty {
+    color: var(--bg-color-restrained);
+}
+
 /* Short */
 
 .msg-shrt {
