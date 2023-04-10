@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.2](./releases/tag/v1.0.2) - 2023-04-10
+## [1.0.2](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.2) - 2023-04-10
 
 ### Changed
 
@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added PHP extensions requirements in the [README.md](README.md#requirements)
 - Various small amendments.
 
-## [1.0.1](./releases/tag/v1.0.1) - 2023-04-03
+## [1.0.1](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.1) - 2023-04-03
 
 ### Changed
 
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed stonetable web app preview image embedding method in [README.md](README.md).
 - Changed the way header part is centered in [README.md](README.md) using the not so semantic `align="center"` syntax.
 
-## [1.0.0](./releases/tag/v1.0.0) - 2023-03-23
+## [1.0.0](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.0) - 2023-03-23
 
 ### Added
 
