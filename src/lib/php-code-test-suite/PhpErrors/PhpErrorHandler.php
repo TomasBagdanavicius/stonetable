@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.2
+ * @version   1.0.3
  * @since     1.0.0
  */
 
@@ -57,7 +57,7 @@ class PHPErrorHandler {
     ) {
 
         // Prevent duplicate printing fatal errors.
-        error_reporting(0);
+        #error_reporting(0);
 
         $this->formatter = $this->debugger->formatter;
         $this->format_html = $this->debugger->formatter->format_html;
@@ -218,30 +218,45 @@ class PHPErrorHandler {
         );
     }
 
-    /** HTML formats error message. */
+    /**
+     * HTML formats error message.
+     *
+     * @param string   $message         Error message text.
+     * @param string   $filename        Filename where error occured.
+     * @param int      $line_number     Line number of error location.
+     * @param int|null $error_type      Error type.
+     * @param bool     $close_html_tags Whether return HTML string should close
+     *                                  tags of wrappers.
+     * @return string HTML formatter error message.
+     */
     public function richFormatErrorMessage(
         string $message,
         string $filename,
         int $line_number,
-        ?int $error_type = null
+        ?int $error_type = null,
+        bool $close_html_tags = true
     ): string {
 
         $result = $this->buildMessageOpeningTag($error_type);
-
         $result .= sprintf(
             '<p class="text"><strong>%s</strong></p>',
-            $this->formatMessageText($message)
+            $this->formatMessageText(
+                $this->formatter->format($message)
+            )
         );
-
         $result .= '<dl>';
-
         $result .= '<dt>Location</dt>';
+        $line_number_suffix = sprintf(
+            '<span class="line-num">:<span class="num">%d</span></span>',
+            $line_number
+        );
         $result .= sprintf(
             '<dd>%s</dd>',
             $this->formatter->formatPathname(
                 $filename,
-                ':' . $line_number,
-                $line_number
+                $line_number_suffix,
+                $line_number,
+                class_names: ['file']
             )
         );
 
@@ -254,9 +269,11 @@ class PHPErrorHandler {
             );
         }
 
-        $result .= '</dl>';
+        if( $close_html_tags ) {
 
-        $result .= '</article>';
+            $result .= '</dl>';
+            $result .= '</article>';
+        }
 
         return $result;
     }
@@ -285,7 +302,7 @@ class PHPErrorHandler {
     /** Builds an error message from a given throwable object. */
     public function formatException(
         \Throwable $exception
-    ) {
+    ): string {
 
         return ( $this->format_html )
             ? $this->richFormatException($exception)
@@ -297,27 +314,12 @@ class PHPErrorHandler {
         \Throwable $exception
     ): string {
 
-        $result = $this->buildMessageOpeningTag(E_RECOVERABLE_ERROR);
-
-        $result .= sprintf(
-            '<p class="text"><strong>%s</strong></p>',
-            $this->formatMessageText(
-                $this->formatter->format(
-                    $exception->getMessage()
-                )
-            )
-        );
-
-        $result .= '<dl>';
-        $result .= '<dt>Location</dt>';
-
-        $result .= sprintf(
-            '<dd>%s</dd>',
-            $this->formatter->formatPathname(
-                $exception->getFile(),
-                ':' . $exception->getLine(),
-                $exception->getLine()
-            )
+        $result = $this->richFormatErrorMessage(
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine(),
+            error_type: E_RECOVERABLE_ERROR,
+            close_html_tags: false
         );
 
         $exception_namespace = $exception::class;
@@ -364,14 +366,15 @@ class PHPErrorHandler {
             if( $trace_data_str ) {
 
                 $result .= '<p class="h">Stack trace list:</p>';
-                $result .= '<ol reversed>';
+                $result .= '<ol class="stk-tr-l" reversed>';
                 $result .= $trace_data_str;
                 $result .= '</ol>';
             }
         }
 
-        if( $previous_error = $exception->getPrevious() ) {
+        $previous_error = $exception->getPrevious();
 
+        if( $previous_error ) {
             $result .= $this->formatException($previous_error);
         }
 
@@ -399,8 +402,8 @@ class PHPErrorHandler {
 
         // Wrap variables into the code tag.
         return preg_replace(
-            '/\$+[a-z_]+/',
-            '<code class="var">$0</code>',
+            '/\$+[a-zA-Z0-9_]+/',
+            '<code class="php"><span class="var">$0</span></code>',
             $text
         );
     }

@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.2
+ * @version   1.0.3
  * @since     1.0.0
  */
 
@@ -91,7 +91,7 @@ class Debugger {
         }
 
         $result = '<p class="h">Stack trace list:</p>';
-        $result .= '<ol reversed>';
+        $result .= '<ol class="stk-tr-l" reversed>';
 
         foreach( $stack_trace_list as $stack_trace_data ) {
 
@@ -168,27 +168,45 @@ class Debugger {
 
         if( $format ) {
 
-            $result .= ( $trace_data['class']
-                ?? $formatter->shortenPathname($filename) );
+            $result .= sprintf(
+                '<span class="file-path">%s</span>',
+                ( $trace_data['class']
+                    ?? $formatter->shortenPathname($filename) )
+            );
 
         } else {
 
-            $result .= $filename;
+            $result .= $formatter->shortenPathname($filename);
+        }
 
-            if( $trace_data['line'] ) {
-                $result .= (':' . $trace_data['line']);
-            }
+        if( !isset($trace_data['class']) && $trace_data['line'] ) {
+            $result .= ( $format )
+                ? sprintf(
+                    '<span class="line-num">:<span class="num">%d</span>'
+                        . '</span>',
+                    $trace_data['line']
+                )
+                : (':' . $trace_data['line']);
         }
 
         $result .= ( $trace_data['type'] ?? ' ' );
-        $result .= $trace_data['function'];
+        $result .= ( $format )
+            ? sprintf(
+                '<span class="func-name">%s'
+                    . '<span class="punc punc-brkt">(</span>'
+                    . '<span class="punc punc-brkt">)</span>'
+                    . '</span>',
+                $trace_data['function']
+            )
+            : ($trace_data['function'] . '()');
 
         if( $format && $convert_links ) {
 
             $result = $formatter->buildIdeHtmlLink(
                 $filename,
                 $result,
-                ((int)$trace_data['line'] ?? null)
+                ((int)$trace_data['line'] ?? null),
+                class_names: ['file']
             );
         }
 
@@ -196,9 +214,14 @@ class Debugger {
 
         if( !empty($trace_data['args']) ) {
 
-            foreach( $trace_data['args'] as $arg ) {
+            if( $format ) {
+                $result .= '<ol class="arg-l">';
+            }
+
+            foreach( $trace_data['args'] as $index => $arg ) {
 
                 $allow_html_entities = true;
+                $length = null;
 
                 if( is_object($arg) ) {
 
@@ -212,24 +235,33 @@ class Debugger {
 
                     $allow_html_entities = false;
 
+                /* Don't attempt to export and show text for the following
+                types, eg. `var_export` will fail on large arrays containing
+                objects with circular reference, etc. */
+                } elseif( is_array($arg) && is_resource($arg) ) {
+
+                    $argument = '';
+
                 } else {
 
                     $argument = var_export($arg, return: true);
                 }
 
+                // String (can be file path or namespace name).
                 if(
                     str_starts_with($argument, '\'')
                     && str_ends_with($argument, '\'')
                 ) {
 
                     $trimmed_arg = trim($argument, '\'');
+                    $length = strlen($trimmed_arg);
 
                     if( $formatter->isQualifiedPathname($trimmed_arg) ) {
 
                         $argument = $formatter->formatPathname(
-                            $trimmed_arg
+                            $trimmed_arg,
+                            class_names: ['file']
                         );
-
                         $allow_html_entities = false;
 
                     } elseif(
@@ -241,86 +273,160 @@ class Debugger {
                             '\\',
                             $trimmed_arg
                         );
-
                         $argument = ( $convert_links )
-                            ? $formatter->namespaceToIdeHtmlLink($namespace)
+                            ? $formatter->namespaceToIdeHtmlLink(
+                                $namespace,
+                                class_names: ['file']
+                            )
                             : $namespace;
-
                         $allow_html_entities = false;
+                    }
+
+                    if( $allow_html_entities ) {
+
+                        $argument = sprintf(
+                            '"%s"',
+                            ( ( strlen($trimmed_arg) > 25 )
+                                ? (substr($trimmed_arg, 0, 25) . '...')
+                                : $trimmed_arg )
+                        );
                     }
                 }
 
-                $arguments[] = [
-                    'type' => gettype($arg),
-                    'text' => $argument,
-                    'allow_html_entities' => $allow_html_entities,
+                $var_type = gettype($arg);
+                $type = match( $var_type ) {
+                    'boolean' => 'bool',
+                    'integer' => 'int',
+                    'double' => 'float',
+                    'NULL' => 'null',
+                    default => $var_type,
+                };
+                $text = $argument;
+                $no_text_types = [
+                    'null',
+                    'array',
+                    'resource',
                 ];
-            }
-        }
 
-        if( $arguments ) {
+                if( $format ) {
 
-            if( $format ) {
-
-                $result .= '<ol class="arg-l">';
-
-                foreach( $arguments as $argument ) {
-
-                    $result .= '<li>';
                     $result .= sprintf(
-                        '<span class="type">%s</span>'
-                            . ' ',
-                        $argument['type']
+                        '<li class="%s">',
+                        $type
                     );
+                    $result .= sprintf(
+                        '<code class="php"><span class="type">%s</span>',
+                        $type
+                    );
+                    $code_open = true;
 
-                    if(
-                        $argument['type'] !== 'NULL'
-                        && $argument['type'] !== 'array'
-                    ) {
+                } else {
 
-                        if( !$argument['allow_html_entities'] ) {
+                    $result .= ("\n\t" . ($index + 1) . '. ' . $type);
+                }
 
-                            $text = $argument['text'];
+                $info_types = [
+                    'string',
+                    'array',
+                    'int',
+                    'float',
+                    'object',
+                    'resource',
+                ];
+
+                if( in_array($type, $info_types) ) {
+
+                    $value = $trace_data['args'][$index];
+
+                    $info = match( $type ) {
+                        'string' => $length,
+                        'float' => strlen((string)(int)$value),
+                        'int' => strlen((string)$value),
+                        'object' => ('#' . spl_object_id($value)),
+                        'resource' => get_resource_type($value),
+                        default => count($value),
+                    };
+
+                    if( $type === 'float' ) {
+                        $info .= ','
+                            . strlen(explode('.', (string)$value, 2)[1]);
+                    }
+
+                    if( $format ) {
+
+                        $result .= '</code>';
+                        $code_open = false;
+
+                        $result .= sprintf(
+                            '<span class="info">'
+                                . '<span class="punc punc-brkt">(</span>'
+                                . '%s'
+                                . '<span class="punc punc-brkt">)</span>'
+                                . '</span>',
+                            $info
+                        );
+
+                    } else {
+
+                        $result .= ('(' . $info . ')');
+                    }
+                }
+
+                if( !in_array($type, $no_text_types) ) {
+
+                    if( !$allow_html_entities ) {
+
+                        $value = $text;
+
+                    } else {
+
+                        $needle = 'array ';
+
+                        if( !str_starts_with($text, $needle) ) {
+                            $value = htmlentities($text);
+                        } else {
+                            $value = 'array';
+                        }
+                    }
+
+                    if( $format) {
+
+                        if( $type === 'bool' ) {
+
+                            $result .= sprintf(
+                                ' <span class="type">%s</span>',
+                                $value
+                            );
 
                         } else {
 
-                            $needle = 'array ';
-
-                            if( !str_starts_with($argument['text'], $needle) ) {
-                                $text = htmlentities($argument['text']);
-                            } else {
-                                $text = 'array';
-                            }
+                            $result .= sprintf(
+                                ' <span class="text">%s</span>',
+                                $value
+                            );
                         }
 
-                        $result .= sprintf(
-                            '<span class="text">%s</span>',
-                            $text
-                        );
-                    }
+                        if( $code_open ) {
+                            $result .= '</code>';
+                            $code_open = false;
+                        }
 
-                    $result .= '</li>';
+                        $result .= '</li>';
+
+                    } else {
+
+                        $result .= (' ' . $value);
+                    }
                 }
 
+                if( $code_open ) {
+                    $result .= '</code>';
+                    $code_open = false;
+                }
+            }
+
+            if( $format ) {
                 $result .= '</ol>';
-
-            } else {
-
-                $result .= '(';
-                $i = 0;
-
-                foreach( $arguments as $argument ) {
-
-                    if( $i ) {
-                        $result .= ', ';
-                    }
-
-                    $result .= $argument['text'];
-
-                    $i++;
-                }
-
-                $result .= ')';
             }
         }
 

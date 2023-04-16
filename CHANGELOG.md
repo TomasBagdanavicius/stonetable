@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.3) - 2023-04-16
+
+### Changed
+
+- Various changes to stack trace list text and style formatting as part of a broader initiative to colorize demo output and code messages.
+- Standalone demo output page has its responsive mode turned on now.
+- Search query string will not be transferred when jumping cross-project into a new tab.
+- Position of popups and similar elements will be adjusted on window resize.
+- Fixed toolbar and divider styling issue in light color mode in standalone demo output pages.
+- Rebuilt the “options” icon in a hope that it will look crisper and aligned better on some browsers in Windows.
+- Title attribute in file listing items will be populated with relative path names, instead of just file names.
+- Added HTML title to control buttons that empty input fields.
+- Added “Quick Run” subsection under “Installation” section in [README.md](README.md#quick-run). It will describe how to run the source code right away.
+- Updated representational app screenshot in [README.md](README.md).
+- Bump PHP Code Test Suite version to 1.0.3
+- Bump Project Directory version to 1.0.3
+
 ## [1.0.2](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.2) - 2023-04-10
 
 ### Changed

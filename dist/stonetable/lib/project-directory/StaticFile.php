@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.2
+ * @version   1.0.3
  * @since     1.0.0
  */
 
@@ -83,7 +83,7 @@ class StaticFile extends TestFile {
     }
 
     /** Rebuilds the source comment line. */
-    public function rebuildSourceCommentLine(): bool {
+    public function rebuildSourceCommentLine(): ?bool {
 
         return $this->rebuildSpecialComment(
             $this->getSpecialComment('source')

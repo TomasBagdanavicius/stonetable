@@ -25,17 +25,20 @@
 }
 
 .code-msg a,
-.code-msg .code {
+.code-msg code {
     overflow-wrap: anywhere;
 }
 
 .code-msg code {
+    font-size: 90%;
     font-family: Menlo, Monaco, "Courier New", monospace;
 }
 
-.code-msg code.var {
-    color: var(--code-variable-name-color, lightblue);
+.code-msg > .h {
+    color: #666;
 }
+
+/* Argument List */
 
 .code-msg .arg-l {
     display: flex;
@@ -45,14 +48,6 @@
     padding: 0;
 }
 
-.code-msg .arg-l::before {
-    content: '(';
-}
-
-.code-msg .arg-l::after {
-    content: ')';
-}
-
 .code-msg .arg-l > li {
     counter-increment: argument-counter;
 }
@@ -60,8 +55,9 @@
 .code-msg .arg-l > li::before {
     display: inline-flex;
     padding: 1px 3px;
+    margin-right: 3px;
     border-radius: 5px;
-    background-color: #111;
+    background-color: #eee;
     font-size: 80%;
     content: counter(argument-counter);
 }
@@ -74,11 +70,7 @@
     content: ',';
 }
 
-.code-msg .arg-l .type {
-    color: #559cd6;
-    font-size: 80%;
-    font-family: Menlo, Monaco, "Courier New", monospace;
-}
+/* Metadata */
 
 .code-msg dl {
     display: grid;
@@ -87,13 +79,23 @@
     margin: 0;
 }
 
+.code-msg dl > dt {
+    color: #666;
+}
+
 .code-msg dl > dd {
     margin: 0;
 }
 
-.code-msg [reversed] {
+/* Stack Trace List */
+
+.code-msg .stk-tr-l {
     list-style-type: decimal;
     padding-left: 40px;
+}
+
+.code-msg .stk-tr-l > li::marker {
+    color: #666;
 }
 
 /* Types */
@@ -112,4 +114,77 @@
 
 .code-msg-dep {
     border-color: #516f79;
+}
+
+/* Highlighting */
+
+.code-msg code.php .var {
+    color: var(--code-php-highlight-variable, #001180);
+}
+
+.code-msg code.php .type {
+    color: var(--code-php-highlight-keyword, #0a00ff);
+}
+
+.code-msg .func-name {
+    color: var(--code-php-highlight-function, #795e27);
+}
+
+.code-msg .line-num,
+.code-msg .arg-l .int .text,
+.code-msg .arg-l .float .text {
+    color: var(--code-php-highlight-number, #0a8658);
+}
+
+.code-msg .punc-brkt {
+    color: var(--code-php-highlight-punctuation-level-1n, #0531fa);
+}
+
+.code-msg .arg-l .info {
+    color: var(--code-php-highlight-number, #0a8658);
+}
+
+.code-msg .arg-l .string .text {
+    color: var(--code-php-highlight-string, #a21515);
+}
+
+@media (prefers-color-scheme: dark) {
+
+    /* Argument List */
+
+    .code-msg .arg-l > li::before {
+        background-color: #111;
+    }
+
+    /* Highlighting */
+
+    .code-msg code.php .var {
+        color: var(--code-php-highlight-variable, #9ddbfe);
+    }
+
+    .code-msg code.php .type {
+        color: var(--code-php-highlight-keyword, #559cd6);
+    }
+
+    .code-msg .func-name {
+        color: var(--code-php-highlight-function, #dcdcaa);
+    }
+
+    .code-msg .line-num,
+    .code-msg .arg-l .int .text,
+    .code-msg .arg-l .float .text {
+        color: var(--code-php-highlight-number, #b6cda8);
+    }
+
+    .code-msg .punc-brkt {
+        color: var(--code-php-highlight-punctuation-level-1n, #ffd601);
+    }
+
+    .code-msg .arg-l .info {
+        color: var(--code-php-highlight-number, #b6cda8);
+    }
+
+    .code-msg .arg-l .string .text {
+        color: var(--code-php-highlight-string, #ce9278);
+    }
 }

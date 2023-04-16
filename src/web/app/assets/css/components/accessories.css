@@ -74,6 +74,7 @@
     .lst-test-case ol > [data-state] > .cnt::before,
     .lst-test-case ol > [data-state] > .cnt::after {
         position: absolute;
+        color: var(--icon-color);
         content: '';
     }
 
@@ -297,34 +298,20 @@
     .opt-btn {
         --icon-size: 4px;
         --icon-offset: 4px;
-        background: radial-gradient(
-            circle at center,
-            var(--icon-color) var(--icon-size-half),
-            var(--current-background-color) var(--icon-size-half)
-        );
-    }
-
-    .i-opts::before,
-    .i-opts::after,
-    .opt-btn::before,
-    .opt-btn::after {
-        top: 50%;
-        left: 50%;
-        width: var(--icon-size);
-        height: var(--icon-size);
-        border-radius: 50%;
-        background-color: var(--icon-color);
-        transform: translate(-50%,-50%);
     }
 
     .i-opts::before,
     .opt-btn::before {
-        top: calc(50% - var(--icon-offset) - var(--icon-size));
-    }
-
-    .i-opts::after,
-    .opt-btn::after {
-        top: calc(50% + var(--icon-offset) + var(--icon-size));
+        --full-offset: calc(var(--icon-offset) * 2);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border-radius: 50%;
+        background-color: var(--icon-color);
+        /* Box shadow inherits its color from `color` property. */
+        box-shadow: 0 calc(0px - var(--full-offset)) 0, 0 var(--full-offset) 0;
     }
 
     /* File */

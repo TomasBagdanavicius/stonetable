@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.2
+ * @version   1.0.3
  * @since     1.0.0
  */
 
@@ -377,7 +377,7 @@ class ProjectFile extends ProjectFileObject {
         SpecialComment $special_comment
     ): ?bool {
 
-        if( $this->file->getSize() ) {
+        if( $this->file->getSize() && $this->isSupportedFileType() ) {
 
             $line = $special_comment->getLine();
 

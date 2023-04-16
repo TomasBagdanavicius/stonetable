@@ -53,7 +53,20 @@ First off, it's important to decide where you will want to install Stonetable. T
     - `intl`
 - Any major web browser that is up to date
 
-#### Steps
+#### Quick Run
+
+- Clone or download a copy of the files.
+- Put the files into your web directory that can be accessed by your web server. If you don't have a web server, the quickest solution is to:
+    - Install PHP
+        - On unix systems use [brew package manager](https://brew.sh/#install) and run `brew install php` ([more info](https://formulae.brew.sh/formula/php#default)).
+        - On Windows use [Chocolatey](https://chocolatey.org/install) and run `choco install php` ([more info](https://community.chocolatey.org/packages/php)).
+    - If required, enable `mbstring` and `intl` extensions.
+    - Open your OS's terminal emulator and run:
+        - `cd <path to files>`
+        - `php -S localhost:8000` ([more info](https://www.php.net/manual/en/features.commandline.webserver.php))
+- Navigate to `http://localhost:8000/src/web/app/` in your browser.
+
+#### Running Production
 
 - Fork the GitHub repository or download a copy of archived files.
 - Go to the `dist/` directory, familiarize quickly with the tree structure, and move the files for web use:
@@ -111,7 +124,7 @@ Here `project-directory-config.php` is a file which stores configuration for the
 
 For example, say we have file `src/file.php` that performs a calculation function. Now, to test that calculation you would create `test/demo/static/file.php` which would be a direct associate to the source file. In case there was an issue in the static file that you want to troubleshoot, you would create an associate playground file in `test/demo/playground/file.php`.
 
-Chaining hasn't been fully implemented for the `units/` directory, therefore for now the common practise is to create custom directories with unit files inside `test/units/static/` directory, eg. `test/units/static/category-1/unit-test-1.php`.
+Chaining hasn't been fully implemented for the `units/` directory, therefore for now the common practice is to create custom directories with unit files inside `test/units/static/` directory, eg. `test/units/static/category-1/unit-test-1.php`.
 
 Find the [starter demo file](src/resources/project-blueprint/test/demo/static/%2Bnew.php) and the [starter unit test file](src/resources/project-blueprint/test/units/%2Bnew.php) to create your demo and unit test files.
 
@@ -123,7 +136,7 @@ Find the [starter demo file](src/resources/project-blueprint/test/demo/static/%2
 
 Stonetable web app reads projects and files remotely by the help of a built-in API. The API is separated from the web app, meaning that you can host the web app at one location and the API with project access in another. Or you can host both together. Since the API is reading projects, it must be where the projects are.
 
-It is important to understand that there is the so called **local development API access** which implies that machine which is accessing API is the host of that API and also the host of project files. When this is true, Stonetable web app will show additional options accross the app that will allow to establish a basic interface with your IDE through the file open implementation to jump from app to IDE and vice versa. This feature is not available when you are connecting to an API which is not running on your local machine.
+It is important to understand that there is the so called **local development API access** which implies that machine which is accessing API is the host of that API and also the host of project files. When this is true, Stonetable web app will show additional options across the app that will allow to establish a basic interface with your IDE through the file open implementation to jump from app to IDE and vice versa. This feature is not available when you are connecting to an API which is not running on your local machine.
 
 To install see: [Installation](#installation).
 
@@ -262,10 +275,10 @@ The above will output something similar to:
 
 ```html
 <article class="msg code-msg code-msg-warn">
-    <p class="text"><strong>Undefined variable <code class="var">$unexisting_variable</code></strong></p>
+    <p class="text"><strong>Undefined variable <code class="php"><span class="var">$unexisting_variable</span></code></strong></p>
     <dl>
         <dt>Location</dt>
-        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:46">.../snippet.php:46</a></dd>
+        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:46" class="file">.../snippet.php<span class="line-num">:<span class="num">46</span></span></a></dd>
         <dt>Type</dt>
         <dd>E_WARNING</dd>
     </dl>
@@ -274,7 +287,9 @@ The above will output something similar to:
     <p class="text"><strong>This is a simulated error: <a href="vscode://file//Users/JohnDoe/stonetable/snippet.php">VendorName\snippet</a></strong></p>
     <dl>
         <dt>Location</dt>
-        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:50">.../snippet.php:50</a></dd>
+        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:50" class="file">.../snippet.php<span class="line-num">:<span class="num">50</span></span></a></dd>
+        <dt>Type</dt>
+        <dd>E_RECOVERABLE_ERROR</dd>
         <dt>Error Class</dt>
         <dd>Error</dd>
         <dt>Error Code</dt>
@@ -284,7 +299,9 @@ The above will output something similar to:
         <p class="text"><strong>This is the reason</strong></p>
         <dl>
             <dt>Location</dt>
-            <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:53">.../snippet.php:53</a></dd>
+            <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:53" class="file">.../snippet.php<span class="line-num">:<span class="num">53</span></span></a></dd>
+            <dt>Type</dt>
+            <dd>E_RECOVERABLE_ERROR</dd>
             <dt>Error Class</dt>
             <dd>Exception</dd>
             <dt>Error Code</dt>
@@ -298,7 +315,7 @@ To take away:
 
 - Since we asked to shorten absolute paths that start with the path where this snippet is located, system has replaced those with ellipsis.
 - Absolute paths that resolve to an existing file in the filesystem have been wrapped into an IDE file open hyperlinks.
-- Namespace names that start with recornized vendor names have also been converted to clickable links that open in IDE.
+- Namespace names that start with recognized vendor names have also been converted to clickable links that open in IDE.
 - There is no dedicated stylesheet solution here, but you can develop your own, or grab one from the source (see: [src/web/assets/css/code-message.css](src/web/assets/css/code-message.css)).
 
 # Licensing

@@ -3,7 +3,7 @@
 :root {
     --bg-color: #fff;
     --text-color: #1e1e1e;
-    --code-variable-name-color: #001180;
+    --divider-color: #bbb;
     color-scheme: light dark;
 }
 
@@ -51,7 +51,7 @@ body {
     left: 0;
     height: 52px;
     padding: 3px;
-    border-bottom: solid 1px #111;
+    border-bottom: solid 1px var(--divider-color);
     background-color: var(--bg-color);
     color: var(--text-color);
 }
@@ -84,7 +84,7 @@ body {
 }
 
 .tb nav a:hover {
-    background-color: #111;
+    background-color: #eee;
 }
 
 /* Output */
@@ -114,6 +114,12 @@ body {
     :root {
         --bg-color: #1e1e1e;
         --text-color: #ccc;
-        --code-variable-name-color: #9ddbfe;
+        --divider-color: #111;
+    }
+
+    /* Toolbbar */
+
+    .tb nav a:hover {
+        background-color: #111;
     }
 }

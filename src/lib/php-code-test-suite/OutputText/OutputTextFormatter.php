@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.2
+ * @version   1.0.3
  * @since     1.0.0
  */
 
@@ -101,11 +101,13 @@ class OutputTextFormatter {
      * Formats a given pathname by attempting to shorten it and wrap into an IDE
      * HTML link.
      *
-     * @param string   $pathname      Path name to format.
-     * @param string   $text_suffix   An optional suffix to to be added to the
-     *                                text part of the resulting string.
-     * @param int|null $line_number   Optional line number to add to IDE link.
-     * @param int|null $column_number Optional column number to add to IDE link.
+     * @param string     $pathname      Path name to format.
+     * @param string     $text_suffix   An optional suffix to to be added to the
+     *                                  text part of the resulting string.
+     * @param int|null   $line_number   Optional line number to add to IDE link.
+     * @param int|null   $column_number Optional column number to add to IDE
+     *                                  link.
+     * @param array|null $class_names   When links are used, add these classes.
      * @return string If global option is set to format in HTML and pathname
      *                represents an existing file, results in HTML format.
      */
@@ -113,16 +115,15 @@ class OutputTextFormatter {
         string $pathname,
         string $text_suffix = '',
         ?int $line_number = null,
-        ?int $column_number = null
+        ?int $column_number = null,
+        ?array $class_names = null
     ): string {
 
         if( !$this->isQualifiedPathname($pathname) ) {
             return ($pathname . $text_suffix);
         }
 
-        $text = ($this->shortenPathname($pathname)
-            . $text_suffix);
-
+        $text = ($this->shortenPathname($pathname) . $text_suffix);
         $is_link = (
             $this->format_html
             && $this->convert_links
@@ -134,7 +135,8 @@ class OutputTextFormatter {
                 $pathname,
                 $text,
                 $line_number,
-                $column_number
+                $column_number,
+                $class_names
             )
             : $text;
     }
@@ -182,7 +184,6 @@ class OutputTextFormatter {
         }
 
         foreach( $this->shorten_paths as $shorten_path ) {
-
             $text = $this->shortenFilenamesByPath($text, $shorten_path);
         }
 
@@ -249,8 +250,8 @@ class OutputTextFormatter {
             // Not preceeded by "file/".
             '#(?<!file\/)(%s('
             // Accepted filepath characters.
-            . '[a-zA-Z0-9\/\_-]'
-            . '+(\.(%s))?))(\son\sline\s(\d+))?#m',
+            . '[\p{L}0-9\.\/\_-]+'
+            . '(\.(%s))?))(\son\sline\s(\d+))?#mu',
             preg_quote($path_prefix . '/', '/'),
             implode('|', $this->editable_file_formats)
         );
@@ -271,6 +272,7 @@ class OutputTextFormatter {
                     . DIRECTORY_SEPARATOR
                     . $relative_path
                 );
+                $filename_length = strlen($filename);
 
                 $is_link = (
                     $this->format_html
@@ -282,7 +284,8 @@ class OutputTextFormatter {
                     ? self::buildIdeHtmlLink(
                         $filename,
                         $text_relative_path,
-                        ( (int)$matches[6][$index][0] ?: null )
+                        ( (int)$matches[6][$index][0] ?: null ),
+                        class_names: ['file']
                     )
                     : $text_relative_path;
 
@@ -290,10 +293,32 @@ class OutputTextFormatter {
                     $text,
                     $replace_text,
                     ((int)$match[1] + $offset),
-                    strlen($filename)
+                    $filename_length
                 );
 
-                $offset += (strlen($replace_text) - strlen($filename));
+                $offset_add = (strlen($replace_text) - $filename_length);
+                $offset += $offset_add;
+
+                // Captured line number.
+                if(
+                    $this->format_html
+                    && isset($matches[6][$index], $matches[6][$index][0])
+                ) {
+
+                    [$line_number, $line_number_pos] = $matches[6][$index];
+                    $line_number_length = strlen($line_number);
+                    $replace_text = sprintf(
+                        '<span class="line-num">%s</span>',
+                        $line_number
+                    );
+                    $text = substr_replace(
+                        $text,
+                        $replace_text,
+                        ((int)$line_number_pos + $offset),
+                        $line_number_length
+                    );
+                    $offset += (strlen($replace_text) - $line_number_length);
+                }
             }
         }
 
@@ -302,14 +327,19 @@ class OutputTextFormatter {
 
     /** Converts a namespace to IDE open file HTML hyperlink. */
     public function namespaceToIdeHtmlLink(
-        string $namespace
+        string $namespace,
+        ?array $class_names = null
     ): ?string {
 
         if( !$filename = $this->namespaceToFilename($namespace) ) {
             return null;
         }
 
-        return self::buildIdeHtmlLink($filename, $namespace);
+        return self::buildIdeHtmlLink(
+            $filename,
+            $namespace,
+            class_names: $class_names
+        );
     }
 
     /**
@@ -361,12 +391,19 @@ class OutputTextFormatter {
         string $filename,
         ?string $text = null,
         ?int $line_number = null,
-        ?int $column_number = null
+        ?int $column_number = null,
+        ?array $class_names = null
     ): string {
 
         $html_link = sprintf(
-            '<a href="%s">',
-            $this->buildIdeUri($filename, $line_number, $column_number)
+            '<a href="%s"%s>',
+            $this->buildIdeUri($filename, $line_number, $column_number),
+            ( ( !$class_names )
+                ? ''
+                : sprintf(
+                    ' class="%s"',
+                    implode(' ', $class_names)
+                ) )
         );
 
         $html_link .= ( $text )
@@ -386,9 +423,10 @@ class OutputTextFormatter {
         $prefix = 'file://';
 
         if( !str_starts_with($file_uri, $prefix) ) {
-            throw new \ValueError(
-                "File URI must start with \"$prefix\" prefix"
-            );
+            throw new \ValueError(sprintf(
+                "File URI must start with \"%s\" prefix",
+                $prefix
+            ));
         }
 
         return $this->buildIdeUri(

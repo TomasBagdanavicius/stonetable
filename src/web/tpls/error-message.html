@@ -21,81 +21,74 @@ body {
 </head>
 <body>
 
-    <article class="msg code-msg">
-
-        <p class="text"><strong>There was an error</strong></p>
-
+<article class="msg code-msg code-msg-err">
+    <p class="text"><strong>This is a simulated error</strong></p>
+    <dl>
+        <dt>Location</dt>
+        <dd><a href="vscode://file//usr/local/var/www/projects/php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php:17" class="file">.../php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php<span class="line-num">:<span class="num">17</span></span></a></dd>
+        <dt>Type</dt>
+        <dd>E_RECOVERABLE_ERROR</dd>
+        <dt>Error Class</dt>
+        <dd>Error</dd>
+        <dt>Error Code</dt>
+        <dd>123</dd>
+    </dl>
+    <p class="h">Stack trace list:</p>
+    <ol class="stk-tr-l" reversed>
+        <li>
+            <a href="vscode://file//usr/local/var/www/projects/php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php:30" class="file"><span class="file-path">.../php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php</span><span class="line-num">:<span class="num">30</span></span> <span class="func-name">B<span class="punc punc-brkt">(</span><span class="punc punc-brkt">)</span></span></a>
+            <ol class="arg-l">
+                <li class="object"><code class="php"><span class="type">object</span></code><span class="info"><span class="punc punc-brkt">(</span>#24<span class="punc punc-brkt">)</span></span> <span class="text">stdClass</span></li>
+                <li class="string"><code class="php"><span class="type">string</span></code><span class="info"><span class="punc punc-brkt">(</span>36<span class="punc punc-brkt">)</span></span> <span class="text">&quot;/Users/JohnDoe/Documents/...&quot;</span></li>
+                <li class="string"><code class="php"><span class="type">string</span></code><span class="info"><span class="punc punc-brkt">(</span>25<span class="punc punc-brkt">)</span></span> <span class="text">&quot;VendorName\\foo\\bar\\baz&quot;</span></li>
+                <li class="object"><code class="php"><span class="type">object</span></code><span class="info"><span class="punc punc-brkt">(</span>#25<span class="punc punc-brkt">)</span></span> <span class="text">Closure</span></li>
+            </ol>
+        </li>
+        <li>
+            <a href="vscode://file//usr/local/var/www/projects/php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php:40" class="file"><span class="file-path">.../php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php</span><span class="line-num">:<span class="num">40</span></span> <span class="func-name">A<span class="punc punc-brkt">(</span><span class="punc punc-brkt">)</span></span></a>
+            <ol class="arg-l">
+                <li class="string"><code class="php"><span class="type">string</span></code><span class="info"><span class="punc punc-brkt">(</span>12<span class="punc punc-brkt">)</span></span> <span class="text">&quot;Hello World!&quot;</span></li>
+                <li class="int"><code class="php"><span class="type">int</span></code><span class="info"><span class="punc punc-brkt">(</span>3<span class="punc punc-brkt">)</span></span> <span class="text">100</span></li>
+                <li class="float"><code class="php"><span class="type">float</span></code><span class="info"><span class="punc punc-brkt">(</span>1,2<span class="punc punc-brkt">)</span></span> <span class="text">1.23</span></li>
+                <li class="bool"><code class="php"><span class="type">bool</span> <span class="type">false</span></code></li>
+            </ol>
+        </li>
+    </ol>
+    <article class="msg code-msg code-msg-err">
+        <p class="text"><strong>This is a simulated exception</strong></p>
         <dl>
             <dt>Location</dt>
-            <dd><a href="vscode://file//Users/JohnDoe/projects/project-directory/PhpErrorHandler_test.php:87">.../project-directory/PhpErrorHandler_test.php:87</a></dd>
+            <dd><a href="vscode://file//usr/local/var/www/projects/php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php:20" class="file">.../php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php<span class="line-num">:<span class="num">20</span></span></a></dd>
+            <dt>Type</dt>
+            <dd>E_RECOVERABLE_ERROR</dd>
             <dt>Error Class</dt>
-            <dd>Error</dd>
+            <dd>Exception</dd>
             <dt>Error Code</dt>
-            <dd>123</dd>
+            <dd>0</dd>
         </dl>
-
-        <p>Stack trace list:</p>
-
-        <ol reversed>
+        <p class="h">Stack trace list:</p>
+        <ol class="stk-tr-l" reversed>
             <li>
-                <a href="vscode://file//Users/JohnDoe/projects/project-directory/PhpErrorHandler_test.php:101">.../project-directory/PhpErrorHandler_test.php B</a>
+                <a href="vscode://file//usr/local/var/www/projects/php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php:30" class="file"><span class="file-path">.../php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php</span><span class="line-num">:<span class="num">30</span></span> <span class="func-name">B<span class="punc punc-brkt">(</span><span class="punc punc-brkt">)</span></span></a>
                 <ol class="arg-l">
-                    <li><span class="type">object</span> <span class="text">stdClass</span></li>
-                    <li><span class="type">string</span> <span class="text">.../deepwater/foo/bar.php</span></li>
-                    <li><span class="type">string</span> <span class="text"><a href="vscode://file//Users/JohnDoe/projects/deepwater/source/Components/Properties/BaseProperty.php">LWP\Components\Properties\BaseProperty</a></span></li>
-                    <li><span class="type">object</span> <span class="text">Closure</span></li>
+                    <li class="object"><code class="php"><span class="type">object</span></code><span class="info"><span class="punc punc-brkt">(</span>#24<span class="punc punc-brkt">)</span></span> <span class="text">stdClass</span></li>
+                    <li class="string"><code class="php"><span class="type">string</span></code><span class="info"><span class="punc punc-brkt">(</span>36<span class="punc punc-brkt">)</span></span> <span class="text">&quot;/Users/JohnDoe/Documents/...&quot;</span></li>
+                    <li class="string"><code class="php"><span class="type">string</span></code><span class="info"><span class="punc punc-brkt">(</span>25<span class="punc punc-brkt">)</span></span> <span class="text">&quot;VendorName\\foo\\bar\\baz&quot;</span></li>
+                    <li class="object"><code class="php"><span class="type">object</span></code><span class="info"><span class="punc punc-brkt">(</span>#25<span class="punc punc-brkt">)</span></span> <span class="text">Closure</span></li>
                 </ol>
             </li>
             <li>
-                <a href="vscode://file//Users/JohnDoe/projects/project-directory/PhpErrorHandler_test.php:111">.../project-directory/PhpErrorHandler_test.php A</a>
+                <a href="vscode://file//usr/local/var/www/projects/php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php:40" class="file"><span class="file-path">.../php-code-test-suite/test/demo/static/PhpErrors/simulation-nested-errors.php</span><span class="line-num">:<span class="num">40</span></span> <span class="func-name">A<span class="punc punc-brkt">(</span><span class="punc punc-brkt">)</span></span></a>
                 <ol class="arg-l">
-                    <li><span class="type">string</span> <span class="text">'Hello World!'</span></li>
-                    <li><span class="type">integer</span> <span class="text">100</span></li>
-                    <li><span class="type">double</span> <span class="text">1.23</span></li>
-                    <li><span class="type">boolean</span> <span class="text">false</span></li>
+                    <li class="string"><code class="php"><span class="type">string</span></code><span class="info"><span class="punc punc-brkt">(</span>12<span class="punc punc-brkt">)</span></span> <span class="text">&quot;Hello World!&quot;</span></li>
+                    <li class="int"><code class="php"><span class="type">int</span></code><span class="info"><span class="punc punc-brkt">(</span>3<span class="punc punc-brkt">)</span></span> <span class="text">100</span></li>
+                    <li class="float"><code class="php"><span class="type">float</span></code><span class="info"><span class="punc punc-brkt">(</span>1,2<span class="punc punc-brkt">)</span></span> <span class="text">1.23</span></li>
+                    <li class="bool"><code class="php"><span class="type">bool</span> <span class="type">false</span></code></li>
                 </ol>
             </li>
         </ol>
-
-        <article class="msg code-msg">
-
-            <p class="text"><strong>There was an exception</strong></p>
-
-            <dl>
-                <dt>Location</dt>
-                <dd><a href="vscode://file//Users/JohnDoe/projects/project-directory/PhpErrorHandler_test.php:90">.../project-directory/PhpErrorHandler_test.php:90</a></dd>
-                <dt>Error Class</dt>
-                <dd>Exception</dd>
-                <dt>Error Code</dt>
-                <dd>0</dd>
-            </dl>
-
-            <p>Stack trace list:</p>
-
-            <ol reversed>
-                <li>
-                    <a href="vscode://file//Users/JohnDoe/projects/project-directory/PhpErrorHandler_test.php:101">.../project-directory/PhpErrorHandler_test.php B</a>
-                    <ol class="arg-l">
-                        <li><span class="type">object</span> <span class="text">stdClass</span></li>
-                        <li><span class="type">string</span> <span class="text">.../deepwater/foo/bar.php</span></li>
-                        <li><span class="type">string</span> <span class="text"><a href="vscode://file//Users/JohnDoe/projects/deepwater/source/Components/Properties/BaseProperty.php">LWP\Components\Properties\BaseProperty</a></span></li>
-                        <li><span class="type">object</span> <span class="text">Closure</span></li>
-                    </ol>
-                </li>
-                <li>
-                    <a href="vscode://file//Users/JohnDoe/projects/project-directory/PhpErrorHandler_test.php:111">.../project-directory/PhpErrorHandler_test.php A</a>
-                    <ol class="arg-l">
-                        <li><span class="type">string</span> <span class="text">'Hello World!'</span></li>
-                        <li><span class="type">integer</span> <span class="text">100</span></li>
-                        <li><span class="type">double</span> <span class="text">1.23</span></li>
-                        <li><span class="type">boolean</span> <span class="text">false</span></li>
-                    </ol>
-                </li>
-            </ol>
-
-        </article>
-
     </article>
+</article>
 
 </body>
 </html>

@@ -2,6 +2,7 @@ abort - abr
 about - abt
 arrow - arw
 blank - blk
+bracket - brkt
 body - bd
 breadcrumbs - brcr
 button - btn
@@ -23,6 +24,7 @@ expand - exp
 field - fld
 footer - ftr
 fullscreen - fscr
+function - func
 group - grp
 header - hdr
 heading - h
@@ -54,6 +56,7 @@ select - slt
 selected - sel
 short - shrt
 sidebar - sb
+stack - stk
 status - sts
 template - tpl
 text - t
@@ -61,6 +64,7 @@ title - ttl
 toggle - tgl
 toolbar - tb
 total - tot
+trace - tr
 upgrade - upg
 version - ver
 waiting - wtng

@@ -4,5 +4,5 @@ node_modules/
 /scripts/sync-dependencies.sh
 /scripts/push-release.sh
 /tmp
-/docs/commands.txt
+/docs/commands.md
 /docs/release-steps.md

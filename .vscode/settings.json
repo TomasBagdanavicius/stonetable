@@ -1,7 +1,11 @@
 {
     "files.trimTrailingWhitespace": true,
     "files.eol": "\n",
+    "editor.rulers": [
+        80
+    ],
     "cSpell.words": [
         "Stonetable"
-    ]
+    ],
+    "cSpell.language": "en-US"
 }

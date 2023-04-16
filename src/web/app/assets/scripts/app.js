@@ -821,6 +821,7 @@ function produceEmptyControllerButton(inputField) {
         button = createElement('button', {
             text: "Empty",
             classes: ['mty-ctrl'],
+            title: "Empty field"
         });
     }
     const remove = () => {
@@ -1830,9 +1831,12 @@ function Popup(
     });
     container.append(closeButton, contentElem);
     this.container = document.body.appendChild(container);
-    const offsets = getTopLeftOffset(offsetPos, relElem, this.container);
-    container.style.top = offsets[0] + 'px';
-    container.style.left = offsets[1] + 'px';
+    const setPosition = () => {
+        const offsets = getTopLeftOffset(offsetPos, relElem, this.container);
+        container.style.top = offsets[0] + 'px';
+        container.style.left = offsets[1] + 'px';
+    };
+    setPosition();
     this.isOpen = true;
     this.trigger = trigger;
     this.bindedCloseFunction = this.listener.bind(this);
@@ -1845,6 +1849,7 @@ function Popup(
             this.close();
         }, {once: true});
     }
+    window.addEventListener('resize', setPosition);
 }
 
 Popup.prototype.listener = function(e) {
@@ -2874,7 +2879,7 @@ const managerScreen = {
                             const onClick = () => {
                                 const url = removeParamsFromUrl(
                                     amendLocationUrl(params),
-                                    ['side']
+                                    ['side', 'file_search_query']
                                 );
                                 open(url.toString(), '_blank');
                             }
@@ -2893,7 +2898,8 @@ const managerScreen = {
                                         onClick,
                                     }
                                 },
-                                [], // Dialog classes.
+                                // Dialog classes.
+                                [],
                                 (returnValue) => {
                                     if (returnValue === 'yes') {
                                         managerScreen.load(params);
@@ -3274,7 +3280,7 @@ const managerScreen = {
         const tagName = (isClickable) ? 'button' : 'span';
         const mainButton = createElement(tagName, {
             text: data.basename,
-            title: data.basename,
+            title: data.relativePathname,
         });
         item.append(mainButton);
         if (isClickable) {

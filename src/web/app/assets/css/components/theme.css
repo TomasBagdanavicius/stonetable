@@ -1,9 +1,5 @@
 @import "code-php-highlight.css";
 
-:root {
-    --code-variable-name-color: var(--code-php-highlight-variable);
-}
-
 /* Waiting */
 
 .wtng {

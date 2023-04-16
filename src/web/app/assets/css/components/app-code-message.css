@@ -38,6 +38,6 @@
     background-color: var(--mg-color);
 }
 
-.code-msg [reversed] > li::marker {
+.code-msg .stk-tr-l > li::marker {
     color: var(--bg-color-restrained);
 }
