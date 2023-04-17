@@ -10,7 +10,7 @@ Stonetable is lightweight, dependency-free, conceptual PHP project build and cod
 
 ## Stonetable Web Application
 
-![Meet Stonetable](https://www.lwis.net/stonetable/images/meet-stonetable.webp)
+![Meet Stonetable](https://www.lwis.net/stonetable/images/meet-stonetable.webp?v=2)
 
 Stonetable's web application is the core component of the suite. This web app helps you navigate and visualize your PHP project builds by providing incentives to maintain organized demo and unit test files that can be outputted in a user friendly manner with enhanced state and error reporting.
 
