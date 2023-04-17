@@ -57,7 +57,7 @@ class PHPErrorHandler {
     ) {
 
         // Prevent duplicate printing fatal errors.
-        #error_reporting(0);
+        error_reporting(0);
 
         $this->formatter = $this->debugger->formatter;
         $this->format_html = $this->debugger->formatter->format_html;
