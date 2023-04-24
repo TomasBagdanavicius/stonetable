@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.3
+ * @version   1.0.4
  * @since     1.0.0
  */
 
@@ -315,7 +315,7 @@ class Debugger {
                         $type
                     );
                     $result .= sprintf(
-                        '<code class="php"><span class="type">%s</span>',
+                        '<code class="code-php"><span class="type">%s</span>',
                         $type
                     );
                     $code_open = true;

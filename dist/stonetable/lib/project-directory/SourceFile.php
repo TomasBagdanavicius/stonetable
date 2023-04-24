@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.3
+ * @version   1.0.4
  * @since     1.0.0
  */
 
@@ -62,7 +62,7 @@ class SourceFile extends ProjectFile {
         return [...parent::getDescriptionData(), ...$my_data];
     }
 
-
+    /** Adds in special comments required by this file. */
     public function setupSpecialComments(
         array $special_comment_storage
     ): array {
@@ -208,9 +208,13 @@ class SourceFile extends ProjectFile {
             return false;
         }
 
-        return $this->root_directory->factory->fromPathname(
+        $demo_file = $this->root_directory->factory->fromPathname(
             $demo_file_pathname
         );
+
+        $demo_file->rebuildAllSpecialCommentLines();
+
+        return $demo_file;
     }
 
     /**

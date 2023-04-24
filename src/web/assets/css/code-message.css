@@ -118,11 +118,11 @@
 
 /* Highlighting */
 
-.code-msg code.php .var {
+.code-msg .code-php .var {
     color: var(--code-php-highlight-variable, #001180);
 }
 
-.code-msg code.php .type {
+.code-msg .code-php .type {
     color: var(--code-php-highlight-keyword, #0a00ff);
 }
 
@@ -158,11 +158,11 @@
 
     /* Highlighting */
 
-    .code-msg code.php .var {
+    .code-msg .code-php .var {
         color: var(--code-php-highlight-variable, #9ddbfe);
     }
 
-    .code-msg code.php .type {
+    .code-msg .code-php .type {
         color: var(--code-php-highlight-keyword, #559cd6);
     }
 

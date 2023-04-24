@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.3
+ * @version   1.0.4
  * @since     1.0.0
  */
 
@@ -58,6 +58,16 @@ class PlaygroundFile extends TestFile {
         return $data;
     }
 
+    /** Adds in special comments required by this file. */
+    public function setupSpecialComments(
+        array $special_comment_storage
+    ): array {
+
+        $special_comment_storage['static'] = new StaticSpecialComment($this);
+
+        return parent::setupSpecialComments($special_comment_storage);
+    }
+
     /** Gets path name relative to the playground files directory. */
     public function getPlaygroundRelativePathname(): string {
 
@@ -71,7 +81,7 @@ class PlaygroundFile extends TestFile {
      * Builds a file name that would be an equivalent file in a static files
      * directory.
      */
-    public function buildStaticFilename(): string {
+    public function buildStaticFilePathname(): string {
 
         return $this->branched_test_directory->buildStaticFilePathname(
             $this->getPlaygroundRelativePathname()
@@ -83,9 +93,9 @@ class PlaygroundFile extends TestFile {
      *
      * @return string|null Null when file does not exist.
      */
-    public function getStaticFilename(): ?string {
+    public function getStaticFilePathname(): ?string {
 
-        $static_filename = $this->buildStaticFilename();
+        $static_filename = $this->buildStaticFilePathname();
 
         if( !file_exists($static_filename) ) {
             return null;
@@ -97,7 +107,7 @@ class PlaygroundFile extends TestFile {
     /** Tells if static file equivalent exists. */
     public function hasStaticFile(): bool {
 
-        return boolval($this->getStaticFilename());
+        return boolval($this->getStaticFilePathname());
     }
 
     /**

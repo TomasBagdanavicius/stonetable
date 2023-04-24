@@ -182,7 +182,7 @@ $tokenizer = new Tokenizer(
 echo '<link rel="stylesheet" href="/path/to/stonetable/lib/php-code-test-suite/misc/php-code-highlight.css">';
 
 // Generates code block
-echo '<code class="php">';
+echo '<code class="code-php">';
 foreach ($tokenizer as $line_number => $html) {
     echo $html;
 }
@@ -194,7 +194,7 @@ The above will output something similar to this:
 ```html
 <link rel="stylesheet" href="/path/to/stonetable/lib/php-code-test-suite/misc/php-code-highlight.css">
 
-<code class="php"><span class="open-tag">&lt;?php</span><span class="whitespace"> </span><span class="function-like-keyword keyword-echo">echo</span><span class="whitespace"> </span><span class="string">&quot;Hello World!&quot;</span><span class="punctuation">;</span></code>
+<code class="code-php"><span class="open-tag">&lt;?php</span><span class="whitespace"> </span><span class="function-like-keyword keyword-echo">echo</span><span class="whitespace"> </span><span class="string">&quot;Hello World!&quot;</span><span class="punctuation">;</span></code>
 ```
 
 Notable things:
@@ -275,7 +275,7 @@ The above will output something similar to:
 
 ```html
 <article class="msg code-msg code-msg-warn">
-    <p class="text"><strong>Undefined variable <code class="php"><span class="var">$unexisting_variable</span></code></strong></p>
+    <p class="text"><strong>Undefined variable <code class="code-php"><span class="var">$unexisting_variable</span></code></strong></p>
     <dl>
         <dt>Location</dt>
         <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:46" class="file">.../snippet.php<span class="line-num">:<span class="num">46</span></span></a></dd>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * An object representing link special comment.
+ * Object representing a static special comment.
  *
  * PHP version 8.1
  *
@@ -11,20 +11,23 @@
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
  * @version   1.0.4
- * @since     1.0.0
+ * @since     1.0.4
  */
 
 declare(strict_types=1);
 
 namespace PD;
 
-class LinkSpecialComment extends SpecialComment {
+class StaticSpecialComment extends SpecialComment {
 
-    /** A prefix to a file URL link in the link comment line. */
-    public const LINE_PREFIX = "Link";
+    /**
+     * A prefix to the static file link at the beginning of the static comment
+     * line.
+     */
+    public const LINE_PREFIX = "Static";
 
     public function __construct(
-        public readonly TestFile $project_file
+        public readonly PlaygroundFile $project_file
     ) {
 
         parent::__construct(self::LINE_PREFIX);
@@ -33,6 +36,12 @@ class LinkSpecialComment extends SpecialComment {
     /** Gets the content part of the comment line. */
     public function getContent(): ?string {
 
-        return $this->project_file->getUrl();
+        $static_file_pathname = $this->project_file->getStaticFilePathname();
+
+        if( !$static_file_pathname ) {
+            return null;
+        }
+
+        return ('file://' . $static_file_pathname);
     }
 }

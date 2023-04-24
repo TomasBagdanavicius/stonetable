@@ -88,6 +88,7 @@
     color: var(--code-php-highlight-comment);
 }
 
+.code-php .var,
 .code-php .variable,
 .code-php .varname,
 .code-php .varname-open,

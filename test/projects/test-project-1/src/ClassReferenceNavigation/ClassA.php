@@ -17,6 +17,8 @@ namespace VendorName\ClassReferenceNavigation;
 use VendorName\ClassReferenceNavigation\ClassB;
 // Alias.
 use VendorName\ClassReferenceNavigation\ClassC as CC;
+// Unexisting: unclickable.
+use VendorName\ClassReferenceNavigation\ClassD;
 
 class ClassA
 {

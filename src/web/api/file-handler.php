@@ -159,17 +159,22 @@ switch( $handler_name ) {
 
                         $base = $known_vendors[$namespace_vendor]['base'];
                         $base_path_len = (strlen($base) + 1);
+                        $namespace_filename
+                            = $output_text_formatter->namespaceToFilename(
+                                $namespace
+                            );
 
-                        $features = sprintf(
-                            ' data-project="%s" data-relative-path="%s"',
-                            $known_vendors[$namespace_vendor]['project'],
-                            substr(
-                                $output_text_formatter->namespaceToFilename(
-                                    $namespace
-                                ),
-                                offset: $base_path_len
-                            )
-                        );
+                        if( file_exists($namespace_filename) ) {
+
+                            $features = sprintf(
+                                ' data-project="%s" data-relative-path="%s"',
+                                $known_vendors[$namespace_vendor]['project'],
+                                substr(
+                                    $namespace_filename,
+                                    offset: $base_path_len
+                                )
+                            );
+                        }
                     }
                 }
 

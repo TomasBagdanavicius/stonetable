@@ -62,6 +62,16 @@ if( !isset($demo_projects_pathname) ) {
 
 $dpi_project_root_directory = new ProjectRootDirectory($demo_projects_pathname);
 
+define(
+    __NAMESPACE__ . '\SRC_PATH',
+    $dpi_project_root_directory->source_dirname
+);
+
+define(
+    __NAMESPACE__ . '\TEST_PATH',
+    $dpi_project_root_directory->tests_dirname
+);
+
 [$dpi_output_text_formatter, ]
     = $dpi_project_root_directory->produceOutputTextFormatter(
         format_html: true,

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.4) - 2023-04-24
+
+### Changed
+
+- Ini directive `zend.exception_ignore_args` will be set to `Off` to make sure that stack trace list arguments are visible on systems where the default configuration has it set to `On` (https://www.php.net/manual/en/ini.core.php#ini.zend.exception-ignore-args)
+- Title attribute in favorite items will be populated with relative path names, instead of just file names.
+- Added constants `Demo\SRC_PATH` and `Demo\TEST_PATH` which can be used in test files. The former holds project source directory’s path name, whereas the latter project test directory’s path name.
+- Special comments will be added right away to a newly built demo file.
+- Class reference will not be clickable into a class whose file does not exist.
+- `<code>` element’s generic “php” class has been replaced with a more practical “code-php”. This allows to use this class semantically on DIV elements, which is required when presenting code in lines as nested DIV elements. `<code>` elements allows phrasing content only.
+- Added `Cache-Control: no-cache` into the main HTML file. The current lightweight structure without service worker implementation does not suffer from this.
+- Bump PHP Code Test Suite version to 1.0.4
+- Bump Project Directory version to 1.0.4
+
+### Added
+
+- Introduced a new special comment "Static" that will be used in playground files to chain back to corresponding static demo file.
+
 ## [1.0.3](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.3) - 2023-04-16
 
 ### Changed

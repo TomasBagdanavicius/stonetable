@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.3
+ * @version   1.0.4
  * @since     1.0.0
  */
 
@@ -302,7 +302,9 @@ class OutputTextFormatter {
                 // Captured line number.
                 if(
                     $this->format_html
-                    && isset($matches[6][$index], $matches[6][$index][0])
+                    && isset($matches[6][$index])
+                    && !empty($matches[6][$index][0])
+                    && $matches[6][$index][1] !== -1
                 ) {
 
                     [$line_number, $line_number_pos] = $matches[6][$index];

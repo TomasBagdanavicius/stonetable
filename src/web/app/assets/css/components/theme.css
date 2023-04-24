@@ -7,11 +7,21 @@
 }
 
 
-/* Code Lines */
+/* Code & Code Lines */
 
 code,
 .code-lns {
-    font: 13px/1.5 Menlo, Monaco, "Courier New", monospace;
+    font-family: Menlo, Monaco, "Courier New", monospace;
+}
+
+code,
+.code-php {
+    font-size: 90%;
+}
+
+.code-lns {
+    font-size: 13px;
+    line-height: 1.5;
 }
 
 .code-lns > :hover > * {

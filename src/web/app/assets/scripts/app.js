@@ -3444,7 +3444,7 @@ const managerScreen = {
     createFavoriteButton(title, place, path) {
         return createElement('button', {
             text: title,
-            title,
+            title: path,
             attrs: {
                 'data-query': `${place}=${path}`,
             }

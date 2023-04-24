@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.3
+ * @version   1.0.4
  * @since     1.0.0
  */
 
@@ -57,7 +57,9 @@ class PHPErrorHandler {
     ) {
 
         // Prevent duplicate printing fatal errors.
-        #error_reporting(0);
+        error_reporting(0);
+        // Make sure stack trace list arguments are visible.
+        ini_set('zend.exception_ignore_args', 'Off');
 
         $this->formatter = $this->debugger->formatter;
         $this->format_html = $this->debugger->formatter->format_html;
@@ -403,7 +405,7 @@ class PHPErrorHandler {
         // Wrap variables into the code tag.
         return preg_replace(
             '/\$+[a-zA-Z0-9_]+/',
-            '<code class="php"><span class="var">$0</span></code>',
+            '<code class="code-php"><span class="var">$0</span></code>',
             $text
         );
     }

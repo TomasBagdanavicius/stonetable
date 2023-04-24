@@ -5,12 +5,12 @@
  *
  * PHP version 8.1
  *
- * @package   [Package name]
+ * @package   Project Directory
  * @author    Tomas Bagdanavičius <tomas.bagdanavicius@lwis.net>
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.3
+ * @version   1.0.4
  * @since     1.0.0
  */
 
@@ -20,7 +20,9 @@ namespace PD;
 
 class DemoSpecialComment extends SpecialComment {
 
-    /** A prefix to the demo file link in the demo comment line. */
+    /**
+     * A prefix to the demo file link at the beginning of the demo comment line.
+     */
     public const LINE_PREFIX = "Demo";
 
     public function __construct(
