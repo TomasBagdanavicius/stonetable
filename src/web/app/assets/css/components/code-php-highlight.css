@@ -210,9 +210,12 @@
 /* Clickable element */
 
 [data-relative-path] {
-    text-decoration: underline var(--bg-color-restrained, #666) dotted 1px;
+    text-decoration: underline var(--bg-color-restrained, #666) dotted;
+    -webkit-text-decoration: underline var(--bg-color-restrained, #666) dotted;
     text-decoration-skip-ink: auto;
     text-decoration-skip-ink: all;
+    /* Safari does not support this inside shorthand */
+    text-decoration-thickness: 1px;
     text-underline-offset: 3px;
     cursor: pointer;
 }
@@ -232,8 +235,11 @@
 /* Namespace that is not backed by a file */
 
 .code-php .namespace.no-file {
-    text-decoration: underline var(--bg-color-restrained, #666) wavy 1px;
+    text-decoration: underline var(--bg-color-restrained, #666) wavy;
+    -webkit-text-decoration: underline var(--bg-color-restrained, #666) wavy;
     text-decoration-skip-ink: auto;
     text-decoration-skip-ink: all;
+    /* Safari does not support this inside shorthand */
+    text-decoration-thickness: 1px;
     text-underline-offset: 3px;
 }
