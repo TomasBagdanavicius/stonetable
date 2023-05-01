@@ -545,11 +545,11 @@ function amendLocationUrl(params) {
  * Removes given search params from the given URL
  * @param {URL} url - URL object which should be used to remove search params
  * @param {array} params - A list of search parameter names
- * @param {boolean} returnIndeces - Whether to return indices
- * @returns {URL|array} When `returnIndeces` is set to true, it will return an
+ * @param {boolean} returnIndices - Whether to return indices
+ * @returns {URL|array} When `returnIndices` is set to true, it will return an
  *     array containing the URL and removed count number
  */
-function removeParamsFromUrl(url, params, returnIndeces = false) {
+function removeParamsFromUrl(url, params, returnIndices = false) {
     let removedCount = 0;
 
     params.forEach(param => {
@@ -559,7 +559,7 @@ function removeParamsFromUrl(url, params, returnIndeces = false) {
         }
     });
 
-    if ( !returnIndeces ) {
+    if ( !returnIndices ) {
         return url;
     } else {
         return [url, removedCount];
@@ -571,7 +571,7 @@ function removeParamsFromUrl(url, params, returnIndeces = false) {
  * @param {array} params - A list of search parameter names
  */
 function removeLocationParams(params) {
-    const {url, removedCount} = removeParamsFromUrl(
+    const [url, removedCount] = removeParamsFromUrl(
         new URL(location),
         params,
         true
@@ -2791,7 +2791,7 @@ const managerScreen = {
                 this.currentMainPath = path;
             } else {
                 this.putOnNoFileMessage();
-                removeLocationParams(['main']);
+                this.releaseParams(['main'], 'replace');
             }
         }).catch(error => {
             console.error(error);
@@ -2860,6 +2860,35 @@ const managerScreen = {
             });
             if (Object.hasOwn(lines, lineNum)) {
                 lineContentContainer.innerHTML = lines[lineNum];
+                let savedContextMenu;
+                let savedPopup;
+                lineNumberContainer.classList.add('has-opts');
+                lineNumberContainer.addEventListener('click', () => {
+                    let contextMenu;
+                    if (!savedContextMenu) {
+                        const menuElem = createElement('menu');
+                        const copyLineButton = createElement('button', {
+                            text: `Copy Line #${lineNum}`
+                        });
+                        copyLineButton.addEventListener('click', () => {
+                            writeToClipboard(lineContentContainer.innerText);
+                        });
+                        menuElem.append(copyLineButton);
+                        contextMenu = menuElem;
+                    } else {
+                        contextMenu = savedContextMenu;
+                    }
+                    if (savedPopup && savedPopup.isOpen) {
+                        savedPopup.close();
+                    } else {
+                        const popup = new Popup(
+                            lineNumberContainer,
+                            contextMenu,
+                            item
+                        );
+                        savedPopup = popup;
+                    }
+                });
                 const clickableElemAttr = 'data-relative-path';
                 let queryStr = '[' + clickableElemAttr + ']';
                 const clickableElems
@@ -2869,17 +2898,31 @@ const managerScreen = {
                     const sameProject
                         = (project && this.loadedProjectName == project);
                     clickableElem.addEventListener('click', () => {
+                        const isFile = (
+                            !clickableElem.hasAttribute('data-path-type')
+                            || clickableElem.dataset.pathType == 'file'
+                        );
                         if (!sameProject) {
+                            const relativePath = clickableElem.getAttribute(
+                                clickableElemAttr
+                            );
                             const params = {
-                                project,
-                                main: clickableElem.getAttribute(
-                                    clickableElemAttr
-                                ),
+                                project
                             };
+                            const toRemoveFromParams = [
+                                'file_search_query',
+                            ];
+                            if (isFile) {
+                                params.main = relativePath;
+                                toRemoveFromParams.push('side');
+                            } else {
+                                params.side = relativePath;
+                                toRemoveFromParams.push('main');
+                            }
                             const onClick = () => {
                                 const url = removeParamsFromUrl(
                                     amendLocationUrl(params),
-                                    ['side', 'file_search_query']
+                                    toRemoveFromParams
                                 );
                                 open(url.toString(), '_blank');
                             }
@@ -2906,8 +2949,14 @@ const managerScreen = {
                                     }
                                 }
                             );
-                        } else {
+                        // Click into file.
+                        } else if( isFile ) {
                             this.loadIntoMainPanel(
+                                clickableElem.getAttribute(clickableElemAttr)
+                            );
+                        // Click into directory.
+                        } else {
+                            this.loadIntoSidePanel(
                                 clickableElem.getAttribute(clickableElemAttr)
                             );
                         }

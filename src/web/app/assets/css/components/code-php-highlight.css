@@ -76,6 +76,10 @@
     color: var(--code-php-highlight-base);
 }
 
+.code-php :any-link {
+    text-underline-offset: 3px;
+}
+
 .code-php .open-tag {
     color: var(--code-php-highlight-open-tag);
 }
@@ -206,11 +210,9 @@
 /* Clickable element */
 
 [data-relative-path] {
-    text-decoration: underline;
-    text-decoration-style: dotted;
+    text-decoration: underline var(--bg-color-restrained, #666) dotted 1px;
     text-decoration-skip-ink: auto;
     text-decoration-skip-ink: all;
-    text-decoration-color: var(--bg-color-restrained);
     text-underline-offset: 3px;
     cursor: pointer;
 }
@@ -220,5 +222,18 @@
 }
 
 [data-relative-path]:focus {
-    outline: solid 1px var(--accent-color);
+    outline: solid 1px var(--accent-color, royalblue);
+}
+
+.code-php .comment [data-relative-path] {
+    text-decoration-color: inherit;
+}
+
+/* Namespace that is not backed by a file */
+
+.code-php .namespace.no-file {
+    text-decoration: underline var(--bg-color-restrained, #666) wavy 1px;
+    text-decoration-skip-ink: auto;
+    text-decoration-skip-ink: all;
+    text-underline-offset: 3px;
 }

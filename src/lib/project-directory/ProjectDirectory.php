@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.4
+ * @version   1.0.5
  * @since     1.0.0
  */
 
@@ -20,6 +20,12 @@ namespace PD;
 
 /** Project directory is also considered a project file object. */
 class ProjectDirectory extends ProjectFileObject implements \IteratorAggregate {
+
+    /** A list of common system file names. */
+    public static $system_files = [
+        '.DS_Store',
+        'desktop.ini',
+    ];
 
     use FileTrait;
 
@@ -191,17 +197,12 @@ class ProjectDirectory extends ProjectFileObject implements \IteratorAggregate {
 
             $file_name = $file_info->getFilename();
 
-            if(
-                // Ignore all files starting with a dot.
-                str_starts_with($file_name, '.')
-            ) {
+            // Skip system files.
+            if( in_array($file_name, self::$system_files) ) {
                 return false;
             }
 
-            $relative_pathname = substr(
-                $filename,
-                ($root_dirname_length + 1)
-            );
+            $relative_pathname = substr($filename, ($root_dirname_length + 1));
 
             if(
                 in_array(
@@ -219,15 +220,39 @@ class ProjectDirectory extends ProjectFileObject implements \IteratorAggregate {
     /** Gets a handler that will sort data by the custom sorting algorithm. */
     public static function getSortHandler(): \Closure {
 
+        $prefix_order = ['_', '-', ':', '!', '?', '.', '*', '|'];
+
         return function(
             \SplFileInfo $a,
             \SplFileInfo $b
-        ): int {
+        ) use( $prefix_order ): int {
 
+            // Directories above files
             if( $a->isDir() && $b->isFile() ) {
                 return -1;
             } elseif( $a->isFile() && $b->isDir() ) {
                 return 1;
+            }
+
+            $a_path = $a->getPath();
+            $b_path = $b->getPath();
+            $a_basename = $a->getBasename();
+            $b_basename = $b->getBasename();
+            $a_first_char = substr($a_basename, 0, 1);
+            $b_first_char = substr($b_basename, 0, 1);
+            $a_pos = array_search($a_first_char, $prefix_order, true);
+            $b_pos = array_search($b_first_char, $prefix_order, true);
+
+            if( $a_path === $b_path && $a_pos !== false || $b_pos !== false ) {
+                if( $a_pos === false ) {
+                    return 1;
+                } elseif( $b_pos === false ) {
+                    return -1;
+                } elseif( $a_pos < $b_pos ) {
+                    return -1;
+                } elseif( $a_pos > $b_pos ) {
+                    return 1;
+                }
             }
 
             return strnatcasecmp($a->getPathname(), $b->getPathname());

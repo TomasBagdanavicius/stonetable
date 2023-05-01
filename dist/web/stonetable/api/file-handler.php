@@ -90,6 +90,12 @@ switch( $handler_name ) {
         [$output_text_formatter, $known_vendors]
             = $project_root_directory->produceOutputTextFormatter();
 
+        $known_vendors_by_base = [];
+
+        foreach( $known_vendors as $vendor_name => $data ) {
+            $known_vendors_by_base[$data['base']] = $data;
+        }
+
         $tokenizer = new Tokenizer(
             code: $project_file_object->getContents(),
             flags: (Tokenizer::KEY_AS_LINE_NUMBER
@@ -101,95 +107,117 @@ switch( $handler_name ) {
 
         foreach( $tokenizer as $line_number => $enhanced_token ) {
 
-            $category = $enhanced_token->getReusableCategory();
-            $features = '';
-            $namespace = $namespace_name = null;
             $php_token = $tokenizer->getElement();
             $is_whitespace_line_break
                 = ($php_token->id === T_WHITESPACE_LINE_BREAK);
 
-            if( !$is_whitespace_line_break ) {
+            if( $is_whitespace_line_break ) {
+                continue;
+            }
 
-                if( $category === PhpTokenCategoryEnum::CLASS_NAME ) {
+            $category = $enhanced_token->getReusableCategory();
+            $features = '';
+            $namespace = $namespace_name = null;
+            $class_names = $enhanced_token->getClassNames();
+
+            if( $category === PhpTokenCategoryEnum::CLASS_NAME ) {
+
+                if( !$tokenizer->isNamespaceUseDeclarationContext() ) {
+                    $namespace_name = $enhanced_token->token->text;
+                } else {
+                    $namespace = $tokenizer->getContext()->getNamespace();
+                }
+
+            } elseif( $category === PhpTokenCategoryEnum::NAMESPACE ) {
+
+                if( !$tokenizer->isNamespaceDefinitionNamePhase() ) {
+
+                    $last_component_type
+                        = $enhanced_token->getNamespaceLastComponentType();
 
                     if( !$tokenizer->isNamespaceUseDeclarationContext() ) {
-                        $namespace_name = $enhanced_token->token->text;
+
+                        if( $last_component_type === NUDTE::CLASS_LIKE ) {
+                            $namespace_name = $enhanced_token->token->text;
+                        }
+
                     } else {
-                        $namespace = $tokenizer->getContext()->getNamespace();
-                    }
 
-                } elseif( $category === PhpTokenCategoryEnum::NAMESPACE ) {
-
-                    if( !$tokenizer->isNamespaceDefinitionNamePhase() ) {
-
-                        $last_component_type
-                            = $enhanced_token->getNamespaceLastComponentType();
-
-                        if( !$tokenizer->isNamespaceUseDeclarationContext() ) {
-
-                            if( $last_component_type === NUDTE::CLASS_LIKE ) {
-                                $namespace_name = $enhanced_token->token->text;
-                            }
-
-                        } else {
-
-                            if( $last_component_type === NUDTE::CLASS_LIKE ) {
-                                $namespace = $tokenizer->getContext()
-                                    ->getNamespace();
-                            }
+                        if( $last_component_type === NUDTE::CLASS_LIKE ) {
+                            $namespace = $tokenizer->getContext()
+                                ->getNamespace();
                         }
                     }
                 }
+            }
 
-                if( $namespace_name || $namespace ) {
+            if( $namespace_name || $namespace ) {
 
-                    if( !$namespace ) {
-                        $namespace = $tokenizer->resolveNamespaceName(
-                            $namespace_name
+                if( !$namespace ) {
+                    $namespace = $tokenizer->resolveNamespaceName(
+                        $namespace_name
+                    );
+                }
+
+                $separator_pos = strpos($namespace, '\\');
+
+                $namespace_vendor = ( $separator_pos !== false )
+                    ? substr($namespace, 0, $separator_pos)
+                    : $namespace;
+
+                if( isset($known_vendors[$namespace_vendor]) ) {
+
+                    $base = $known_vendors[$namespace_vendor]['base'];
+                    $base_path_len = (strlen($base) + 1);
+                    $namespace_filename
+                        = $output_text_formatter->namespaceToFilename(
+                            $namespace
                         );
-                    }
 
-                    $separator_pos = strpos($namespace, '\\');
+                    if( file_exists($namespace_filename) ) {
 
-                    $namespace_vendor = ( $separator_pos !== false )
-                        ? substr($namespace, 0, $separator_pos)
-                        : $namespace;
+                        $features = sprintf(
+                            ' data-project="%s" data-relative-path="%s"',
+                            $known_vendors[$namespace_vendor]['project'],
+                            substr(
+                                $namespace_filename,
+                                offset: $base_path_len
+                            )
+                        );
 
-                    if( isset($known_vendors[$namespace_vendor]) ) {
+                    } else {
 
-                        $base = $known_vendors[$namespace_vendor]['base'];
-                        $base_path_len = (strlen($base) + 1);
-                        $namespace_filename
-                            = $output_text_formatter->namespaceToFilename(
-                                $namespace
-                            );
-
-                        if( file_exists($namespace_filename) ) {
-
-                            $features = sprintf(
-                                ' data-project="%s" data-relative-path="%s"',
-                                $known_vendors[$namespace_vendor]['project'],
-                                substr(
-                                    $namespace_filename,
-                                    offset: $base_path_len
-                                )
-                            );
-                        }
+                        $class_names[] = 'no-file';
                     }
                 }
+            }
 
-                $html = sprintf(
-                    '<span class="%s"%s>%s</span>',
-                    implode(' ', $enhanced_token->getClassNames()),
-                    $features,
+            if( $category === PhpTokenCategoryEnum::COMMENT ) {
+
+                $inner_html = wrap_links_around_urls(
                     $enhanced_token->getInnerHtml()
                 );
+                $inner_html = wrap_meta_around_pathnames(
+                    $inner_html,
+                    $known_vendors_by_base
+                );
 
-                if( !isset($parts[$line_number]) ) {
-                    $parts[$line_number] = $html;
-                } else {
-                    $parts[$line_number] .= $html;
-                }
+            } else {
+
+                $inner_html = $enhanced_token->getInnerHtml();
+            }
+
+            $html = sprintf(
+                '<span class="%s"%s>%s</span>',
+                implode(' ', $class_names),
+                $features,
+                $inner_html
+            );
+
+            if( !isset($parts[$line_number]) ) {
+                $parts[$line_number] = $html;
+            } else {
+                $parts[$line_number] .= $html;
             }
         }
 

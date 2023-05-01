@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.4
+ * @version   1.0.5
  * @since     1.0.0
  */
 
@@ -290,6 +290,8 @@ class ProjectRootDirectory extends ProjectDirectory {
                 'project' => $this->getBasename(),
                 'source' => $this->source_dirname,
                 'base' => $this->pathname,
+                'demo_static' => $this->demo_static_dirname,
+                'units_static' => $this->units_static_dirname,
             ],
         ];
 
@@ -303,17 +305,20 @@ class ProjectRootDirectory extends ProjectDirectory {
                     $this->projects_dirname,
                     $project_name
                 );
-                $project_instance = new self($project_dirname);
+                $project = new self($project_dirname);
+                $import_vendor_name = $project->getVendorName();
 
-                if( $import_vendor_name = $project_instance->getVendorName() ) {
+                if( $import_vendor_name ) {
 
                     $vendor_data[$import_vendor_name]
-                        = $project_instance->source_dirname;
+                        = $project->source_dirname;
 
                     $known_vendors[$import_vendor_name] = [
-                        'project' => $project_instance->getBasename(),
-                        'source' => $project_instance->source_dirname,
-                        'base' => $project_instance->pathname,
+                        'project' => $project->getBasename(),
+                        'source' => $project->source_dirname,
+                        'base' => $project->pathname,
+                        'demo_static' => $project->demo_static_dirname,
+                        'units_static' => $project->units_static_dirname,
                     ];
                 }
             }

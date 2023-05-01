@@ -289,3 +289,139 @@ function get_project_root_object( string $pathname ): ProjectRootDirectory {
         );
     }
 }
+
+/**
+ * Wraps hyperlinks around URLs found in the given text.
+ *
+ * @param string $text Text string where it will look for URLs.
+ * @return string String where all URLs are wrapped inside hyperlinks.
+ */
+function wrap_links_around_urls( string $text ): string {
+
+    // Define the regex pattern to match URLs.
+    $regex = '/'
+        // Match http(s)://, ftp://, or www.
+        . '(?:https?:\/\/|ftp:\/\/|(www\.))'
+        . '('
+        // Known hosts.
+        . '(?:localhost|127\.0\.0\.1'
+        // Valid domain pattern.
+        . '|[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)'
+        // Match any valid path or query parameter, including &amp;
+        . '(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=;]*)'
+        . ')'
+        . '/';
+
+    // Replace URLs with links.
+    return preg_replace_callback($regex, function( array $matches ): string {
+
+        [$url, $is_www, $scheme_relative] = $matches;
+        $link_text = $url;
+
+        if( $is_www === 'www.' ) {
+            $url = ('http://' . $url);
+        }
+
+        return sprintf(
+            '<a href="%s" target="_blank">%s</a>',
+            $url,
+            $link_text
+        );
+    }, $text);
+}
+
+/**
+ * Wraps special HTML code around file:// URIs or strings resembling a valid
+ * pathname
+ *
+ * @param string $text          Text string where replacements will be made
+ * @param array  $known_vendors An array of vendor data by base project path
+ * @return string Modified text string
+ */
+function wrap_meta_around_pathnames(
+    string $text,
+    array $known_vendors
+): string {
+
+    $path_prefixes = array_keys($known_vendors);
+    $regex = '#'
+        // Allowed path prefixes.
+        . '(' . implode('|', array_map('preg_quote', $path_prefixes)) . ')'
+        // Accepted filepath characters.
+        . '([\p{L}0-9' . preg_quote("_-:!?.*|/\\") . ']+)'
+        // Flags.
+        . '#u';
+
+    preg_match_all($regex, $text, $matches, PREG_OFFSET_CAPTURE);
+
+    if( $matches[0] ) {
+
+        $ds = DIRECTORY_SEPARATOR;
+        $path_before = 'file://';
+        $path_before_len = strlen($path_before);
+        $offset = 0;
+
+        foreach( $matches[0] as $i => $data ) {
+
+            [$pathname, $pos] = $data;
+            $pathname_len = strlen($pathname);
+
+            foreach( $path_prefixes as $path_prefix ) {
+
+                if( str_starts_with($pathname, $path_prefix) ) {
+                    $meta = $known_vendors[$path_prefix];
+                    break;
+                }
+            }
+
+            if(
+                $pathname === $meta['source']
+                || str_starts_with($pathname, $meta['source'] . $ds)
+                || $pathname === $meta['demo_static']
+                || str_starts_with($pathname, $meta['demo_static'] . $ds)
+                || $pathname === $meta['units_static']
+                || str_starts_with($pathname, $meta['units_static'] . $ds)
+            ) {
+
+                $relative_path = substr($pathname, (strlen($meta['base']) + 1));
+                $attrs = sprintf(
+                    'data-project="%s"'
+                        . ' data-relative-path="%s"'
+                        . ' data-path-type="%s"',
+                    $meta['project'],
+                    $relative_path,
+                    ( ( is_dir($pathname) )
+                        ? 'directory'
+                        : 'file' )
+                );
+                $replace_format = '<span %s>%s</span>';
+                $replace_format_len = strlen(
+                    str_replace('%s', '', $replace_format)
+                );
+                $replace_len = strlen($pathname);
+                $pos += $offset;
+                $off = ($pos - $path_before_len);
+
+                if(
+                    $pos >= $path_before_len
+                    && substr($text, $off, $path_before_len) === $path_before
+                ) {
+                    $pos -= $path_before_len;
+                    $replace_len += $path_before_len;
+                    $replace_format = '<span %s>' . $path_before . '%s</span>';
+                }
+
+                $text = substr_replace(
+                    $text,
+                    sprintf($replace_format, $attrs, $pathname),
+                    $pos,
+                    $replace_len
+                );
+                // Modify offset by the number of new characters added.
+                $offset += (strlen($attrs) + $replace_format_len);
+            }
+        }
+    }
+
+    return $text;
+}

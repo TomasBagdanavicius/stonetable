@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.5) - 2023-05-01
+
+### Changed
+
+- File iterator's sort handler will sort file names whose first character is a special character above files that start with a letter. What is more, the order of special characters is also specific.
+- File search functionality will now include file extension into the searchable string. Previously it was ignoring the extension (including the dot prefix). This opens the possibility to search for file names that start with a dot prefix.
+- When loaded file is not found (eg. deleted from filesystem) and there is an attempt to reload it, the “main” parameter will be removed from the URL.
+- You can now copy source code line number by clicking on the line number next to the code line. Empty lines do not have this option.
+- URLs will now be wrapped with hyperlinks inside comments in source code.
+- Relevant filesystem path names will be wrapped into clickable elements that will navigate to target files inside the application.
+- "Use" declaration namespaces that are not backed by an existing file will be marked with a wavy underline.
+- Bump PHP Code Test Suite version to 1.0.5
+- Bump Project Directory version to 1.0.5
+
 ## [1.0.4](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.4) - 2023-04-24
 
 ### Changed

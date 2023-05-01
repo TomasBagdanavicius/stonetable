@@ -10,7 +10,6 @@ if( !$project_pathname = get_value_exists('project_path') ) {
 
 $path = get_value_exists('path', DIRECTORY_SEPARATOR);
 $path = preg_replace('#[/\\\]+#', DIRECTORY_SEPARATOR, $path);
-
 $search_query = get_value_exists('file_search_query', null);
 
 use PD\ProjectFile;
@@ -79,26 +78,13 @@ foreach( $file_iterator as $project_file_object ) {
         $index++;
 
         if( $index >= $select_from && $index <= $select_to ) {
-
             $data[] = $project_file_object->getDescriptionData();
         }
 
     // Search query provided.
     } else {
 
-        $extension = $project_file_object->getExtension();
-        $file_name = $project_file_object->getFilename();
-        $searchable_string = $file_name;
-
-        if( $extension ) {
-
-            $searchable_string = mb_substr(
-                $file_name,
-                0,
-                -(mb_strlen($extension, $charset) + 1),
-                $charset
-            );
-        }
+        $searchable_string = $project_file_object->getBasename();
 
         $comparable_searchable_str = mb_strtolower(
             $searchable_string,

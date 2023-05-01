@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.4
+ * @version   1.0.5
  * @since     1.0.0
  */
 
@@ -250,7 +250,7 @@ class OutputTextFormatter {
             // Not preceeded by "file/".
             '#(?<!file\/)(%s('
             // Accepted filepath characters.
-            . '[\p{L}0-9\.\/\_-]+'
+            . '[\p{L}0-9' . preg_quote('_-:!?.*|/\\') . ']+'
             . '(\.(%s))?))(\son\sline\s(\d+))?#mu',
             preg_quote($path_prefix . '/', '/'),
             implode('|', $this->editable_file_formats)

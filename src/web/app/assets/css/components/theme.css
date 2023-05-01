@@ -33,6 +33,10 @@ code,
     color: var(--bg-color-restrained);
 }
 
+.code-lns > * > .line-num.has-opts {
+    cursor: pointer;
+}
+
 .code-lns > * > .cnt {
     border-radius: 0 var(--decorative-radius) var(--decorative-radius) 0;
 }

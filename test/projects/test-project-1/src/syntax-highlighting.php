@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Advanced PHP code highlighting test.
+ * Advanced PHP syntax highlighting test.
  *
  * This is a sample PHP syntax file. It is not valid! The mere purpose of this
  * file is to have various PHP language syntax features in one place. Primarily,
- * this will be used to tokenize the contents, or test advanced PHP code
+ * this will be used to tokenize the contents, or test advanced PHP syntax
  * highlighting features.
  */
 

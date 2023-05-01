@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.4
+ * @version   1.0.5
  * @since     1.0.0
  */
 
@@ -353,7 +353,10 @@ class PHPErrorHandler {
 
             foreach( $trace_list as $trace_data ) {
 
-                if( !in_array($trace_data['file'], $this->ignore_trace_file) ) {
+                if(
+                    isset($trace_data['file'])
+                    && !in_array($trace_data['file'], $this->ignore_trace_file)
+                ) {
 
                     $trace_data_str .= sprintf(
                         '<li>%s</li>',
