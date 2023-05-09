@@ -794,6 +794,9 @@ async function apiRequest(url, abortController, timeout = 5000) {
                 || error instanceof RequestTimeoutError
             ) && signal.aborted
         ) {
+            if (error instanceof RequestTimeoutError) {
+                shortNotifications.send(error.message);
+            }
             return false;
         } else if (
             error instanceof TypeError
@@ -2582,13 +2585,11 @@ const managerScreen = {
                     = screenContainer.querySelectorAll('.tgl-lo');
                 for (const layoutToggler of layoutTogglers) {
                     layoutToggler.addEventListener('click', () => {
-                        const attrName = 'data-layout';
-                        const layout
-                            = document.body.getAttribute(attrName);
+                        const layout = document.body.dataset.layout;
                         if (layout === 'open') {
-                            document.body.setAttribute(attrName, 'discrete');
+                            document.body.dataset.layout = 'discrete';
                         } else if (layout === 'discrete') {
-                            document.body.setAttribute(attrName, 'open');
+                            document.body.dataset.layout = 'open';
                             this.listing.fillUpContents();
                         }
                     });
@@ -2624,7 +2625,10 @@ const managerScreen = {
                 }
                 this.loadProjectFavorites();
                 if (hasMain && isCompact.matches) {
-                    document.body.setAttribute('data-layout', 'discrete');
+                    document.body.dataset.layout = 'discrete';
+                } else {
+                    document.body.dataset.layout = 'open';
+                    this.listing.fillUpContents();
                 }
             // Project not found.
             } else if (payload !== false && !payload.data) {
@@ -2968,7 +2972,9 @@ const managerScreen = {
                     if (!sameProject) {
                         title += ` in project "${project}"`;
                     }
-                    clickableElem.title = title;
+                    clickableElem.title = !clickableElem.title
+                        ? title
+                        : title + ' ' + clickableElem.title;
                 }
             }
             item.append(lineNumberContainer, lineContentContainer);

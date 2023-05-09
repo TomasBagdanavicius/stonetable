@@ -10,7 +10,7 @@ if( !$project_pathname = get_value_exists('project_path') ) {
 
 $path = get_value_exists('path', DIRECTORY_SEPARATOR);
 $path = preg_replace('#[/\\\]+#', DIRECTORY_SEPARATOR, $path);
-$search_query = get_value_exists('file_search_query', null);
+$search_query = get_value_exists('file_search_query');
 
 use PD\ProjectFile;
 

@@ -8,10 +8,7 @@ if( !$project_pathname = get_value_exists('project_path') ) {
     send_error("Please provide a project path");
 }
 
-if( !$path = get_value_exists('path', '/') ) {
-    send_error("Please provide a path");
-}
-
+$path = get_value_exists('path', DIRECTORY_SEPARATOR);
 $project_root_directory = get_project_root_object($project_pathname);
 $project_file = $project_root_directory->find($path);
 

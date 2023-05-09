@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.5
+ * @version   1.0.6
  * @since     1.0.0
  */
 
@@ -192,14 +192,18 @@ class OutputTextFormatter {
 
     /** Converts all namespaces to HTML hyperlinks in the given text string. */
     public function convertNamespacesToHtmlLinks(
-        string $text
+        string $text,
+        ?\Closure $match_handler = null
     ): string {
 
         if( !$text || !$this->vendor_data ) {
             return $text;
         }
 
-        $vendor_names = array_keys($this->vendor_data);
+        $vendor_names = array_map(
+            fn( string $value ): string => preg_quote($value . '\\'),
+            array_keys($this->vendor_data)
+        );
 
         // Mind the "preceeded by" character group.
         $regex_str = sprintf(
@@ -216,18 +220,22 @@ class OutputTextFormatter {
             foreach( $matches[2] as $index => $match ) {
 
                 [$namespace, $line_number] = $match;
-                $vendor_name = $matches[3][$index][0];
+                $vendor_name = rtrim($matches[3][$index][0], '\\');
 
-                $html_link = $this->namespaceToIdeHtmlLink($namespace);
+                if( !$match_handler ) {
+                    $wrapper = $this->namespaceToIdeHtmlLink($namespace);
+                } else {
+                    $wrapper = $match_handler($namespace, $vendor_name);
+                }
 
                 $text = substr_replace(
                     $text,
-                    $html_link,
+                    $wrapper,
                     ((int)$match[1] + $offset),
                     strlen($match[0])
                 );
 
-                $offset += (strlen($html_link) - strlen($match[0]));
+                $offset += (strlen($wrapper) - strlen($match[0]));
             }
         }
 

@@ -145,6 +145,8 @@ input:focus {
 [type=url],
 [type=search] {
     height: var(--base-bar-height);
+    text-overflow: ellipsis;
+    /* Only Firefox supports two value syntax. */
     text-overflow: ellipsis ellipsis;
 }
 

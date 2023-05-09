@@ -11,7 +11,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.5
+ * @version   1.0.6
  * @since     1.0.0
  */
 

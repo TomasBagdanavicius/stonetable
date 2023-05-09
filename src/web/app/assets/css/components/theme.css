@@ -148,6 +148,7 @@ code,
 
 .lst-file .fld-srch.blk-within:focus-within .ttl {
     font-size: 1em;
+    line-height: inherit;
 }
 
 /* Test Cases */

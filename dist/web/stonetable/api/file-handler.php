@@ -87,7 +87,7 @@ switch( $handler_name ) {
     case ViewHandlersEnum::SOURCE_CODE_PARTS:
     default:
 
-        [$output_text_formatter, $known_vendors]
+        [$formatter, $known_vendors]
             = $project_root_directory->produceOutputTextFormatter();
 
         $known_vendors_by_base = [];
@@ -104,6 +104,7 @@ switch( $handler_name ) {
         );
 
         $parts = [];
+        $source_filename = $project_file_object->pathname;
 
         foreach( $tokenizer as $line_number => $enhanced_token ) {
 
@@ -169,10 +170,10 @@ switch( $handler_name ) {
 
                     $base = $known_vendors[$namespace_vendor]['base'];
                     $base_path_len = (strlen($base) + 1);
-                    $namespace_filename
-                        = $output_text_formatter->namespaceToFilename(
-                            $namespace
-                        );
+                    $namespace_filename = $formatter->namespaceToFilename(
+                        $namespace
+                    );
+                    $issues = [];
 
                     if( file_exists($namespace_filename) ) {
 
@@ -188,6 +189,29 @@ switch( $handler_name ) {
                     } else {
 
                         $class_names[] = 'no-file';
+                        $issues[] = "not backed up by a file";
+                    }
+
+                    if( $issues ) {
+
+                        $i = 0;
+                        $issues_numbered = array_map(
+                            function( string $value ) use( &$i ): string {
+                                $i++;
+                                return '(' . $i . ') ' . $value;
+                            },
+                            $issues
+                        );
+                        $issues_str = "Issues: "
+                            . implode(', ', $issues_numbered)
+                            . ".";
+                        $issues_attr = sprintf(' title="%s"', $issues_str);
+
+                        if( !$features ) {
+                            $features = $issues_attr;
+                        } else {
+                            $features .= $issues_attr;
+                        }
                     }
                 }
             }
@@ -200,6 +224,24 @@ switch( $handler_name ) {
                 $inner_html = wrap_meta_around_pathnames(
                     $inner_html,
                     $known_vendors_by_base
+                );
+                $inner_html = $formatter->convertNamespacesToHtmlLinks(
+                    $inner_html,
+                    function(
+                        string $namespace,
+                        string $vendor_name
+                    ) use(
+                        $known_vendors,
+                        $formatter,
+                    ): string {
+                        $meta = $known_vendors[$vendor_name];
+                        $pathname = $formatter->namespaceToFilename($namespace);
+                        return build_navigation_elem(
+                            $meta['project'],
+                            substr($pathname, (strlen($meta['base']) + 1)),
+                            $namespace
+                        );
+                    }
                 );
 
             } else {

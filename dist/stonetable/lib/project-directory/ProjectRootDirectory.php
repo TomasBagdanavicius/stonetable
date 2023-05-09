@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.5
+ * @version   1.0.6
  * @since     1.0.0
  */
 
@@ -395,12 +395,12 @@ class ProjectRootDirectory extends ProjectDirectory {
      * @return string If no arguments are given, it returns an empty string,
      *                otherwise a joined string.
      */
-    public static function joinPath(): string {
+    public static function joinPath( ...$args ): string {
 
-        if( !func_num_args() ) {
+        if( count($args) === 0 ) {
             return '';
         }
 
-        return implode(DIRECTORY_SEPARATOR, func_get_args());
+        return implode(DIRECTORY_SEPARATOR, $args);
     }
 }

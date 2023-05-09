@@ -53,7 +53,7 @@ if( $page_number = get_value_exists('page_number', 1) ) {
     }
 }
 
-$search_query = get_value_exists('project_search_query', null);
+$search_query = get_value_exists('project_search_query');
 $has_search_query = ( $search_query !== null );
 $search_query_limit = 100;
 $charset = 'UTF-8';
@@ -68,7 +68,7 @@ if( $has_search_query ) {
 
     if( mb_strlen($search_query) > $search_query_limit ) {
         send_error(
-            "Search query must not exceed {$search_query_limit} characters"
+            "Search query must not exceed $search_query_limit characters"
         );
     }
 }

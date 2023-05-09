@@ -17,7 +17,7 @@ namespace VendorName\ClassReferenceNavigation;
 use VendorName\ClassReferenceNavigation\ClassB;
 // Alias.
 use VendorName\ClassReferenceNavigation\ClassC as CC;
-// Unexisting: unclickable.
+// Not backed up by a file: unclickable.
 use VendorName\ClassReferenceNavigation\ClassD;
 
 class ClassA
@@ -27,5 +27,7 @@ class ClassA
         public readonly ?CC $classC = null
     ) {
         $this->classC ??= new CC();
+        // Predefined: unclickable.
+        $stdClass = new \stdClass;
     }
 }

@@ -5,13 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
-## 1.0.6 - 2023-05-01
+## [1.0.6](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.6) - 2023-05-09
 
 ### Changed
 
-- Fixed a few CSS issues considering `text-decoration` and `text-decoration-style` in Safari.
+- Fixed a few CSS issues considering `text-decoration`, `text-decoration-style`, and others in Safari.
+- When cross-project jumping to another project’s directory in mobile it will now open/focus the aside panel.
+- Excluded "node_modules/" and "dist/" directories from search results in workspace in VS Code specific [settings.json](.vscode/settings.json).
+- Namespace names will now also be clickable in source code comments (similar to file path names and URLs).
+- Reviewed sanitation efforts of data coming into the API files.
+- Various small changes.
+- Bump PHP Code Test Suite version to 1.0.6
+- Bump Project Directory version to 1.0.6
+
+### Added
+
+- Added directory [`scripts/`](src/resources/project-blueprint/scripts/) to project blueprint. This directory contains 2 automated tasks/scripts: (1) [rebuild-special-comments-all.php](src/resources/project-blueprint/scripts/rebuild-special-comments-all.php) which rebuilds all special comments in all files and (2) [rebuild-special-comments-file.php](src/resources/project-blueprint/scripts/rebuild-special-comments-file.php) which rebuilds all special comments inside selected file. Additionally, [`.vscode/tasks.json`](src/resources/project-blueprint/.vscode/tasks.json) was added to show how these scripts can be run as tasks in VS Code IDE.
 
 ## [1.0.5](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.5) - 2023-05-01
 

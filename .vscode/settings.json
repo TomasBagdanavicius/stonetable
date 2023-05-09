@@ -4,6 +4,10 @@
     "editor.rulers": [
         80
     ],
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/dist": true
+    },
     "cSpell.words": [
         "Stonetable"
     ],

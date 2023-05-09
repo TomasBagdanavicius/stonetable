@@ -31,9 +31,11 @@ function send_access_control_http_headers(): void {
  */
 function get_value_exists( string $key, mixed $default = null ): mixed {
 
-    return ( isset($_GET[$key]) && $_GET[$key] !== '' )
-        ? $_GET[$key]
-        : $default;
+    if( isset($_GET[$key]) && is_string($_GET[$key]) && $_GET[$key] !== '' ) {
+        return $_GET[$key];
+    } else {
+        return $default;
+    }
 }
 
 /**
@@ -298,7 +300,6 @@ function get_project_root_object( string $pathname ): ProjectRootDirectory {
  */
 function wrap_links_around_urls( string $text ): string {
 
-    // Define the regex pattern to match URLs.
     $regex = '/'
         // Match http(s)://, ftp://, or www.
         . '(?:https?:\/\/|ftp:\/\/|(www\.))'
@@ -308,7 +309,7 @@ function wrap_links_around_urls( string $text ): string {
         // Valid domain pattern.
         . '|[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)'
         // Match any valid path or query parameter, including &amp;
-        . '(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=;]*)'
+        . '(?:[-a-zA-Z0-9()@:%_\+.~#?&\/\/=;]*[^\)\s])?'
         . ')'
         . '/';
 
@@ -327,7 +328,50 @@ function wrap_links_around_urls( string $text ): string {
             $url,
             $link_text
         );
+
     }, $text);
+}
+
+/**
+ * Builds a navigation element.
+ *
+ * @param string $project        The associated project.
+ * @param string $path           The relative path to a file in the project.
+ * @param string $text           The text to display within the element.
+ * @param string|null $path_type The type of path - "file" or "directory".
+ * @param string $tagname        The HTML tag name to use for the element.
+ *
+ * @return string The fully built navigation element as an HTML string.
+ */
+function build_navigation_elem(
+    string $project,
+    string $path,
+    string $text,
+    ?string $path_type = null,
+    string $tagname = 'span'
+): string {
+
+    $result = sprintf(
+        '<%s data-project="%s" data-relative-path="%s"',
+        $tagname,
+        $project,
+        $path
+    );
+
+    if( $path_type ) {
+        $result .= sprintf(
+            ' data-path-type="%s"',
+            $path_type
+        );
+    }
+
+    $result .= sprintf(
+        '>%s</%s>',
+        $text,
+        $tagname
+    );
+
+    return $result;
 }
 
 /**
@@ -384,21 +428,7 @@ function wrap_meta_around_pathnames(
             ) {
 
                 $relative_path = substr($pathname, (strlen($meta['base']) + 1));
-                $attrs = sprintf(
-                    'data-project="%s"'
-                        . ' data-relative-path="%s"'
-                        . ' data-path-type="%s"',
-                    $meta['project'],
-                    $relative_path,
-                    ( ( is_dir($pathname) )
-                        ? 'directory'
-                        : 'file' )
-                );
-                $replace_format = '<span %s>%s</span>';
-                $replace_format_len = strlen(
-                    str_replace('%s', '', $replace_format)
-                );
-                $replace_len = strlen($pathname);
+                $inner_text = $pathname;
                 $pos += $offset;
                 $off = ($pos - $path_before_len);
 
@@ -407,18 +437,26 @@ function wrap_meta_around_pathnames(
                     && substr($text, $off, $path_before_len) === $path_before
                 ) {
                     $pos -= $path_before_len;
-                    $replace_len += $path_before_len;
-                    $replace_format = '<span %s>' . $path_before . '%s</span>';
+                    $inner_text = ($path_before . $inner_text);
                 }
 
+                $replace = build_navigation_elem(
+                    $meta['project'],
+                    $relative_path,
+                    $inner_text,
+                    ( ( is_dir($pathname) )
+                        ? 'directory'
+                        : 'file' )
+                );
+                $replace_len = strlen($inner_text);
                 $text = substr_replace(
                     $text,
-                    sprintf($replace_format, $attrs, $pathname),
+                    $replace,
                     $pos,
                     $replace_len
                 );
                 // Modify offset by the number of new characters added.
-                $offset += (strlen($attrs) + $replace_format_len);
+                $offset += (strlen($replace) - $replace_len);
             }
         }
     }

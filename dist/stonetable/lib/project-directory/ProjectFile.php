@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.5
+ * @version   1.0.6
  * @since     1.0.0
  */
 
@@ -393,7 +393,7 @@ class ProjectFile extends ProjectFileObject {
                 // Add.
                 : $this->injectSpecialComment($special_comment);
 
-        // File is empty.
+        // File is empty or unsupported.
         } else {
 
             return null;
@@ -403,7 +403,7 @@ class ProjectFile extends ProjectFileObject {
     /** Rebuilds all special comments. */
     public function rebuildAllSpecialCommentLines(): ?bool {
 
-        if( $this->file->getSize() ) {
+        if( $this->file->getSize() && $this->isSupportedFileType() ) {
 
             foreach( $this->special_comments as $special_comment ):
 
@@ -415,7 +415,7 @@ class ProjectFile extends ProjectFileObject {
 
             return true;
 
-        // File is empty.
+        // File is empty or unsupported.
         } else {
 
             return null;

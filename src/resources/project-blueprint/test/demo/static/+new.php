@@ -10,3 +10,7 @@ Demo\start();
 /*** Demo Code ***/
 
 # Write your demo code here...
+
+# Special constants
+echo Demo\SRC_PATH, PHP_EOL;
+echo Demo\TEST_PATH, PHP_EOL;

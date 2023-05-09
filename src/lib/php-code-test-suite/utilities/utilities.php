@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.5
+ * @version   1.0.6
  * @since     1.0.0
  */
 
@@ -32,15 +32,15 @@ function pre( mixed $value ): never {
 /**
  * Runs "var_dump()" with the given value(s) and exits immediatelly afterwards.
  */
-function vare(): never {
+function vare( ...$args ): never {
 
-    if( !func_num_args() ) {
+    if( count($args) === 0 ) {
         throw new \ArgumentCountError(
             "vare() expects at least 1 argument, 0 given"
         );
     }
 
-    var_dump(...func_get_args());
+    var_dump(...$args);
     exit;
 }
 

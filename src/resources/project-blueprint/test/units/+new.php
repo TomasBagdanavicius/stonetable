@@ -12,4 +12,8 @@ Demo\start();
 # Code your test expression
 $expression = true;
 
+# Special constants
+echo Demo\SRC_PATH, PHP_EOL;
+echo Demo\TEST_PATH, PHP_EOL;
+
 Demo\assert_true($expression, "This is my error message");

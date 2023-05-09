@@ -232,8 +232,9 @@
     text-decoration-color: inherit;
 }
 
-/* Namespace that is not backed by a file */
+/* Issues */
 
+/* Namespace that is not backed by a file */
 .code-php .namespace.no-file {
     text-decoration: underline var(--bg-color-restrained, #666) wavy;
     -webkit-text-decoration: underline var(--bg-color-restrained, #666) wavy;
