@@ -8,7 +8,7 @@ Demo\start();
 
 /*** Demo Code ***/
 
-require_once (__DIR__ . '/../../../src/hello-world.php');
+require_once (Demo\SRC_PATH . '/hello-world.php');
 
 echo helloWorld(), PHP_EOL;
 

@@ -10,7 +10,7 @@ Stonetable is lightweight, dependency-free, conceptual PHP project build and cod
 
 ## Stonetable Web Application
 
-![Meet Stonetable](https://www.lwis.net/stonetable/images/meet-stonetable.webp?v=2)
+![Meet Stonetable](https://www.lwis.net/stonetable/images/meet-stonetable.webp?v=3)
 
 Stonetable's web application is the core component of the suite. This web app helps you navigate and visualize your PHP project builds by providing incentives to maintain organized demo and unit test files that can be outputted in a user friendly manner with enhanced state and error reporting.
 
@@ -49,8 +49,8 @@ First off, it's important to decide where you will want to install Stonetable. T
 
 - Any web server
 - PHP 8.1 or higher with extensions:
-    - `mbstring`
-    - `intl`
+    - `mbstring` (compulsory)
+    - `intl` (recommended)
 - Any major web browser that is up to date
 
 #### Quick Run
@@ -277,34 +277,34 @@ The above will output something similar to:
 <article class="msg code-msg code-msg-warn">
     <p class="text"><strong>Undefined variable <code class="code-php"><span class="var">$unexisting_variable</span></code></strong></p>
     <dl>
-        <dt>Location</dt>
-        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:46" class="file">.../snippet.php<span class="line-num">:<span class="num">46</span></span></a></dd>
-        <dt>Type</dt>
+        <dt class="loc">Location</dt>
+        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:46" class="file"><span class="path">.../<span class="base ext-php">snippet.php</span></span><span class="line-num">:<span class="num">46</span></span></a></dd>
+        <dt class="type">Type</dt>
         <dd>E_WARNING</dd>
     </dl>
 </article>
 <article class="msg code-msg code-msg-err">
-    <p class="text"><strong>This is a simulated error: <a href="vscode://file//Users/JohnDoe/stonetable/snippet.php">VendorName\snippet</a></strong></p>
+    <p class="text"><strong>This is a simulated error: <span class="ns-name"><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php">VendorName\<span class="base">snippet</a></span></span></strong></p>
     <dl>
-        <dt>Location</dt>
-        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:50" class="file">.../snippet.php<span class="line-num">:<span class="num">50</span></span></a></dd>
-        <dt>Type</dt>
+        <dt class="loc">Location</dt>
+        <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:50" class="file"><span class="path">.../<span class="base ext-php">snippet.php</span></span><span class="line-num">:<span class="num">50</span></span></a></dd>
+        <dt class="type">Type</dt>
         <dd>E_RECOVERABLE_ERROR</dd>
-        <dt>Error Class</dt>
-        <dd>Error</dd>
-        <dt>Error Code</dt>
+        <dt class="err-cls">Error Class</dt>
+        <dd><span class="cls-name">Error</span></dd>
+        <dt class="err-code">Error Code</dt>
         <dd>1</dd>
     </dl>
     <article class="msg code-msg code-msg-err">
         <p class="text"><strong>This is the reason</strong></p>
         <dl>
-            <dt>Location</dt>
-            <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:53" class="file">.../snippet.php<span class="line-num">:<span class="num">53</span></span></a></dd>
-            <dt>Type</dt>
+            <dt class="loc">Location</dt>
+            <dd><a href="vscode://file//Users/JohnDoe/stonetable/snippet.php:53" class="file"><span class="path">.../<span class="base ext-php">snippet.php</span></span><span class="line-num">:<span class="num">53</span></span></a></dd>
+            <dt class="type">Type</dt>
             <dd>E_RECOVERABLE_ERROR</dd>
-            <dt>Error Class</dt>
-            <dd>Exception</dd>
-            <dt>Error Code</dt>
+            <dt class="err-cls">Error Class</dt>
+            <dd><span class="cls-name">Exception</span></dd>
+            <dt class="err-code">Error Code</dt>
             <dd>0</dd>
         </dl>
     </article>

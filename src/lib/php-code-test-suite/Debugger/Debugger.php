@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.6
+ * @version   1.0.7
  * @since     1.0.0
  */
 
@@ -168,11 +168,11 @@ class Debugger {
 
         if( $format ) {
 
-            $result .= sprintf(
-                '<span class="file-path">%s</span>',
-                ( $trace_data['class']
-                    ?? $formatter->shortenPathname($filename) )
-            );
+            $result .= ( isset($trace_data['class']) )
+                ? $formatter->formatClassNameOrNamespace($trace_data['class'])
+                : $formatter::formatPathnameAddWrappers(
+                    $formatter->shortenPathname($filename)
+                );
 
         } else {
 
@@ -180,6 +180,7 @@ class Debugger {
         }
 
         if( !isset($trace_data['class']) && $trace_data['line'] ) {
+
             $result .= ( $format )
                 ? sprintf(
                     '<span class="line-num">:<span class="num">%d</span>'
@@ -190,22 +191,34 @@ class Debugger {
         }
 
         $result .= ( $trace_data['type'] ?? ' ' );
-        $result .= ( $format )
-            ? sprintf(
-                '<span class="func-name">%s'
-                    . '<span class="punc punc-brkt">(</span>'
-                    . '<span class="punc punc-brkt">)</span>'
-                    . '</span>',
-                $trace_data['function']
-            )
-            : ($trace_data['function'] . '()');
+
+        if( $format ) {
+
+            $separator_pos = strrpos($trace_data['function'], '\\');
+
+            if( $separator_pos === false ) {
+                $result .= $this->formatter->formatSimplifiedFunctionStr(
+                    $trace_data['function']
+                );
+            } else {
+                $result .= $this->formatter->formatNamespaceName(
+                    $trace_data['function'],
+                    ['func']
+                ) . '<span class="punc punc-brkt">(</span>'
+                . '<span class="punc punc-brkt">)</span>';
+            }
+
+        } else {
+
+            $result .= ($trace_data['function'] . '()');
+        }
 
         if( $format && $convert_links ) {
 
             $result = $formatter->buildIdeHtmlLink(
                 $filename,
                 $result,
-                ((int)$trace_data['line'] ?? null),
+                ( (int)$trace_data['line'] ?? null ),
                 class_names: ['file']
             );
         }
@@ -225,12 +238,19 @@ class Debugger {
 
                 if( is_object($arg) ) {
 
+                    $class = $arg::class;
+                    $formatted_class = $formatter->formatClassNameOrNamespace(
+                        $class
+                    );
                     $argument = ( $convert_links )
-                        ? $formatter->namespaceToIdeHtmlLink($arg::class)
-                        : $arg::class;
+                        ? $formatter->namespaceToIdeHtmlLink(
+                            $class,
+                            text: $formatted_class
+                        )
+                        : $formatted_class;
 
                     if( !$argument ) {
-                        $argument = $arg::class;
+                        $argument = $formatted_class;
                     }
 
                     $allow_html_entities = false;
@@ -238,7 +258,7 @@ class Debugger {
                 /* Don't attempt to export and show text for the following
                 types, eg. `var_export` will fail on large arrays containing
                 objects with circular reference, etc. */
-                } elseif( is_array($arg) && is_resource($arg) ) {
+                } elseif( is_array($arg) || is_resource($arg) ) {
 
                     $argument = '';
 
@@ -249,11 +269,11 @@ class Debugger {
 
                 // String (can be file path or namespace name).
                 if(
-                    str_starts_with($argument, '\'')
-                    && str_ends_with($argument, '\'')
+                    str_starts_with($argument, "'")
+                    && str_ends_with($argument, "'")
                 ) {
 
-                    $trimmed_arg = trim($argument, '\'');
+                    $trimmed_arg = trim($argument, "'");
                     $length = strlen($trimmed_arg);
 
                     if( $formatter->isQualifiedPathname($trimmed_arg) ) {
@@ -273,12 +293,23 @@ class Debugger {
                             '\\',
                             $trimmed_arg
                         );
+
+                        if( $format ) {
+                            $namespace_formatted
+                                = $formatter->formatClassNameOrNamespace(
+                                    $namespace
+                                );
+                        }
+
                         $argument = ( $convert_links )
                             ? $formatter->namespaceToIdeHtmlLink(
                                 $namespace,
-                                class_names: ['file']
+                                class_names: ['file'],
+                                text: $namespace_formatted
                             )
-                            : $namespace;
+                            : ( ( $format )
+                                ? $namespace_formatted
+                                : $namespace );
                         $allow_html_entities = false;
                     }
 

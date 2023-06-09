@@ -7,6 +7,7 @@ body - bd
 breadcrumbs - brcr
 button - btn
 category - cat
+class - cls
 close - cl
 collapse - coll
 color - clr
@@ -35,7 +36,9 @@ light - lt
 lines - lns
 list - l
 listing - lst
+location - loc
 message - msg
+namespace - ns
 notification - notif
 number - num
 option - opt

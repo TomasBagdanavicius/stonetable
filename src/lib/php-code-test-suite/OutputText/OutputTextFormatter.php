@@ -10,13 +10,15 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.6
+ * @version   1.0.7
  * @since     1.0.0
  */
 
 declare(strict_types=1);
 
 namespace PCTS\OutputText;
+
+use PCTS\PhpTokens\EnhancedPhpToken;
 
 class OutputTextFormatter {
 
@@ -123,11 +125,52 @@ class OutputTextFormatter {
             return ($pathname . $text_suffix);
         }
 
-        $text = ($this->shortenPathname($pathname) . $text_suffix);
+        return $this->formatPathnameWithText(
+            $pathname,
+            $this->shortenPathname($pathname),
+            $text_suffix,
+            $line_number,
+            $column_number,
+            $class_names
+        );
+    }
+
+    /**
+     * Formats qualified/verified pathname.
+     *
+     * @param string     $pathname      Path name reference.
+     * @param string     $text          Text representation of the pathname.
+     * @param string     $suffix        Text suffix to add after formatted text.
+     * @param int|null   $line_number   Line number.
+     * @param int|null   $column_number Column number.
+     * @param array|null $class_names   When links are used, add these classes.
+     * @return string If HTML formatting is enabled, HTML formatted text,
+     *                otherwise just plain text
+     */
+    protected function formatPathnameWithText(
+        string $pathname,
+        string $text,
+        string $suffix = '',
+        ?int $line_number = null,
+        ?int $column_number = null,
+        ?array $class_names = null
+    ): string {
+
+        $file_exists = file_exists($pathname);
+
+        if( $this->format_html ) {
+            $path_classes = [];
+            if( !$file_exists ) {
+                $path_classes[] = 'no-file';
+            }
+            $text = self::formatPathnameAddWrappers($text, $path_classes);
+        }
+
+        $text = ($text . $suffix);
         $is_link = (
             $this->format_html
+            && $file_exists
             && $this->convert_links
-            && file_exists($pathname)
         );
 
         return ( $is_link )
@@ -139,6 +182,36 @@ class OutputTextFormatter {
                 $class_names
             )
             : $text;
+    }
+
+    /** Adds outer and inner HTML wrappers to the given pathname. */
+    public static function formatPathnameAddWrappers(
+        string $pathname,
+        array $path_classes = [],
+        array $base_classes = []
+    ): string {
+
+        $basename = basename($pathname);
+        $basename_len = strlen($basename);
+        $extension = pathinfo($pathname, PATHINFO_EXTENSION);
+        $path_classes = ['path', ...$path_classes];
+        $base_classes = ['base', ...$base_classes];
+
+        if( $extension === 'php' ) {
+            $base_classes[] = 'ext-php';
+        }
+
+        return sprintf(
+                '<span class="%s">',
+                implode(' ', $path_classes)
+            )
+            . substr($pathname, 0, -$basename_len)
+            . sprintf(
+                '<span class="%s">%s</span>',
+                implode(' ', $base_classes),
+                substr($pathname, -$basename_len)
+            )
+            . '</span>';
     }
 
     /** Tells if the given value is recognized as a qualified namespace. */
@@ -163,10 +236,7 @@ class OutputTextFormatter {
     ): string {
 
         $result = $this->shortenFilenamesAll($text);
-
-        if( $this->convert_links ) {
-            $result = $this->convertNamespacesToHtmlLinks($result);
-        }
+        $result = $this->formatNamespaces($result);
 
         return $result;
     }
@@ -190,8 +260,8 @@ class OutputTextFormatter {
         return $text;
     }
 
-    /** Converts all namespaces to HTML hyperlinks in the given text string. */
-    public function convertNamespacesToHtmlLinks(
+    /** Formats all namespaces to HTML. */
+    public function formatNamespaces(
         string $text,
         ?\Closure $match_handler = null
     ): string {
@@ -205,9 +275,10 @@ class OutputTextFormatter {
             array_keys($this->vendor_data)
         );
 
-        // Mind the "preceeded by" character group.
         $regex_str = sprintf(
-            '#(\s|^|\?|\(|"|\')((%s)[A-Za-z0-9\\\\]+)#m',
+            // Mind the "preceeded by" character group.
+            // Curly brackets "{}" are used to include "{closure}"
+            '#(\s|^|\?|\(|"|\'|\||:|&)((%s)[A-Za-z0-9_{}\\\\]+)#m',
             implode('|', $vendor_names)
         );
 
@@ -219,23 +290,62 @@ class OutputTextFormatter {
 
             foreach( $matches[2] as $index => $match ) {
 
-                [$namespace, $line_number] = $match;
-                $vendor_name = rtrim($matches[3][$index][0], '\\');
+                [$ns_name, $line_number] = $match;
+                [$vendor_name, $ns_start_pos] = $matches[3][$index];
+                $vendor_name = rtrim($vendor_name, '\\');
+                $ns_name_len = strlen($ns_name);
 
                 if( !$match_handler ) {
-                    $wrapper = $this->namespaceToIdeHtmlLink($namespace);
+                    $ns_end_pos = ($ns_start_pos + $ns_name_len + $offset);
+                    $is_func = (
+                        isset($text[$ns_end_pos])
+                        && $text[$ns_end_pos] === '('
+                    );
+                    $is_closure = (
+                        !$is_func
+                        && EnhancedPhpToken::namespaceToParts($ns_name)['base']
+                            === '{closure}'
+                    );
+                    $ns_name_classes = ( !$is_func )
+                        ? []
+                        : ['func'];
+                    if( !$is_func && !$is_closure ) {
+                        $filename = $this->namespaceToFilename($ns_name);
+                        if( !$filename || !file_exists($filename) ) {
+                            $ns_name_classes[] = 'no-file';
+                            $wrapper = $ns_name;
+                        } elseif( $this->convert_links ) {
+                            $wrapper = self::buildIdeHtmlLink(
+                                $filename,
+                                $ns_name
+                            );
+                        } else {
+	                        $wrapper = $ns_name;
+                        }
+                    } else {
+                        $wrapper = $ns_name;
+                    }
+                    $wrapper = $this->formatClassNameOrNamespace(
+                        $wrapper,
+                        $ns_name_classes
+                    );
+                    if( $is_func || $is_closure ) {
+                        $wrapper .= '<span class="punc-brkt">(</span>'
+                        . '<span class="punc-brkt">)</span>';
+                        $ns_name_len += 2;
+                    }
                 } else {
-                    $wrapper = $match_handler($namespace, $vendor_name);
+                    $wrapper = $match_handler($ns_name, $vendor_name);
                 }
 
                 $text = substr_replace(
                     $text,
                     $wrapper,
-                    ((int)$match[1] + $offset),
-                    strlen($match[0])
+                    ((int)$line_number + $offset),
+                    $ns_name_len
                 );
 
-                $offset += (strlen($wrapper) - strlen($match[0]));
+                $offset += (strlen($wrapper) - $ns_name_len);
             }
         }
 
@@ -258,8 +368,8 @@ class OutputTextFormatter {
             // Not preceeded by "file/".
             '#(?<!file\/)(%s('
             // Accepted filepath characters.
-            . '[\p{L}0-9' . preg_quote('_-:!?.*|/\\') . ']+'
-            . '(\.(%s))?))(\son\sline\s(\d+))?#mu',
+            . '[\p{L}0-9' . preg_quote('_-!?.*|/\\') . ']+'
+            . '(\.(%s))?))(\son\sline\s(\d+))?(:(\d+))?#mu',
             preg_quote($path_prefix . '/', '/'),
             implode('|', $this->editable_file_formats)
         );
@@ -281,41 +391,47 @@ class OutputTextFormatter {
                     . $relative_path
                 );
                 $filename_length = strlen($filename);
-
-                $is_link = (
-                    $this->format_html
-                    && $this->convert_links
-                    && file_exists($filename)
+                $is_on_line = (
+                    isset($matches[6][$index])
+                    && !empty($matches[6][$index][0])
+                    && $matches[6][$index][1] !== -1
                 );
-
-                $replace_text = ( $is_link )
-                    ? self::buildIdeHtmlLink(
-                        $filename,
-                        $text_relative_path,
-                        ( (int)$matches[6][$index][0] ?: null ),
-                        class_names: ['file']
-                    )
-                    : $text_relative_path;
-
+                $is_column_num = (
+                    isset($matches[8][$index])
+                    && !empty($matches[8][$index][0])
+                    && $matches[8][$index][1] !== -1
+                );
+                $replace_text = $this->formatPathnameWithText(
+                    $filename,
+                    $text_relative_path,
+                    line_number: match(true) {
+                        $is_on_line => (int)$matches[6][$index][0],
+                        $is_column_num => (int)$matches[8][$index][0],
+                        default => null
+                    },
+                    class_names: ['file']
+                );
                 $text = substr_replace(
                     $text,
                     $replace_text,
                     ((int)$match[1] + $offset),
                     $filename_length
                 );
-
                 $offset_add = (strlen($replace_text) - $filename_length);
                 $offset += $offset_add;
 
                 // Captured line number.
                 if(
                     $this->format_html
-                    && isset($matches[6][$index])
-                    && !empty($matches[6][$index][0])
-                    && $matches[6][$index][1] !== -1
+                    && ($is_on_line || $is_column_num)
                 ) {
 
-                    [$line_number, $line_number_pos] = $matches[6][$index];
+                    if( $is_on_line ) {
+                        [$line_number, $line_number_pos] = $matches[6][$index];
+                    } else {
+                        [$line_number, $line_number_pos] = $matches[8][$index];
+                    }
+
                     $line_number_length = strlen($line_number);
                     $replace_text = sprintf(
                         '<span class="line-num">%s</span>',
@@ -338,16 +454,21 @@ class OutputTextFormatter {
     /** Converts a namespace to IDE open file HTML hyperlink. */
     public function namespaceToIdeHtmlLink(
         string $namespace,
-        ?array $class_names = null
+        ?array $class_names = null,
+        ?string $text = null,
     ): ?string {
 
         if( !$filename = $this->namespaceToFilename($namespace) ) {
             return null;
         }
 
+        if( !file_exists($filename) ) {
+            return null;
+        }
+
         return self::buildIdeHtmlLink(
             $filename,
-            $namespace,
+            ( $text ?: $namespace ),
             class_names: $class_names
         );
     }
@@ -416,10 +537,7 @@ class OutputTextFormatter {
                 ) )
         );
 
-        $html_link .= ( $text )
-            ? $text
-            : $filename;
-
+        $html_link .= ( $text ?: $filename );
         $html_link .= '</a>';
 
         return $html_link;
@@ -558,7 +676,6 @@ class OutputTextFormatter {
             'line' => $line_number,
             'column' => $column_number,
         ];
-
         $result = $mem = '';
         $format_len = strlen($ide_uri_format);
         $curly_stack = [];
@@ -682,5 +799,96 @@ class OutputTextFormatter {
         }
 
         return $result;
+    }
+
+    /** HTML formats given class name - either fully qualified or keyword. */
+    public function formatClassNameOrNamespace(
+        string $string,
+        array $ns_name_classes = []
+    ): string {
+
+        $separator_pos = strrpos($string, '\\');
+
+        // Namespace
+        if( $separator_pos !== false ) {
+            return $this->formatNamespaceName($string, $ns_name_classes);
+        // Class name
+        } else {
+            return sprintf(
+                '<span class="cls-name">%s</span>',
+                $string
+            );
+        }
+    }
+
+    /**
+     * HTML formats namespace name
+     *
+     * @param string $ns_name         Namespace name.
+     * @param array  $ns_name_classes Classes to add to namespace name wrapper.
+     * @return string HTML formatted namespace name.
+     */
+    public function formatNamespaceName(
+        string $ns_name,
+        array $ns_name_classes = []
+    ): string {
+
+        $separator_pos = strrpos($ns_name, '\\');
+
+        if( $separator_pos === false ) {
+            throw new \Exception(
+                "Namespace name must contain backward slash separator"
+            );
+        }
+
+        $base = substr($ns_name, ($separator_pos + 1));
+
+        if( $base === '{closure}' ) {
+            $base = self::getFormattedClosureString();
+            $ns_name_classes[] = 'closure';
+        }
+
+        $ns_name_classes = ['ns-name', ...$ns_name_classes];
+
+        return
+            sprintf(
+                '<span class="%s">',
+                implode(' ', $ns_name_classes)
+            )
+            . substr($ns_name, 0, ($separator_pos + 1))
+            . sprintf(
+                '<span class="base">%s</span>',
+                $base
+            )
+            . '</span>';
+    }
+
+    /** Returns HTML formatted debug string for closure. */
+    public static function getFormattedClosureString(): string {
+
+        return '<span class="punc punc-brkt">{</span>'
+            . 'closure'
+            . '<span class="punc punc-brkt">}</span>';
+    }
+
+    /** HTML formats a simplified function name string. */
+    public function formatSimplifiedFunctionStr( string $func_str ): string {
+
+        if( str_ends_with($func_str, '()') ) {
+            $func_str = substr($func_str, -2);
+        }
+
+        $func_format = '<span class="func-name">%s</span>';
+        $punc_html = '<span class="punc punc-brkt">(</span>'
+            . '<span class="punc punc-brkt">)</span>';
+
+        if( $func_str === '{closure}' ) {
+            $func_str = self::getFormattedClosureString();
+        }
+
+        return (sprintf(
+            $func_format,
+            $func_str
+        ) . $punc_html);
     }
 }

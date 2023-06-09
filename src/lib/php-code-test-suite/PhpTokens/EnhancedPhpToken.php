@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.6
+ * @version   1.0.7
  * @since     1.0.0
  */
 
@@ -45,6 +45,7 @@ class EnhancedPhpToken {
         'noreturn',
         'parent',
         'self',
+        'iterable',
         '__COMPILER_HALT_OFFSET__',
     ];
 
@@ -95,8 +96,8 @@ class EnhancedPhpToken {
      * @return bool True when found, and false when not found.
      */
     public function lookAhead(
-        array|string $while,
-        array|string $until
+        int|array|string $while,
+        int|array|string $until
     ): bool {
 
         $key = ($this->cache_key + 1);
@@ -171,25 +172,34 @@ class EnhancedPhpToken {
         }
 
         $non_whitespace_tokens = [
-            T_CLASS,
             T_NEW,
             T_INSTANCEOF,
             T_EXTENDS,
             T_INTERFACE,
+            T_IMPLEMENTS,
             T_TRAIT,
             T_ENUM,
             // Traits
             T_USE,
             T_INSTEADOF,
-            T_IMPLEMENTS,
         ];
 
-        return $this->lookBehind([
+        $main_look_behind = $this->lookBehind([
+            T_WHITESPACE,
+            T_STRING,
+            T_CLASS,
+            ...$non_whitespace_tokens
+        ], [T_CLASS, ...$non_whitespace_tokens]);
+
+        #review: what role does comma exactly play?
+        $with_comma_look_behind = $this->lookBehind([
             T_WHITESPACE,
             ',',
             T_STRING,
             ...$non_whitespace_tokens
         ], $non_whitespace_tokens);
+
+        return $main_look_behind || $with_comma_look_behind;
     }
 
     /**
@@ -211,9 +221,11 @@ class EnhancedPhpToken {
     /**
      * Tells if current token might be a class name in catch clause.
      */
-    public function isClassNameLookBehindForCatch(): bool {
+    public function isClassNameLookBehindForCatch(
+        int|string|array $is = T_STRING
+    ): bool {
 
-        return ( !$this->token->is(T_STRING) )
+        return ( !$this->token->is($is) )
             ? false
             : $this->lookBehind([
                 T_WHITESPACE,
@@ -252,6 +264,10 @@ class EnhancedPhpToken {
         return $this->lookAhead(
             [T_WHITESPACE, T_VARIABLE, '|'],
             [T_VARIABLE, '|'],
+        // Not preceeded by double colons.
+        ) && !$this->lookBehind(
+            [T_WHITESPACE, T_DOUBLE_COLON, T_PAAMAYIM_NEKUDOTAYIM],
+            [T_DOUBLE_COLON, T_PAAMAYIM_NEKUDOTAYIM]
         );
     }
 
@@ -687,9 +703,12 @@ class EnhancedPhpToken {
      */
     public function getNamespaceLastComponentType(): ?NUDTE {
 
-        $type = NUDTE::CLASS_LIKE;
+        $type = NUDTE::CONSTANT;
+        $identified = false;
 
         if( $context = $this->stream->getContext() ) {
+
+            $identified = true;
 
             if( $context instanceof NamespaceUseDeclarationBuilder ) {
 
@@ -706,6 +725,43 @@ class EnhancedPhpToken {
 
                 // Namespace definition will be presented as generic string.
                 $type = null;
+
+            } else {
+
+                $identified = false;
+            }
+
+        } elseif(
+            /* `isFunctionLookAhead` will not work here, because it can be a
+            "name" class token. */
+            $this->lookAhead([T_WHITESPACE, '('], '(')
+            && !$this->lookBehind([T_WHITESPACE, T_NEW], T_NEW)
+        ) {
+
+            $type = NUDTE::FUNCTION;
+            $identified = true;
+        }
+
+        if( !$identified ) {
+
+            $ns_name_parts = self::namespaceToParts($this->token->text);
+
+            if(
+                ($ns_name_parts['vendor'] && !$ns_name_parts['base'])
+                || (!$ns_name_parts['vendor'] && $ns_name_parts['base'])
+                || $this->lookAhead(
+                    [T_WHITESPACE, T_DOUBLE_COLON],
+                    T_DOUBLE_COLON
+                )
+                || $this->lookBehind([T_WHITESPACE, T_NEW], T_NEW)
+                || $this->lookBehind([T_WHITESPACE, T_USE], T_USE)
+                || $this->isClassNameLookBehindForCatch([
+                    T_NAMESPACE,
+                    T_NAME_QUALIFIED,
+                    T_NAME_FULLY_QUALIFIED
+                ])
+            ) {
+                $type = NUDTE::CLASS_LIKE;
             }
         }
 
@@ -837,5 +893,39 @@ class EnhancedPhpToken {
         }
 
         return $result;
+    }
+
+    /** Returns parts for a given namespace name. */
+    public static function namespaceToParts( string $ns_name ): array {
+
+        $divider_pos = strpos($ns_name, '\\');
+
+        if( $divider_pos !== false ) {
+
+            $divider_pos_last = strrpos($ns_name, '\\');
+
+            return [
+                'vendor' => substr($ns_name, 0, $divider_pos),
+                'parts' => ($divider_pos !== $divider_pos_last)
+                    ? explode(
+                        '\\',
+                        substr(
+                            $ns_name,
+                            ($divider_pos + 1),
+                            $divider_pos_last - ($divider_pos + 1)
+                        )
+                    )
+                    : [],
+                'base' => substr($ns_name, ($divider_pos_last + 1)),
+            ];
+
+        } else {
+
+            return [
+                'vendor' => $ns_name,
+                'parts' => [],
+                'base' => '',
+            ];
+        }
     }
 }

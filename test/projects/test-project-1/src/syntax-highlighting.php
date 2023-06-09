@@ -35,6 +35,12 @@ $var1 = "hello";
 $hello = "World";
 echo $$var1;
 
+\me();
+Me::class;
+new Hello\World();
+Demo\SRC_PATH;
+function &test(...$args): string|array|ParentClass|\Closure {}
+
 $var2 = ((((1 + 2))));
 
 const CONST_2 = ME;

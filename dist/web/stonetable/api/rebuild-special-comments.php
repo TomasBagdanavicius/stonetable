@@ -26,7 +26,6 @@ if(
     !($project_file_object instanceof SourceFile)
     && !($project_file_object instanceof TestFile)
 ) {
-
     send_error(
         "File $path does not represent a source, or a test file"
     );

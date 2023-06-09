@@ -8,7 +8,7 @@ Demo\start();
 
 /*** Demo Code ***/
 
-require_once (__DIR__ . '/../../../src/Rectangle.php');
+require_once (Demo\SRC_PATH . '/Rectangle.php');
 
 echo "Constructing Rectangle(5,10)...", PHP_EOL;
 $rectangleA = new Rectangle(5,10);

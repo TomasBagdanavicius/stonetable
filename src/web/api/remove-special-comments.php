@@ -31,12 +31,12 @@ if(
     );
 }
 
-$rebuild_result = $project_file_object->rebuildAllSpecialCommentLines();
+$remove_result = $project_file_object->removeAllSpecialCommentLines();
 
-if( $rebuild_result === false ) {
-    send_error("Could not rebuild special comment lines");
-} elseif( $rebuild_result === null ) {
-    send_error("There was nothing to rebuild");
+if( $remove_result === false ) {
+    send_error("Could not remove special comment lines");
+} elseif( $remove_result === null ) {
+    send_error("There was nothing to remove");
 } else {
     send_success([]);
 }

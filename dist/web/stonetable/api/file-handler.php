@@ -38,6 +38,9 @@ if( !$project_file_object->isFile() ) {
     );
 }
 
+$force_source = get_value_exists('force_source', '0');
+$force_source = ( is_numeric($force_source) && $force_source === '1' );
+
 /**
  * Enumerates view handler names.
  */
@@ -46,7 +49,7 @@ enum ViewHandlersEnum: string {
     case OUTPUT_CODE_PARTS = 'demo-output';
 }
 
-$handler_name = ( $project_file_object instanceof TestFile )
+$handler_name = ( ($project_file_object instanceof TestFile) && !$force_source )
     ? ViewHandlersEnum::OUTPUT_CODE_PARTS
     : ViewHandlersEnum::SOURCE_CODE_PARTS;
 
@@ -225,7 +228,7 @@ switch( $handler_name ) {
                     $inner_html,
                     $known_vendors_by_base
                 );
-                $inner_html = $formatter->convertNamespacesToHtmlLinks(
+                $inner_html = $formatter->formatNamespaces(
                     $inner_html,
                     function(
                         string $namespace,

@@ -47,7 +47,6 @@ if( $page_number = get_value_exists('page_number', 1) ) {
 }
 
 $charset = 'UTF-8';
-$transliterator = 'Any-Latin; Latin-ASCII';
 $has_search_query = ( $search_query !== null );
 
 if( !$has_search_query ) {
@@ -58,12 +57,17 @@ if( !$has_search_query ) {
 } else {
 
     $file_iterator = $project_file_object->getRecursiveIterator();
-
+    $has_transliterator = function_exists('transliterator_transliterate');
+    $transliterator = 'Any-Latin; Latin-ASCII';
     $comparable_search_query = mb_strtolower($search_query, $charset);
-    $comparable_search_query = transliterator_transliterate(
-        $transliterator,
-        $comparable_search_query
-    );
+
+    if( $has_transliterator ) {
+
+        $comparable_search_query = transliterator_transliterate(
+            $transliterator,
+            $comparable_search_query
+        );
+    }
 }
 
 $data = [];
@@ -91,10 +95,13 @@ foreach( $file_iterator as $project_file_object ) {
             $charset
         );
 
-        $comparable_searchable_str = transliterator_transliterate(
-            $transliterator,
-            $comparable_searchable_str
-        );
+        if( $has_transliterator ) {
+
+            $comparable_searchable_str = transliterator_transliterate(
+                $transliterator,
+                $comparable_searchable_str
+            );
+        }
 
         if(
             mb_strpos(

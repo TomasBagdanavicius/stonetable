@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.6
+ * @version   1.0.7
  * @since     1.0.0
  */
 
@@ -188,7 +188,6 @@ class ProjectFile extends ProjectFileObject {
         }
 
         $data = ($before_portion . $replacement);
-
         $file_size = $this->file->getSize();
 
         if( $coords[1] < $file_size ) {
@@ -400,6 +399,39 @@ class ProjectFile extends ProjectFileObject {
         }
     }
 
+    /** Removes given special comment. */
+    public function removeSpecialComment(
+        SpecialComment $special_comment
+    ): ?bool {
+
+        if( $this->file->getSize() && $this->isSupportedFileType() ) {
+
+            $coords = $this->containsSpecialComment($special_comment);
+
+            if( !$coords ) {
+                return null;
+            }
+
+            $this->file->rewind();
+            clearstatcache();
+
+            while(
+                $this->file->fseek($coords[1]) === 0
+                && ($char = $this->file->fread(1)) !== false
+                && ( $char === "\r" || $char === "\n" )
+            ) {
+                $coords[1]++;
+            }
+
+            return $this->replaceByCoords($coords, '');
+
+        // File is empty or unsupported.
+        } else {
+
+            return null;
+        }
+    }
+
     /** Rebuilds all special comments. */
     public function rebuildAllSpecialCommentLines(): ?bool {
 
@@ -408,6 +440,28 @@ class ProjectFile extends ProjectFileObject {
             foreach( $this->special_comments as $special_comment ):
 
                 if( $this->rebuildSpecialComment($special_comment) === false ) {
+                    return false;
+                }
+
+            endforeach;
+
+            return true;
+
+        // File is empty or unsupported.
+        } else {
+
+            return null;
+        }
+    }
+
+    /** Removes all special comments. */
+    public function removeAllSpecialCommentLines(): ?bool {
+
+        if( $this->file->getSize() && $this->isSupportedFileType() ) {
+
+            foreach( $this->special_comments as $special_comment ):
+
+                if( $this->removeSpecialComment($special_comment) === false ) {
                     return false;
                 }
 

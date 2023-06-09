@@ -14,8 +14,8 @@
     .type-file,
     .type-dir,
     .i-menu,
-    .i-open-lo,
-    .i-disc-lo,
+    .i-std-lo-lhs,
+    .i-std-lo,
     .tgl-lo,
     .tgl-word-wrap-btn,
     .scr.welcome h1,
@@ -57,10 +57,10 @@
     .type-dir > :first-child::before,
     .type-dir > :first-child::after,
     .i-menu::before,
-    .i-open-lo::before,
-    .i-open-lo::after,
-    .i-disc-lo::before,
-    .i-disc-lo::after,
+    .i-std-lo-lhs::before,
+    .i-std-lo-lhs::after,
+    .i-std-lo::before,
+    .i-std-lo::after,
     .tgl-lo::before,
     .tgl-lo::after,
     .tgl-word-wrap-btn::before,
@@ -81,7 +81,7 @@
     /* Medium Length Rightwards Arrow */
 
     .i-md-rt-arw,
-    .cont-btn:not(.waiting) {
+    .cont-btn:not(.wtng) {
         --icon-size: 20px;
         --wing-size: 10px;
     }
@@ -98,7 +98,11 @@
     }
 
     .i-md-rt-arw::after,
-    .cont-btn:not(.wtng)::after {
+    .cont-btn:not(.wtng)::after,
+    .i-run::before,
+    [data-handler="demo-output"] .tgl-view-btn::before,
+    .i-code::before,
+    [data-handler="source-code"] .tgl-view-btn::before {
         top: calc(50% + var(--icon-weight-half));
         left: calc(50% + var(--icon-size-half) - var(--wing-size)
             + var(--icon-weight-half));
@@ -134,46 +138,58 @@
     /* Enter & Exit Fullscreen */
 
     :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn) {
-        --icon-size: 10px;
-        --icon-offset: 1px;
+        --wing-size: 8px;
+        --icon-size: 20px;
+        /* Calculated */
+        --icon-size-max: max(calc(var(--wing-size) * 2), var(--icon-size));
     }
 
     :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::before,
     :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::after {
-        width: var(--icon-size);
-        height: var(--icon-size);
-        border: solid var(--icon-weight) var(--icon-color);
+        top: calc(50% - var(--icon-size-half));
+        left: calc(50% - var(--icon-size-half));
         border-radius: var(--icon-weight-half);
+        background-color: var(--icon-color);
     }
 
     :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::before {
-        bottom: calc(50% + var(--icon-offset));
-        left: calc(50% + var(--icon-offset));
-        border-width: var(--icon-weight) var(--icon-weight) 0 0;
+        width: var(--wing-size);
+        height: var(--icon-weight);
+        box-shadow: var(--offset1) 0 0,
+            0 var(--offset2) 0,
+            var(--offset1) var(--offset2) 0;
     }
 
     :is(.i-go-fscr, .i-exit-fscr, .tgl-fscr-btn)::after {
-        top: calc(50% + var(--icon-offset));
-        right: calc(50% + var(--icon-offset));
-        border-width: 0 0 var(--icon-weight) var(--icon-weight);
+        width: var(--icon-weight);
+        height: var(--wing-size);
+        box-shadow: var(--offset2) 0 0,
+            0 var(--offset1) 0,
+            var(--offset2) var(--offset1) 0;
+    }
+
+    .i-go-fscr,
+    .tgl-fscr-btn {
+        --offset1: calc(var(--icon-size-max) - var(--wing-size));
+        --offset2: calc(var(--icon-size-max) - var(--icon-weight));
+    }
+
+    .i-exit-fscr,
+    body:fullscreen .tgl-fscr-btn {
+        /* Calculated */
+        --inner-wing-size: calc(var(--wing-size) - var(--icon-weight));
+        --offset1: calc(var(--icon-size-max) - var(--wing-size));
+        --offset2: calc(var(--offset1) - var(--inner-wing-size));
     }
 
     .i-exit-fscr::before,
     body:fullscreen .tgl-fscr-btn::before {
-        border-width: 0 0 var(--icon-weight) var(--icon-weight);
-    }
-
-    body:-webkit-full-screen .tgl-fscr-btn::before {
-        border-width: 0 0 var(--icon-weight) var(--icon-weight);
+        margin-top: var(--inner-wing-size);
     }
 
     .i-exit-fscr::after,
     body:fullscreen .tgl-fscr-btn::after {
-        border-width: var(--icon-weight) var(--icon-weight) 0 0;
-    }
-
-    body:-webkit-full-screen .tgl-fscr-btn::after {
-        border-width: var(--icon-weight) var(--icon-weight) 0 0;
+        margin-left: var(--inner-wing-size);
     }
 
     /* Search */
@@ -529,46 +545,15 @@
         background-clip: content-box;
     }
 
-    /* Open Layout */
+    /* Standard Layout */
 
-    .i-open-lo {
-        --icon-width: 20px;
-        --icon-height: 14px;
-        --stroke-size: 2px;
-        /* Calculated */
-        --stroke-size-double: calc(var(--stroke-size) * 2);
-    }
-
-    .i-open-lo::before {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, calc(0px - var(--icon-height) / 2));
-        width: var(--icon-width);
-        height: var(--stroke-size);
-        background-color: var(--icon-color);
-    }
-
-    .i-open-lo::after {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, calc(0px - (var(--icon-height) / 2 - var(--stroke-size-double))));
-        width: var(--icon-width);
-        height: calc(var(--icon-height) - var(--stroke-size-double));
-        border-left: solid var(--stroke-size-double) var(--icon-color);
-        padding-left: var(--stroke-size);
-        background-color: var(--icon-color);
-        background-clip: content-box;
-    }
-
-    /* Discrete Layout */
-
-    .i-disc-lo {
+    .i-std-lo {
         --icon-width: 20px;
         --icon-height: 14px;
         --stroke-size: 2px;
     }
 
-    .i-disc-lo::before {
+    .i-std-lo::before {
         top: 50%;
         left: 50%;
         width: var(--icon-width);
@@ -578,6 +563,52 @@
         border-top: solid var(--stroke-size) var(--icon-color);
         background-color: var(--icon-color);
         background-clip: content-box;
+    }
+
+    /* Standard Layout With Sidebar */
+
+    .i-std-lo-lhs,
+    .i-std-lo-rhs {
+        --icon-width: 20px;
+        --icon-height: 14px;
+        --stroke-size: 2px;
+        /* Calculated */
+        --stroke-size-double: calc(var(--stroke-size) * 2);
+    }
+
+    .i-std-lo-lhs::before,
+    .i-std-lo-rhs::before {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, calc(0px - var(--icon-height) / 2));
+        width: var(--icon-width);
+        height: var(--stroke-size);
+        background-color: var(--icon-color);
+    }
+
+    .i-std-lo-lhs::after,
+    .i-std-lo-rhs::after {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, calc(0px - (var(--icon-height) / 2 - var(--stroke-size-double))));
+        width: var(--icon-width);
+        height: calc(var(--icon-height) - var(--stroke-size-double));
+        background-color: var(--icon-color);
+        background-clip: content-box;
+    }
+
+    /* Standard Layout With LHS Sidebar */
+
+    .i-std-lo-lhs::after {
+        border-left: solid var(--stroke-size-double) var(--icon-color);
+        padding-left: var(--stroke-size);
+    }
+
+    /* Standard Layout With RHS Sidebar */
+
+    .i-std-lo-rhs::after {
+        border-right: solid var(--stroke-size-double) var(--icon-color);
+        padding-right: var(--stroke-size);
     }
 
     /* No Word Wrap */
@@ -720,6 +751,60 @@
         font: 16px/var(--icon-size) "Times New Roman", Times, serif;
         color: var(--icon-color);
         content: 'i';
+    }
+
+    /* Run */
+
+    .i-run,
+    [data-handler="demo-output"] .tgl-view-btn {
+        --icon-width: 25px;
+        --icon-height: 20px;
+        --line-size: 15px;
+        --wing-size: 10px;
+        /* Calculated */
+        --icon-height-half: calc(var(--icon-height) / 2);
+    }
+
+    .i-run::before,
+    [data-handler="demo-output"] .tgl-view-btn::before {
+        left: calc(50% - var(--icon-width) / 2);
+    }
+
+    .i-run::after,
+    [data-handler="demo-output"] .tgl-view-btn::after {
+        top: calc(50% + (var(--icon-height-half) - var(--icon-weight)));
+        left: calc(50% + (var(--icon-width) / 2 - var(--line-size)));
+        width: var(--line-size);
+        height: var(--icon-weight);
+        background-color: var(--icon-color);
+        border-radius: var(--icon-weight-half);
+    }
+
+    /* Code */
+
+    .i-code,
+    [data-handler="source-code"] .tgl-view-btn {
+        --wing-size: 10px;
+    }
+
+    .i-code::before,
+    [data-handler="source-code"] .tgl-view-btn::before {
+        top: 50%;
+        left: calc(50% - 11px);
+        border-width: 2px 0 0 2px;
+        transform: rotate(-45deg);
+        transform-origin: 0 0;
+    }
+
+    .i-code::after,
+    [data-handler="source-code"] .tgl-view-btn::after {
+        top: calc(50% - 10px);
+        left: calc(50% - var(--icon-weight-half) + 5px);
+        width: var(--icon-weight);
+        height: 20px;
+        background-color: var(--icon-color);
+        border-radius: var(--icon-weight-half);
+        transform: rotate(30deg);
     }
 
 

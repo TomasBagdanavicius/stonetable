@@ -1,3 +1,15 @@
+:root {
+    --pathname-base-highlight: #669321;
+    --pathname-base-highlight-php: #9f74c4;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --pathname-base-highlight: #669321;
+        --pathname-base-highlight-php: #9f74c4;
+    }
+}
+
 /* Code Message */
 
 .code-msg {
@@ -87,6 +99,10 @@
     margin: 0;
 }
 
+.code-msg .err-code + dd {
+    color: var(--code-php-highlight-number, #0a8658);
+}
+
 /* Stack Trace List */
 
 .code-msg .stk-tr-l {
@@ -118,6 +134,28 @@
 
 /* Highlighting */
 
+.code-msg .path .base {
+    color: var(--pathname-base-highlight);
+}
+
+.code-msg .path .base.ext-php {
+    color: var(--pathname-base-highlight-php);
+}
+
+.code-msg .path.no-file,
+.code-msg .ns-name.no-file {
+    text-decoration: underline var(--bg-color-restrained, #666) wavy;
+    -webkit-text-decoration: underline var(--bg-color-restrained, #666) wavy;
+    /* Safari does not support this inside shorthand */
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+.code-msg .cls-name,
+.code-msg .ns-name .base {
+    color: var(--code-php-highlight-class-name, #257e99);
+}
+
 .code-msg .code-php .var {
     color: var(--code-php-highlight-variable, #001180);
 }
@@ -126,7 +164,9 @@
     color: var(--code-php-highlight-keyword, #0a00ff);
 }
 
-.code-msg .func-name {
+.code-msg .func-name,
+.code-msg .ns-name.func .base,
+.code-msg .ns-name.closure .base {
     color: var(--code-php-highlight-function, #795e27);
 }
 
@@ -156,7 +196,18 @@
         background-color: #111;
     }
 
+    /* Metadata */
+
+    .code-msg .err-code + dd {
+        color: var(--code-php-highlight-number, #b6cda8);
+    }
+
     /* Highlighting */
+
+    .code-msg .cls-name,
+    .code-msg .ns-name .base {
+        color: var(--code-php-highlight-class-name, #4ec9b0);
+    }
 
     .code-msg .code-php .var {
         color: var(--code-php-highlight-variable, #9ddbfe);
@@ -166,7 +217,9 @@
         color: var(--code-php-highlight-keyword, #559cd6);
     }
 
-    .code-msg .func-name {
+    .code-msg .func-name,
+    .code-msg .ns-name.func .base,
+    .code-msg .ns-name.closure .base {
         color: var(--code-php-highlight-function, #dcdcaa);
     }
 

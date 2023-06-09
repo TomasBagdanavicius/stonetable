@@ -393,5 +393,3 @@ function assert_true( mixed $value, string $error_message ): void {
 
 define(__NAMESPACE__ . '\ERROR_HANDLER', $dpi_error_handler);
 define(__NAMESPACE__ . '\DEBUGGER', $dpi_debugger);
-
-namespace UserDemo;

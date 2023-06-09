@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.7) - 2023-06-09
+
+### Changed
+
+- Improved responsiveness of main file and file listing loading.
+- When a file is loaded and you press “R” key (and the modifier key is not held), the reload function will be called automatically.
+- Qualified file paths as well as qualified namespace names that are not backed up by an existing file in filesystem will be underlined using wavy style in message text.
+- Advanced PHP syntax highlighter improvements.
+- PHP's "intl" extension is no longer compulsory, but recommended.
+- New notifications will be shown above existing ones, instead of below them.
+- Various small changes and fixes.
+- Bump PHP Code Test Suite version to 1.0.7
+- Bump Project Directory version to 1.0.7
+
+### Added
+
+- More highlighted elements with colors introduced as part of a broader initiative to colorize demo output and code messages, most notably:
+    - File path's basename;
+    - Namespace name's last component;
+    - Class names;
+    - etc.
+- It’s now possible to switch to demo or unit file’s source code and back again (not to be confused with source file and its source code). A new "Toggle view" button was added to file's controls menubar.
+- New API endpoint [remove-special-comments.php](src/web/api/remove-special-comments.php) that removes all special comments in a given test file.
+
 ## [1.0.6](https://github.com/TomasBagdanavicius/stonetable/releases/tag/v1.0.6) - 2023-05-09
 
 ### Changed

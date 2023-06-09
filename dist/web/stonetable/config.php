@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Path name to the directory containing web projects.
+ * Path name to the directory containing PHP projects.
  *
  * Trailing slash should be excluded. Please normalize using `realpath()` if
  * required.

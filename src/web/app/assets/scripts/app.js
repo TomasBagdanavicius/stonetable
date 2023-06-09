@@ -205,7 +205,7 @@ function markSubstringsInString(
     }
 
     return stringWrap(
-        string,
+        string.normalize('NFC'),
         positions,
         searchString.length,
         before,
@@ -242,6 +242,20 @@ function writeToClipboard(text, onSuccess, onFailure) {
             onFailure();
         }
     });
+}
+
+/**
+ * Checks if the currently focused element is an active form control.
+ * @returns {boolean} True if the active element is an input, textarea, or
+ *     select; otherwise, false.
+ */
+function isActiveFormControl() {
+    return document.activeElement !== null
+        && (
+            document.activeElement instanceof HTMLInputElement
+            || document.activeElement instanceof HTMLTextAreaElement
+            || document.activeElement instanceof HTMLSelectElement
+        );
 }
 
 /**
@@ -981,12 +995,20 @@ function SearchableApiListing(
         });
     });
     this.listingBody.addEventListener('scroll', () => {
-        if (this.hasMorePages() && this.hasReachedScrollThreshold()) {
+        if (
+            // Ignore scroll when awaiting previous response
+            !this.scrollOccupied
+            && this.hasMorePages()
+            && this.hasReachedScrollThreshold()
+        ) {
+            this.scrollOccupied = true;
             this.nextPageRequest().then(payload => {
                 if (payload) {
                     this.appendGroupContents(payload);
                     this.populateStateData(payload);
                 }
+            }).finally(() => {
+                this.scrollOccupied = false;
             });
         }
     });
@@ -998,9 +1020,12 @@ Object.assign(SearchableApiListing.prototype, {
             ? new URL(endpointUrl)
             : endpointUrl;
     },
-    async fillUpContents() {
-        if (this.getRemainingSpace()) {
+    async fillUpContents(onPayload, willReplace = false) {
+        if (willReplace || this.getRemainingSpace()) {
             return this.nextPageRequestUntil(payload => {
+                if (typeof onPayload === 'function') {
+                    onPayload(payload);
+                }
                 this.populateStateData(payload);
                 this.appendGroupContents(payload);
                 return this.hasMorePages() && this.getRemainingSpace();
@@ -1130,13 +1155,15 @@ Object.assign(SearchableApiListing.prototype, {
         });
     },
     async nextPageRequestUntil(untilHandler) {
-        return this.request({
-            pageNumber: (this.pageNumber + 1)
-        }).then(async payload => {
-            if (payload !== false && untilHandler(payload)) {
-                await this.nextPageRequestUntil(untilHandler);
-            }
-        });
+        if (this.pageNumber === 0 || this.hasMorePages()) {
+            return this.request({
+                pageNumber: (this.pageNumber + 1)
+            }).then(async payload => {
+                if (payload !== false && untilHandler(payload)) {
+                    await this.nextPageRequestUntil(untilHandler);
+                }
+            });
+        }
     },
     bindSearchInput() {
         this.searchInput.addEventListener('input', () => {
@@ -1152,7 +1179,9 @@ Object.assign(SearchableApiListing.prototype, {
                     if (data.length) {
                         this.populateStateData(payload);
                         this.replaceGroupContents(payload);
-                        this.fillUpContents();
+                        if (payload.maxPages > payload.pageNumber) {
+                            this.fillUpContents();
+                        }
                     // No results.
                     } else {
                         this.flushGroupContents();
@@ -1197,9 +1226,12 @@ Object.assign(SearchableApiListing.prototype, {
             }));
         }
         this.setEndpointUrl(endpointUrl);
-        this.flushGroupContents();
         this.pageNumber = 0;
-        return this.fillUpContents();
+        return this.fillUpContents(payload => {
+            if (payload && payload.pageNumber == '1') {
+                this.flushGroupContents();
+            }
+        }, true);
     }
 });
 
@@ -1923,6 +1955,7 @@ const genericScreen = {
         'main',
         'project_search_query',
         'file_search_query',
+        'force_source',
     ],
     menuItems: [
         {
@@ -1991,6 +2024,7 @@ const genericScreen = {
         },
     ],
     abortControllers: new Set(),
+    keyboardShortcuts: {},
     /**
      * Amends the location to contain given state parameters
      * @param {object} params - State parameters
@@ -2095,26 +2129,6 @@ const genericScreen = {
         this.onCloseCallbacks.add(callback);
     },
     /**
-     * Closes currently active screen
-     * @returns {null|boolean} Null when there is nothing to be closed
-     */
-    close() {
-        if (!this.isLoaded) {
-            return null;
-        }
-        console.log(`closing ${this.name} screen`);
-        this.clearAbortControllers();
-        this.container.remove();
-        document.body.removeAttribute('data-current-screen-name');
-        this.isLoaded = false;
-        if (this.onCloseCallbacks.size) {
-            this.onCloseCallbacks.forEach(callback => {
-                callback();
-            });
-        }
-        return true;
-    },
-    /**
      * Adds the screen container to the document body and makes it globally
      *     available
      * @param {HTMLDivElement} container - Screen container
@@ -2133,6 +2147,38 @@ const genericScreen = {
     finishLoading() {
         this.isLoaded = true;
         currentLoadedScreen = this;
+        const keyboardShortcuts = {
+            ...genericScreen.keyboardShortcuts,
+            ...this.keyboardShortcuts
+        };
+        for (const [name, method] of Object.entries(keyboardShortcuts)) {
+            this.keyboardShortcuts[name] = method.bind(this);
+            document.addEventListener('keydown', this.keyboardShortcuts[name]);
+        }
+    },
+    /**
+     * Closes currently active screen
+     * @returns {null|boolean} Null when there is nothing to be closed
+     */
+    close() {
+        if (!this.isLoaded) {
+            return null;
+        }
+        console.log(`closing ${this.name} screen`);
+        this.clearAbortControllers();
+        this.container.remove();
+        document.body.removeAttribute('data-current-screen-name');
+        this.isLoaded = false;
+        if (this.onCloseCallbacks.size) {
+            this.onCloseCallbacks.forEach(callback => {
+                callback();
+            });
+        }
+        // Cleanup keyboard shortcut bindings
+        for( const [, method] of Object.entries(this.keyboardShortcuts) ) {
+            document.removeEventListener('keydown', method);
+        }
+        return true;
     },
     /**
      * Excavates a document fragment from the corresponding screen template
@@ -2493,6 +2539,17 @@ const managerScreen = {
         }
     ],
     onMainPanelCloseCallbacks: new Set(),
+    lastMainPanelSendParams: {},
+    keyboardShortcuts: {
+        'reload': function(e) {
+            // R key (no meta)
+            if (!e.metaKey && (e.key === 'r' || e.key === 'R')) {
+                if (this.currentMainPath && !isActiveFormControl()) {
+                    this.reloadMainPanel();
+                }
+            }
+        }
+    },
     /**
      * Runs all tasks required to load the screen
      * @param {object} params - Params to use when loading
@@ -2571,7 +2628,7 @@ const managerScreen = {
                             this.listingGroup.prepend(item);
                         }
                     },
-                    (searchField) => {
+                    searchField => {
                         if (searchField.value !== '') {
                             let params = {};
                             params[searchField.name] = searchField.value;
@@ -2590,7 +2647,9 @@ const managerScreen = {
                             document.body.dataset.layout = 'discrete';
                         } else if (layout === 'discrete') {
                             document.body.dataset.layout = 'open';
-                            this.listing.fillUpContents();
+                            if (isCompact.matches) {
+                                this.listing.fillUpContents();
+                            }
                         }
                     });
                 }
@@ -2628,7 +2687,9 @@ const managerScreen = {
                     document.body.dataset.layout = 'discrete';
                 } else {
                     document.body.dataset.layout = 'open';
-                    this.listing.fillUpContents();
+                    if (isCompact.matches) {
+                        this.listing.fillUpContents();
+                    }
                 }
             // Project not found.
             } else if (payload !== false && !payload.data) {
@@ -2711,17 +2772,23 @@ const managerScreen = {
      * @param {string} path - File's path name
      * @param {bool} setParams - Whether to set path name in location
      */
-    loadIntoMainPanel(path, setParams = true) {
+    loadIntoMainPanel(path, setParams = true, sendParams = {}) {
         if (
             this.mainPanelAbortController
             && !this.mainPanelAbortController.signal.aborted
         ) {
             this.mainPanelAbortController.abort();
         }
-        this.removeMainPanelMasterMessage();
-        this.truncateMainPanel();
-        this.mainPanel.removeAttribute('data-handler');
+        const loadCleanUp = () => {
+            this.removeMainPanelMasterMessage();
+            this.truncateMainPanel();
+            if (this.lastMainPanelSendParams) {
+                this.releaseParams(Object.keys(this.lastMainPanelSendParams));
+            }
+            this.mainPanel.removeAttribute('data-handler');
+        };
         const waitingTimeout = setTimeout(() => {
+            loadCleanUp();
             this.mainPanel.classList.add('wtng');
         }, 150);
         if (isCompact.matches) {
@@ -2744,9 +2811,13 @@ const managerScreen = {
                 this.loadedProjectData.pathname
             );
         }
+        for (const [key, val] of Object.entries(sendParams)) {
+            url.searchParams.set(key, val);
+        }
         this.mainPanelAbortController = this.provideAbortController();
         apiRequest(url, this.mainPanelAbortController).then(payload => {
             if (payload !== false) {
+                loadCleanUp();
                 const data = payload.data;
                 const mainPanelToolbar = createElement('div', {
                     classes: ['tb'],
@@ -2788,12 +2859,16 @@ const managerScreen = {
                     data.meta.handlerName
                 );
                 if (setParams) {
-                    this.setParams({
+                    const mainParams = {
                         main: path,
-                    });
+                    };
+                    this.setParams({...mainParams, ...sendParams});
+                    this.lastMainPanelSendParams = sendParams;
                 }
                 this.currentMainPath = path;
             } else {
+                this.currentMainPath = null;
+                this.truncateMainPanel();
                 this.putOnNoFileMessage();
                 this.releaseParams(['main'], 'replace');
             }
@@ -3048,7 +3123,7 @@ const managerScreen = {
         });
         const currentButton = createElement('button', {
             text: fileData.basename,
-            title: "Reload file",
+            title: "Reload file (R)",
         });
         currentButton.addEventListener('click', () => {
             this.reloadMainPanel();
@@ -3076,7 +3151,7 @@ const managerScreen = {
         const reloadButton = createElement('button', {
             classes: ['rld-btn'],
             text: "Reload",
-            title: "Reload file",
+            title: "Reload file (R)",
         });
         reloadButton.addEventListener('click', () => {
             this.reloadMainPanel();
@@ -3103,6 +3178,26 @@ const managerScreen = {
             });
             menu.append(wordWrapButton);
         }
+        if (fileData.category === 'demo' || fileData.category === 'unit') {
+            const toggleView = createElement('button', {
+                classes: ['tgl-view-btn'],
+                text: "Toggle view",
+                title: "Toggle view",
+            });
+            toggleView.addEventListener('click', () => {
+                if (!Object.hasOwn(stateObj, 'force_source')) {
+                    this.loadIntoMainPanel(this.currentMainPath, true, {
+                        'force_source': '1',
+                    });
+                } else {
+                    this.loadIntoMainPanel(this.currentMainPath);
+                    this.releaseParams([
+                        'force_source',
+                    ]);
+                }
+            });
+            menu.append(toggleView);
+        }
         menu.append(reloadButton, closeButton);
         return menu;
     },
@@ -3111,16 +3206,23 @@ const managerScreen = {
      */
     reloadMainPanel() {
         if (this.currentMainPath) {
-            this.loadIntoMainPanel(this.currentMainPath);
+            this.loadIntoMainPanel(
+                this.currentMainPath,
+                true,
+                this.lastMainPanelSendParams
+            );
         }
     },
     /**
      * Closes main panel
      */
     closeMainPanel() {
+        this.currentMainPath = null;
         this.mainPanel.innerHTML = '';
         this.putOnNoFileMessage();
-        this.releaseParams(['main']);
+        this.releaseParams(
+            ['main', ...Object.keys(this.lastMainPanelSendParams)]
+        );
         if (this.onMainPanelCloseCallbacks.size) {
             this.onMainPanelCloseCallbacks.forEach(callback => {
                 callback();
@@ -3863,9 +3965,8 @@ const shortNotifications = {
 function ShortNotification(text, timeout) {
     const container = this.createElement();
     container.innerText = text;
-    this.container = shortNotifications.container.appendChild(
-        container
-    );
+    shortNotifications.container.prepend(container);
+    this.container = shortNotifications.container.firstElementChild;
     this.timeoutHandlerId = setTimeout(() => {
         this.close();
     }, timeout);

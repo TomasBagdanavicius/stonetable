@@ -10,7 +10,7 @@
  * @license   MIT License
  * @copyright Copyright (c) 2023 LWIS Technologies <info@lwis.net>
  *            (https://www.lwis.net/)
- * @version   1.0.6
+ * @version   1.0.7
  * @since     1.0.0
  */
 
@@ -247,7 +247,7 @@ class PHPErrorHandler {
             )
         );
         $result .= '<dl>';
-        $result .= '<dt>Location</dt>';
+        $result .= '<dt class="loc">Location</dt>';
         $line_number_suffix = sprintf(
             '<span class="line-num">:<span class="num">%d</span></span>',
             $line_number
@@ -264,7 +264,7 @@ class PHPErrorHandler {
 
         if( $error_type !== null ) {
 
-            $result .= '<dt>Type</dt>';
+            $result .= '<dt class="type">Type</dt>';
             $result .= sprintf(
                 '<dd>%s</dd>',
                 self::errorTypeToString($error_type)
@@ -324,24 +324,27 @@ class PHPErrorHandler {
             close_html_tags: false
         );
 
-        $exception_namespace = $exception::class;
-
-        $result .= '<dt>Error Class</dt>';
+        $result .= '<dt class="err-cls">Error Class</dt>';
         $result .= '<dd>';
+        $exception_class = $exception::class;
+        $class_formatted = $this->formatter->formatClassNameOrNamespace(
+            $exception_class
+        );
 
-        if( $this->formatter->isQualifiedNamespace($exception_namespace) ) {
+        if( $this->formatter->isQualifiedNamespace($exception_class) ) {
 
             $result .= $this->formatter->namespaceToIdeHtmlLink(
-                $exception_namespace
+                $exception_class,
+                text: $class_formatted
             );
 
         } else {
 
-            $result .= $exception_namespace;
+            $result .= $class_formatted;
         }
 
         $result .= '</dd>';
-        $result .= '<dt>Error Code</dt>';
+        $result .= '<dt class="err-code">Error Code</dt>';
         $result .= '<dd>';
         $result .= $exception->getCode();
         $result .= '</dd>';

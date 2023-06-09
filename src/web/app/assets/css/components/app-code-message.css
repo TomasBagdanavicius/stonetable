@@ -1,5 +1,41 @@
 @import "../../../../assets/css/code-message.css";
 
+/* Code Message */
+
+.code-msg {
+    padding: 20px 12px;
+    border-width: 1px 0;
+}
+
+.code-msg .code-msg {
+    margin-top: 1em;
+    border-width: 1px;
+}
+
+.code-msg .arg-l > li::before {
+    background-color: var(--mg-color);
+}
+
+.code-msg .stk-tr-l > li::marker {
+    color: var(--bg-color-restrained);
+}
+
+:root[data-theme="light"] .code-msg .path .base {
+    color: #669321;
+}
+
+:root[data-theme="dark"] .code-msg .path .base {
+    color: #669321;
+}
+
+:root[data-theme="light"] .code-msg .path .base.ext-php {
+    color: #9f74c4;
+}
+
+:root[data-theme="dark"] .code-msg .path .base.ext-php {
+    color: #9f74c4;
+}
+
 /* Output */
 
 .o {
@@ -22,22 +58,8 @@
     text-decoration-style: solid;
 }
 
-/* Code Message */
-
-.code-msg {
-    padding: 20px 12px;
-    border-width: 1px 0;
-}
-
-.code-msg .code-msg {
-    margin-top: 1em;
-    border-width: 1px;
-}
-
-.code-msg .arg-l > li::before {
-    background-color: var(--mg-color);
-}
-
-.code-msg .stk-tr-l > li::marker {
-    color: var(--bg-color-restrained);
+.o > .code-msg {
+    font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
 }

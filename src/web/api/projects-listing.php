@@ -55,16 +55,17 @@ if( $page_number = get_value_exists('page_number', 1) ) {
 
 $search_query = get_value_exists('project_search_query');
 $has_search_query = ( $search_query !== null );
-$search_query_limit = 100;
 $charset = 'UTF-8';
 $transliterator = 'Any-Latin; Latin-ASCII';
 
 if( $has_search_query ) {
 
-    $search_query = transliterator_transliterate(
-        $transliterator,
-        mb_strtolower($search_query, $charset)
-    );
+    $search_query_limit = 100;
+    $has_transliterator = function_exists('transliterator_transliterate');
+    $search_query_lc = mb_strtolower($search_query, $charset);
+    $search_query = ( $has_transliterator )
+        ? transliterator_transliterate($transliterator, $search_query_lc)
+        : $search_query_lc;
 
     if( mb_strlen($search_query) > $search_query_limit ) {
         send_error(
@@ -77,6 +78,10 @@ $data = [];
 $index = 0;
 $select_from = (($page_number - 1) * $entries_per_page + 1);
 $select_to = ($select_from + $entries_per_page - 1);
+$config_file_ending = (DIRECTORY_SEPARATOR
+    . ProjectRootDirectory::SYS_CONFIG_DIR_NAME
+    . DIRECTORY_SEPARATOR
+    . ProjectRootDirectory::SYS_CONFIG_FILE_NAME);
 
 foreach( $file_iterator as $fileinfo ) {
 
@@ -85,20 +90,16 @@ foreach( $file_iterator as $fileinfo ) {
     if(
         $fileinfo->isDir()
         && !str_starts_with($file_name, '.')
-        && file_exists(
-            $fileinfo->getPathname()
-            . DIRECTORY_SEPARATOR
-            . ProjectRootDirectory::SYS_CONFIG_DIR_NAME
-            . DIRECTORY_SEPARATOR
-            . ProjectRootDirectory::SYS_CONFIG_FILE_NAME
-        )
+        && file_exists($fileinfo->getPathname() . $config_file_ending)
         && (
             !$has_search_query
             || mb_strpos(
-                transliterator_transliterate(
-                    $transliterator,
-                    mb_strtolower($file_name, $charset)
-                ),
+                ( ( $has_transliterator )
+                    ? transliterator_transliterate(
+                        $transliterator,
+                        mb_strtolower($file_name, $charset)
+                    )
+                    : mb_strtolower($file_name, $charset) ),
                 $search_query,
                 encoding: $charset
             ) !== false
@@ -143,7 +144,7 @@ for( $i = 1; $i <= $total; $i++ ) {
             $data[] = [
                 'title' => $title,
                 'pathname' => '/foo/bar',
-                'url' => 'https://localhost/',
+                'url' => 'http://localhost/',
             ];
         }
     }
